@@ -1,32 +1,18 @@
 import React from 'react';
-import { createMuiTheme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-const useStyles = makeStyles(
-  createStyles({
-    root: {
-      display: 'flex',
-    },
-  }),
-);
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+  },
+});
 
+const defaultTheme = createMuiTheme();
 const theme = createMuiTheme({
   typography: {
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
     fontWeightMedium: 500,
     body1: {
       fontWeight: 500,
@@ -40,7 +26,7 @@ const theme = createMuiTheme({
   },
 });
 
-function TypographyTheme() {
+export default function TypographyTheme() {
   const classes = useStyles();
 
   const children = (
@@ -52,11 +38,11 @@ function TypographyTheme() {
   );
 
   return (
-    <div className={classes.root}>
-      {children}
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </div>
+    <ThemeProvider theme={defaultTheme}>
+      <div className={classes.root}>
+        {children}
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </div>
+    </ThemeProvider>
   );
 }
-
-export default TypographyTheme;

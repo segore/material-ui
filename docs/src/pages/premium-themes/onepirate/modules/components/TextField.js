@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MuiTextField from '@material-ui/core/TextField';
-import { capitalize } from '@material-ui/core/utils/helpers';
+import { capitalize } from '@material-ui/core/utils';
 
 const styles = theme => ({
   root: {
@@ -67,8 +67,8 @@ function TextField(props) {
       ...InputPropsOther
     } = {},
     InputLabelProps,
-    noBorder,
-    size,
+    noBorder = false,
+    size = 'medium',
     SelectProps,
     ...other
   } = props;
@@ -116,11 +116,6 @@ TextField.propTypes = {
   noBorder: PropTypes.bool,
   SelectProps: PropTypes.object,
   size: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge']),
-};
-
-TextField.defaultProps = {
-  noBorder: false,
-  size: 'medium',
 };
 
 export default withStyles(styles)(TextField);

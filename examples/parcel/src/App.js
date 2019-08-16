@@ -2,17 +2,21 @@ import React from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import ProTip from './ProTip';
 import Link from '@material-ui/core/Link';
+import ProTip from './ProTip';
 
-function MadeWithLove() {
+function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
+      {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'. Built with '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Material-UI.
       </Link>
-      {' team.'}
     </Typography>
   );
 }
@@ -25,7 +29,7 @@ export default function App() {
           Parcel v4-beta example
         </Typography>
         <ProTip />
-        <MadeWithLove />
+        <Copyright />
       </Box>
     </Container>
   );

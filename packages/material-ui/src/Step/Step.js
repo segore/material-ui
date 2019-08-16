@@ -11,12 +11,6 @@ export const styles = {
   horizontal: {
     paddingLeft: 8,
     paddingRight: 8,
-    '&:first-child': {
-      paddingLeft: 0,
-    },
-    '&:last-child': {
-      paddingRight: 0,
-    },
   },
   /* Styles applied to the root element if `orientation="vertical"`. */
   vertical: {},
@@ -25,7 +19,7 @@ export const styles = {
     flex: 1,
     position: 'relative',
   },
-  /* Styles applied to the root element if `completed={true}`. */
+  /* Pseudo-class applied to the root element if `completed={true}`. */
   completed: {},
 };
 

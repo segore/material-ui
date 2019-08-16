@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function SimpleSnackbar() {
+export default function SimpleSnackbar() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -48,7 +48,7 @@ function SimpleSnackbar() {
           </Button>,
           <IconButton
             key="close"
-            aria-label="Close"
+            aria-label="close"
             color="inherit"
             className={classes.close}
             onClick={handleClose}
@@ -60,5 +60,3 @@ function SimpleSnackbar() {
     </div>
   );
 }
-
-export default SimpleSnackbar;

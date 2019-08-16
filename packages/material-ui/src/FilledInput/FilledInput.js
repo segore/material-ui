@@ -92,9 +92,15 @@ export const styles = theme => {
     },
     /* Styles applied to the root element if `error={true}`. */
     error: {},
+    /* Styles applied to the `input` element if `margin="dense"`. */
+    marginDense: {},
     /* Styles applied to the root element if `multiline={true}`. */
     multiline: {
       padding: '27px 12px 10px',
+      '&$marginDense': {
+        paddingTop: 23,
+        paddingBottom: 6,
+      },
     },
     /* Styles applied to the `input` element. */
     input: {
@@ -102,8 +108,21 @@ export const styles = theme => {
     },
     /* Styles applied to the `input` element if `margin="dense"`. */
     inputMarginDense: {
-      paddingTop: 24,
+      paddingTop: 23,
       paddingBottom: 6,
+    },
+    /* Styles applied to the `input` if in `<FormControl hiddenLabel />`. */
+    inputHiddenLabel: {
+      paddingTop: 18,
+      paddingBottom: 19,
+      '&$inputMarginDense': {
+        paddingTop: 10,
+        paddingBottom: 11,
+      },
+    },
+    /* Styles applied to the `input` element if `select={true}`. */
+    inputSelect: {
+      paddingRight: 24,
     },
     /* Styles applied to the `input` element if `multiline={true}`. */
     inputMultiline: {
@@ -152,7 +171,7 @@ const FilledInput = React.forwardRef(function FilledInput(props, ref) {
 
 FilledInput.propTypes = {
   /**
-   * This property helps users to fill forms faster, especially on mobile devices.
+   * This prop helps users to fill forms faster, especially on mobile devices.
    * The name can be confusing, as it's more like an autofill.
    * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
    */
@@ -171,7 +190,7 @@ FilledInput.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * The default `input` element value, useful when not controlling the component.
+   * The default `input` element value. Use when the component is not controlled.
    */
   defaultValue: PropTypes.any,
   /**
@@ -209,7 +228,7 @@ FilledInput.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * This property can be used to pass a ref callback to the `input` element.
+   * This prop can be used to pass a ref callback to the `input` element.
    */
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**

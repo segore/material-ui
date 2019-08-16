@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { fade, withStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import { capitalize } from '@material-ui/core/utils/helpers';
+import { capitalize } from '@material-ui/core/utils';
 
 export const styles = theme => ({
   /* Styles applied to the root element. */
@@ -13,7 +13,6 @@ export const styles = theme => ({
     ...theme.typography.button,
     boxSizing: 'border-box',
     height: 48,
-    minWidth: 49,
     padding: '0px 11px 0px 12px',
     border: `1px solid ${fade(theme.palette.action.active, 0.12)}`,
     color: fade(theme.palette.action.active, 0.38),
@@ -56,9 +55,9 @@ export const styles = theme => ({
       paddingLeft: 12,
     },
   },
-  /* Styles applied to the root element if `disabled={true}`. */
+  /* Pseudo-class applied to the root element if `disabled={true}`. */
   disabled: {},
-  /* Styles applied to the root element if `selected={true}`. */
+  /* Pseudo-class applied to the root element if `selected={true}`. */
   selected: {},
   /* Styles applied to the `label` wrapper element. */
   label: {
@@ -70,13 +69,13 @@ export const styles = theme => ({
   /* Styles applied to the root element if `size="small"`. */
   sizeSmall: {
     height: 40,
-    minWidth: 41,
+    padding: '0px 7px 0px 8px',
     fontSize: theme.typography.pxToRem(13),
   },
   /* Styles applied to the root element if `size="large"`. */
   sizeLarge: {
     height: 56,
-    minWidth: 57,
+    padding: '0px 15px 0px 16px',
     fontSize: theme.typography.pxToRem(15),
   },
 });
@@ -86,12 +85,13 @@ const ToggleButton = React.forwardRef(function ToggleButton(props, ref) {
     children,
     classes,
     className,
-    disabled,
-    disableFocusRipple,
+    disabled = false,
+    disableFocusRipple = false,
+    disableRipple = false,
     onChange,
     onClick,
     selected,
-    size,
+    size = 'medium',
     value,
     ...other
   } = props;
@@ -126,6 +126,7 @@ const ToggleButton = React.forwardRef(function ToggleButton(props, ref) {
       onClick={handleChange}
       onChange={onChange}
       value={value}
+      disableRipple={disableRipple}
       {...other}
     >
       <span className={classes.label}>{children}</span>
@@ -181,13 +182,6 @@ ToggleButton.propTypes = {
    * ToggleButtonGroup.
    */
   value: PropTypes.any.isRequired,
-};
-
-ToggleButton.defaultProps = {
-  disabled: false,
-  disableFocusRipple: false,
-  disableRipple: false,
-  size: 'medium',
 };
 
 export default withStyles(styles, { name: 'MuiToggleButton' })(ToggleButton);

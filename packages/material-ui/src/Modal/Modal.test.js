@@ -1,8 +1,9 @@
 import React from 'react';
-import { assert } from 'chai';
-import { spy, stub } from 'sinon';
+import { assert, expect } from 'chai';
+import { useFakeTimers, spy } from 'sinon';
 import PropTypes from 'prop-types';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
+import { cleanup, createClientRender } from 'test/utils/createClientRender';
 import { createMount, findOutermostIntrinsic } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
 import Fade from '../Fade';
@@ -11,6 +12,7 @@ import Modal from './Modal';
 
 describe('<Modal />', () => {
   let mount;
+  const render = createClientRender({ strict: false });
   let savedBodyStyle;
 
   before(() => {
@@ -21,6 +23,10 @@ describe('<Modal />', () => {
 
   beforeEach(() => {
     document.body.setAttribute('style', savedBodyStyle);
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   after(() => {
@@ -35,7 +41,12 @@ describe('<Modal />', () => {
       inheritComponent: 'div',
       mount,
       refInstanceof: window.HTMLDivElement,
-      skip: ['rootClass', 'componentProp'],
+      skip: [
+        'rootClass',
+        'componentProp',
+        // https://github.com/facebook/react/issues/11565
+        'reactTestRenderer',
+      ],
     }),
   );
 
@@ -94,12 +105,8 @@ describe('<Modal />', () => {
       const wrapper = mount(modal);
       const onClose = spy();
       wrapper.setProps({ onClose });
-
-      const handler = wrapper.find('Modal').instance().handleBackdropClick;
-      const backdrop = wrapper.find(Backdrop);
-      assert.strictEqual(backdrop.props().onClick, handler);
-
-      handler({});
+      const backdrop = wrapper.find('[data-mui-test="Backdrop"]');
+      backdrop.simulate('click');
       assert.strictEqual(onClose.callCount, 1);
     });
 
@@ -107,10 +114,8 @@ describe('<Modal />', () => {
       const wrapper = mount(modal);
       const onClose = spy();
       wrapper.setProps({ onClose, disableBackdropClick: true });
-
-      const handler = wrapper.find('Modal').instance().handleBackdropClick;
-
-      handler({});
+      const backdrop = wrapper.find('[data-mui-test="Backdrop"]');
+      backdrop.simulate('click');
       assert.strictEqual(onClose.callCount, 0);
     });
 
@@ -118,29 +123,47 @@ describe('<Modal />', () => {
       const wrapper = mount(modal);
       const onBackdropClick = spy();
       wrapper.setProps({ onBackdropClick });
-
-      const handler = wrapper.find('Modal').instance().handleBackdropClick;
-
-      handler({});
+      const backdrop = wrapper.find('[data-mui-test="Backdrop"]');
+      backdrop.simulate('click');
       assert.strictEqual(onBackdropClick.callCount, 1);
     });
 
     it('should ignore the backdrop click if the event did not come from the backdrop', () => {
       const wrapper = mount(modal);
       const onBackdropClick = spy();
-      wrapper.setProps({ onBackdropClick });
-
-      const handler = wrapper.find('Modal').instance().handleBackdropClick;
-
-      handler({
-        target: {
-          /* a dom node */
-        },
-        currentTarget: {
-          /* another dom node */
-        },
+      wrapper.setProps({
+        onBackdropClick,
+        BackdropComponent: props => (
+          <div data-mui-test="Backdrop" {...props}>
+            <span />
+          </div>
+        ),
       });
+
+      const backdropSpan = wrapper.find('div[data-mui-test="Backdrop"] > span');
+      backdropSpan.simulate('click');
       assert.strictEqual(onBackdropClick.callCount, 0);
+    });
+
+    // Test case for https://github.com/mui-org/material-ui/issues/12831
+    it('should unmount the children when starting open and closing immediately', () => {
+      function TestCase() {
+        const [open, setOpen] = React.useState(true);
+
+        React.useEffect(() => {
+          setOpen(false);
+        }, []);
+
+        return (
+          <Modal open={open}>
+            <Fade in={open}>
+              <div id="modal-body">hello</div>
+            </Fade>
+          </Modal>
+        );
+      }
+      render(<TestCase />);
+      expect(document.querySelector('#modal-body')).to.equal(null);
     });
   });
 
@@ -250,92 +273,44 @@ describe('<Modal />', () => {
 
   describe('handleKeyDown()', () => {
     let wrapper;
-    let instance;
     let onEscapeKeyDownSpy;
     let onCloseSpy;
-    let topModalStub;
-    let event;
+    let modalWrapper;
 
     beforeEach(() => {
       onEscapeKeyDownSpy = spy();
       onCloseSpy = spy();
-      topModalStub = stub();
       wrapper = mount(
-        <Modal open={false} onEscapeKeyDown={onEscapeKeyDownSpy} onClose={onCloseSpy}>
+        <Modal open onEscapeKeyDown={onEscapeKeyDownSpy} onClose={onCloseSpy}>
           <div />
         </Modal>,
       );
-      instance = wrapper.find('Modal').instance();
-    });
-
-    it('should have handleKeyDown', () => {
-      assert.notStrictEqual(instance.handleKeyDown, undefined);
-      assert.strictEqual(typeof instance.handleKeyDown, 'function');
-    });
-
-    it('when not mounted should not call onEscapeKeyDown and onClose', () => {
-      instance.handleKeyDown({});
-      assert.strictEqual(onEscapeKeyDownSpy.callCount, 0);
-      assert.strictEqual(onCloseSpy.callCount, 0);
-    });
-
-    it('when mounted and not TopModal should not call onEscapeKeyDown and onClose', () => {
-      topModalStub.returns(false);
-      wrapper.setProps({ manager: { isTopModal: topModalStub } });
-
-      instance.handleKeyDown({
-        key: 'Escape',
-      });
-      assert.strictEqual(topModalStub.callCount, 1);
-      assert.strictEqual(onEscapeKeyDownSpy.callCount, 0);
-      assert.strictEqual(onCloseSpy.callCount, 0);
+      modalWrapper = wrapper.find('[data-mui-test="Modal"]');
     });
 
     it('when mounted, TopModal and event not esc should not call given functions', () => {
-      topModalStub.returns(true);
-      wrapper.setProps({ manager: { isTopModal: topModalStub } });
-      event = { key: 'j' }; // Not 'esc'
-
-      instance.handleKeyDown(event);
-      assert.strictEqual(topModalStub.callCount, 0);
+      modalWrapper.simulate('keydown', {
+        key: 'j', // Not escape
+      });
       assert.strictEqual(onEscapeKeyDownSpy.callCount, 0);
       assert.strictEqual(onCloseSpy.callCount, 0);
     });
 
     it('should call onEscapeKeyDown and onClose', () => {
-      topModalStub.returns(true);
-      wrapper.setProps({ manager: { isTopModal: topModalStub } });
-      event = { key: 'Escape', stopPropagation: () => {} };
-
-      instance.handleKeyDown(event);
-      assert.strictEqual(topModalStub.callCount, 1);
+      modalWrapper.simulate('keydown', {
+        key: 'Escape',
+      });
       assert.strictEqual(onEscapeKeyDownSpy.callCount, 1);
-      assert.strictEqual(onEscapeKeyDownSpy.calledWith(event), true);
       assert.strictEqual(onCloseSpy.callCount, 1);
-      assert.strictEqual(onCloseSpy.calledWith(event, 'escapeKeyDown'), true);
     });
 
     it('when disableEscapeKeyDown should call only onClose', () => {
-      topModalStub.returns(true);
-      wrapper.setProps({ disableEscapeKeyDown: true, manager: { isTopModal: topModalStub } });
-      event = { key: 'Escape', stopPropagation: () => {} };
-
-      instance.handleKeyDown(event);
-      assert.strictEqual(topModalStub.callCount, 1);
+      wrapper.setProps({ disableEscapeKeyDown: true });
+      modalWrapper.simulate('keydown', {
+        key: 'Escape',
+      });
       assert.strictEqual(onEscapeKeyDownSpy.callCount, 1);
-      assert.strictEqual(onEscapeKeyDownSpy.calledWith(event), true);
       assert.strictEqual(onCloseSpy.callCount, 0);
-    });
-
-    it('should be call when defaultPrevented', () => {
-      topModalStub.returns(true);
-      wrapper.setProps({ manager: { isTopModal: topModalStub } });
-      event = { key: 'Escape', defaultPrevented: true, stopPropagation: () => {} };
-
-      instance.handleKeyDown(event);
-      assert.strictEqual(topModalStub.callCount, 1);
-      assert.strictEqual(onEscapeKeyDownSpy.callCount, 1);
-      assert.strictEqual(onCloseSpy.callCount, 1);
     });
   });
 
@@ -352,13 +327,16 @@ describe('<Modal />', () => {
 
     it('does not include the children in the a11y tree', () => {
       const modalRef = React.createRef();
-      mount(
+      const wrapper = mount(
         <Modal keepMounted open={false} ref={modalRef}>
-          <div />
+          <div>ModalContent</div>
         </Modal>,
       );
       const modalNode = modalRef.current;
-      assert.strictEqual(modalNode.getAttribute('aria-hidden'), 'true');
+      expect(modalNode).to.be.ariaHidden;
+
+      wrapper.setProps({ open: true });
+      expect(modalNode).not.to.be.ariaHidden;
     });
 
     // Test case for https://github.com/mui-org/material-ui/issues/15180
@@ -557,6 +535,46 @@ describe('<Modal />', () => {
         shiftKey: true,
       });
       assert.strictEqual(document.activeElement.getAttribute('data-test'), 'sentinelEnd');
+    });
+
+    describe('', () => {
+      let clock;
+
+      before(() => {
+        clock = useFakeTimers();
+      });
+
+      after(() => {
+        clock.restore();
+      });
+
+      it('contains the focus if the active element is removed', () => {
+        function WithRemovableElement({ hideButton = false }) {
+          return (
+            <Modal open>
+              <div>{!hideButton && <button type="button">I am going to disappear</button>}</div>
+            </Modal>
+          );
+        }
+        WithRemovableElement.propTypes = {
+          hideButton: PropTypes.bool,
+        };
+
+        wrapper = {
+          unmount() {},
+        };
+
+        const { getByRole, setProps } = render(<WithRemovableElement />);
+        expect(getByRole('document')).to.be.focused;
+
+        getByRole('button').focus();
+        expect(getByRole('button')).to.be.focused;
+
+        setProps({ hideButton: true });
+        expect(getByRole('document')).to.not.be.focused;
+        clock.tick(500); // wait for the interval check to kick in.
+        expect(getByRole('document')).to.be.focused;
+      });
     });
   });
 
@@ -784,6 +802,17 @@ describe('<Modal />', () => {
         }
       }
       mount(<TestCase />);
+    });
+  });
+
+  describe('prop: disablePortal', () => {
+    it('should render the content into the parent', () => {
+      const { container } = render(
+        <Modal open disablePortal>
+          <div />
+        </Modal>,
+      );
+      expect(container.querySelector('[role="document"]')).to.be.ok;
     });
   });
 });

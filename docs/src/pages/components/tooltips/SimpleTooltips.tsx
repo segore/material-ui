@@ -19,21 +19,22 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function SimpleTooltips() {
+export default function SimpleTooltips() {
   const classes = useStyles();
+
   return (
     <div>
       <Tooltip title="Delete">
-        <IconButton aria-label="Delete">
+        <IconButton aria-label="delete">
           <DeleteIcon />
         </IconButton>
       </Tooltip>
-      <Tooltip title="Add" aria-label="Add">
+      <Tooltip title="Add" aria-label="add">
         <Fab color="primary" className={classes.fab}>
           <AddIcon />
         </Fab>
       </Tooltip>
-      <Tooltip title="Add" aria-label="Add">
+      <Tooltip title="Add" aria-label="add">
         <Fab color="secondary" className={classes.absolute}>
           <AddIcon />
         </Fab>
@@ -41,5 +42,3 @@ function SimpleTooltips() {
     </div>
   );
 }
-
-export default SimpleTooltips;

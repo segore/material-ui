@@ -28,13 +28,16 @@ function MyButtonRaw(props) {
 }
 
 MyButtonRaw.propTypes = {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object.isRequired,
-  color: PropTypes.string.isRequired,
+  color: PropTypes.oneOf(['blue', 'red']).isRequired,
 };
 
 const MyButton = withStyles(styles)(MyButtonRaw);
 
-function AdaptingHOC() {
+export default function AdaptingHOC() {
   return (
     <React.Fragment>
       <MyButton color="red">Red</MyButton>
@@ -42,5 +45,3 @@ function AdaptingHOC() {
     </React.Fragment>
   );
 }
-
-export default AdaptingHOC;

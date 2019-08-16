@@ -46,7 +46,7 @@ interface State {
   showPassword: boolean;
 }
 
-function OutlinedInputAdornments() {
+export default function OutlinedInputAdornments() {
   const classes = useStyles();
   const [values, setValues] = React.useState<State>({
     amount: '',
@@ -62,6 +62,10 @@ function OutlinedInputAdornments() {
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
   };
 
   return (
@@ -128,8 +132,9 @@ function OutlinedInputAdornments() {
             <InputAdornment position="end">
               <IconButton
                 edge="end"
-                aria-label="Toggle password visibility"
+                aria-label="toggle password visibility"
                 onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
               >
                 {values.showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
@@ -140,5 +145,3 @@ function OutlinedInputAdornments() {
     </div>
   );
 }
-
-export default OutlinedInputAdornments;

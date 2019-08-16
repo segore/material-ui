@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Inputs() {
+export default function Inputs() {
   const classes = useStyles();
 
   return (
@@ -21,14 +21,14 @@ function Inputs() {
         defaultValue="Hello world"
         className={classes.input}
         inputProps={{
-          'aria-label': 'Description',
+          'aria-label': 'description',
         }}
       />
       <Input
         placeholder="Placeholder"
         className={classes.input}
         inputProps={{
-          'aria-label': 'Description',
+          'aria-label': 'description',
         }}
       />
       <Input
@@ -36,7 +36,7 @@ function Inputs() {
         className={classes.input}
         disabled
         inputProps={{
-          'aria-label': 'Description',
+          'aria-label': 'description',
         }}
       />
       <Input
@@ -44,11 +44,9 @@ function Inputs() {
         className={classes.input}
         error
         inputProps={{
-          'aria-label': 'Description',
+          'aria-label': 'description',
         }}
       />
     </div>
   );
 }
-
-export default Inputs;

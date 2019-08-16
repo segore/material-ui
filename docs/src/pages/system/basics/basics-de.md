@@ -207,12 +207,12 @@ const Box = styled.div`
 
 <Box
   p={2}
-  sm={{ p: 3 } }
-  md={{ p: 4 } }
+  sm={{ p: 3 }}
+  md={{ p: 4 }}
 />
 
 /**
- * Ausgaben:
+ * Outputs:
  *
  * padding: 16px;
  * @media (min-width: 600px) {
@@ -224,6 +224,8 @@ const Box = styled.div`
  */
 ```
 
+{{"demo": "pages/system/basics/CollocationApi.js"}}
+
 ## Individuelle Stileigenschaften
 
 ### `style(options) => style function`
@@ -232,9 +234,9 @@ Verwenden Sie diesen Helfer, um Ihre eigene Style-Funktion zu erstellen.
 
 Wir unterstützen nicht alle CSS-Eigenschaften. Möglicherweise möchten Sie neue unterstützen. Es ist auch möglich, dass Sie das Designpfad-Präfix ändern möchten.
 
-#### Argumente
+#### Parameter
 
-1. `Optionen` (*Object*): 
+1. `options` (*Object*): 
   - `options.pro ` (*String*): Die Eigenschaft, für die die Style-Funktion ausgelöst wird.
   - `options.cssProperty ` (*String|Boolean* [optional]): Standardeinstellung ist `options.prop`. Die verwendete CSS-Eigenschaft. Sie können diese Option deaktivieren, indem Sie `false` angeben. Wenn diese Eigenschaft deaktiviert ist, wird der Eigenschaftswert als eigenes Stilobjekt behandelt. Es kann für [Rendering-Varianten](#variants) verwendet werden.
   - `options.themeKey` (*String* [optional]): Der Themepfadpräfix.
@@ -246,8 +248,27 @@ Wir unterstützen nicht alle CSS-Eigenschaften. Möglicherweise möchten Sie neu
 
 #### Beispiele
 
-```js
-import { style } from '@material-ui/system'
+We can create a component that supports some CSS grid properties like `grid-gap`. By supplying `spacing` as the `themeKey` we can reuse logic enabling the behavior we see in other spacing properties like `padding`.
+
+```jsx
+import styled from 'styled-components';
+import { style } from '@material-ui/system';
+import { Box } from '@material-ui/core';
+
+const gridGap = style({
+  prop: 'gridGap',
+  themeKey: 'spacing',
+});
+
+const Grid = styled(Box)`${gridGap}`;
+const example = <Grid display="grid" gridGap={[2, 3]}>...</Grid>;
+```
+
+We can also customize the prop name by adding both a `prop` and `cssProperty` and transform the value by adding a `transform` function.
+
+```jsx
+import styled from 'styled-components';
+import { style } from '@material-ui/system';
 
 const borderColor = style({
   prop: 'bc',
@@ -255,6 +276,9 @@ const borderColor = style({
   themeKey: 'palette',
   transform: value => `${value} !important`,
 });
+
+const Colored = styled.div`${borderColor}`;
+const example = <Colored bc="primary.main">...</Colored>;
 ```
 
 ### `compose(...style functions) => style function`

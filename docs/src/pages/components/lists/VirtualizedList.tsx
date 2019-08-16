@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -26,12 +25,7 @@ function Row(props: ListChildComponentProps) {
   );
 }
 
-Row.propTypes = {
-  index: PropTypes.number,
-  style: PropTypes.object,
-} as any;
-
-function VirtualizedList() {
+export default function VirtualizedList() {
   const classes = useStyles();
 
   return (
@@ -42,5 +36,3 @@ function VirtualizedList() {
     </div>
   );
 }
-
-export default VirtualizedList;

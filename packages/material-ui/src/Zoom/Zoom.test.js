@@ -1,7 +1,8 @@
 import React from 'react';
 import { assert } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
-import { createMount, describeConformance } from '@material-ui/core/test-utils';
+import { createMount } from '@material-ui/core/test-utils';
+import describeConformance from '@material-ui/core/test-utils/describeConformance';
 import { Transition } from 'react-transition-group';
 import Zoom from './Zoom';
 
@@ -25,7 +26,12 @@ describe('<Zoom />', () => {
       classes: {},
       inheritComponent: Transition,
       mount,
-      skip: ['componentProp', 'refForwarding'],
+      refInstanceof: window.HTMLDivElement,
+      skip: [
+        'componentProp',
+        // react-transition-group issue
+        'reactTestRenderer',
+      ],
     }),
   );
 

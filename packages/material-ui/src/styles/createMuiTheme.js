@@ -32,7 +32,7 @@ function createMuiTheme(options = {}) {
     mixins: createMixins(breakpoints, spacing, mixinsInput),
     overrides: {}, // Inject custom styles
     palette,
-    props: {}, // Inject custom properties
+    props: {}, // Inject custom props
     shadows: shadowsInput || shadows,
     typography: createTypography(palette, typographyInput),
     spacing,
@@ -90,7 +90,7 @@ function createMuiTheme(options = {}) {
                 2,
               ),
               '',
-              'https://material-ui.com/customization/components/#pseudo-classes',
+              'https://material-ui.com/r/pseudo-classes-guide',
             ].join('\n'),
           );
           // Remove the style to prevent global conflicts.

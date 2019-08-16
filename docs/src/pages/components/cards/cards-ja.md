@@ -1,5 +1,5 @@
 ---
-title: Card React component
+title: Card コンポーネント
 components: Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedia, Collapse, Paper
 ---
 
@@ -9,7 +9,7 @@ components: Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedi
 
 [Card](https://material.io/design/components/cards.html) は、1つのトピックに関するコンテンツとアクションを表示する面です。
 
-関連性のある実用的な情報を探し易くあるべきです。テキストや画像などの要素は、階層を明確に示すように配置する必要があります。
+関連する実行可能な情報を容易にスキャンできる必要があります。 テキストや画像などの要素は、階層を明確に示すように配置する必要があります。
 
 ## シンプルなCard
 
@@ -17,7 +17,7 @@ Cardは複数のアクション、UIコントロール、およびオーバー�
 
 {{"demo": "pages/components/cards/SimpleCard.js"}}
 
-## 複雑な相互作用
+## 複雑なインタラクション
 
 デスクトップでは、Cardの内容が展開できる可能性があります。
 
@@ -33,7 +33,7 @@ Cardは複数のアクション、UIコントロール、およびオーバー�
 
 {{"demo": "pages/components/cards/ImgMediaCard.js"}}
 
-> ⚠️ When `component="img"`, CardMedia relies on `object-fit` for centering the image. It's not supported by IE 11.
+> `component="img"`の場合、CardMediaはイメージのセンタリングを`object-fit`に依存します。 IE 11ではサポートされていません。
 
 ## UIコントロール
 

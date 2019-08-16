@@ -12,7 +12,7 @@ import Dialog from '@material-ui/core/Dialog';
 import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
-import blue from '@material-ui/core/colors/blue';
+import { blue } from '@material-ui/core/colors';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const useStyles = makeStyles({
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 
 function SimpleDialog(props) {
   const classes = useStyles();
-  const { onClose, selectedValue, ...other } = props;
+  const { onClose, selectedValue, open } = props;
 
   function handleClose() {
     onClose(selectedValue);
@@ -35,7 +35,7 @@ function SimpleDialog(props) {
   }
 
   return (
-    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" {...other}>
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
       <List>
         {emails.map(email => (
@@ -63,12 +63,12 @@ function SimpleDialog(props) {
 }
 
 SimpleDialog.propTypes = {
-  onClose: PropTypes.func,
-  open: PropTypes.bool,
-  selectedValue: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  selectedValue: PropTypes.string.isRequired,
 };
 
-function SimpleDialogDemo() {
+export default function SimpleDialogDemo() {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(emails[1]);
 
@@ -92,5 +92,3 @@ function SimpleDialogDemo() {
     </div>
   );
 }
-
-export default SimpleDialogDemo;

@@ -31,7 +31,7 @@ export const styles = {
   /* Styles applied to the `List` component via `MenuList`. */
   list: {
     // We disable the focus ring for mouse, touch and keyboard users.
-    outline: 'none',
+    outline: 0,
   },
 };
 
@@ -53,7 +53,7 @@ const Menu = React.forwardRef(function Menu(props, ref) {
     ...other
   } = props;
 
-  const autoFocus = autoFocusProp !== undefined ? autoFocusProp : !disableAutoFocusItem;
+  const autoFocus = (autoFocusProp !== undefined ? autoFocusProp : !disableAutoFocusItem) && open;
 
   const menuListActionsRef = React.useRef(null);
   const firstValidItemRef = React.useRef(null);
@@ -61,13 +61,13 @@ const Menu = React.forwardRef(function Menu(props, ref) {
 
   const getContentAnchorEl = () => firstSelectedItemRef.current || firstValidItemRef.current;
 
-  const handleEntering = element => {
+  const handleEntering = (element, isAppearing) => {
     if (menuListActionsRef.current) {
       menuListActionsRef.current.adjustStyleForScrollbar(element, theme);
     }
 
     if (onEntering) {
-      onEntering(element);
+      onEntering(element, isAppearing);
     }
   };
 
@@ -192,7 +192,7 @@ Menu.propTypes = {
    */
   disableAutoFocusItem: PropTypes.bool,
   /**
-   * Properties applied to the [`MenuList`](/api/menu-list/) element.
+   * Props applied to the [`MenuList`](/api/menu-list/) element.
    */
   MenuListProps: PropTypes.object,
   /**
@@ -235,7 +235,7 @@ Menu.propTypes = {
    */
   PaperProps: PropTypes.object,
   /**
-   * `classes` property applied to the [`Popover`](/api/popover/) element.
+   * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   PopoverClasses: PropTypes.object,
   /**

@@ -31,7 +31,7 @@ export const styles = theme => ({
     // We disable the focus ring for mouse, touch and keyboard users.
     // At some point, it would be better to keep it for keyboard users.
     // :focus-ring CSS pseudo-class will help.
-    outline: 'none',
+    outline: 0,
   },
   /* Styles applied to the `Paper` component if `anchor="left"`. */
   paperAnchorLeft: {
@@ -98,7 +98,7 @@ export function getAnchor(theme, anchor) {
 
 const defaultTransitionDuration = { enter: duration.enteringScreen, exit: duration.leavingScreen };
 /**
- * The properties of the [Modal](/api/modal/) component are available
+ * The props of the [Modal](/api/modal/) component are available
  * when `variant="temporary"` is set.
  */
 const Drawer = React.forwardRef(function Drawer(props, ref) {
@@ -218,7 +218,7 @@ Drawer.propTypes = {
    */
   elevation: PropTypes.number,
   /**
-   * Properties applied to the [`Modal`](/api/modal/) element.
+   * Props applied to the [`Modal`](/api/modal/) element.
    */
   ModalProps: PropTypes.object,
   /**
@@ -232,11 +232,11 @@ Drawer.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * Properties applied to the [`Paper`](/api/paper/) element.
+   * Props applied to the [`Paper`](/api/paper/) element.
    */
   PaperProps: PropTypes.object,
   /**
-   * Properties applied to the [`Slide`](/api/slide/) element.
+   * Props applied to the [`Slide`](/api/slide/) element.
    */
   SlideProps: PropTypes.object,
   /**

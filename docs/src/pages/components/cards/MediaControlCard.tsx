@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function MediaControlCard() {
+export default function MediaControlCard() {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -53,13 +53,13 @@ function MediaControlCard() {
           </Typography>
         </CardContent>
         <div className={classes.controls}>
-          <IconButton aria-label="Previous">
+          <IconButton aria-label="previous">
             {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
           </IconButton>
-          <IconButton aria-label="Play/pause">
+          <IconButton aria-label="play/pause">
             <PlayArrowIcon className={classes.playIcon} />
           </IconButton>
-          <IconButton aria-label="Next">
+          <IconButton aria-label="next">
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
           </IconButton>
         </div>
@@ -72,5 +72,3 @@ function MediaControlCard() {
     </Card>
   );
 }
-
-export default MediaControlCard;

@@ -1,17 +1,15 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(
-  createStyles({
-    root: {
-      width: '100%',
-      maxWidth: 500,
-    },
-  }),
-);
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+    maxWidth: 500,
+  },
+});
 
-function Types() {
+export default function Types() {
   const classes = useStyles();
 
   return (
@@ -62,5 +60,3 @@ function Types() {
     </div>
   );
 }
-
-export default Types;

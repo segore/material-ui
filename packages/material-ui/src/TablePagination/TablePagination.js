@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
+import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import InputBase from '../InputBase';
 import MenuItem from '../MenuItem';
@@ -34,8 +35,9 @@ export const styles = theme => ({
   caption: {
     flexShrink: 0,
   },
-  /* Styles applied to the Select component `root` class. */
+  /* Styles applied to the Select component root element. */
   selectRoot: {
+    // `.selectRoot` should be merged with `.input` in v5.
     marginRight: 32,
     marginLeft: 8,
   },
@@ -111,11 +113,10 @@ const TablePagination = React.forwardRef(function TablePagination(props, ref) {
         {rowsPerPageOptions.length > 1 && (
           <Select
             classes={{
-              root: classes.selectRoot,
               select: classes.select,
               icon: classes.selectIcon,
             }}
-            input={<InputBase className={classes.input} />}
+            input={<InputBase className={clsx(classes.input, classes.selectRoot)} />}
             value={rowsPerPage}
             onChange={onChangeRowsPerPage}
             {...SelectProps}
@@ -160,7 +161,7 @@ TablePagination.propTypes = {
    */
   ActionsComponent: PropTypes.elementType,
   /**
-   * Properties applied to the back arrow [`IconButton`](/api/icon-button/) component.
+   * Props applied to the back arrow [`IconButton`](/api/icon-button/) component.
    */
   backIconButtonProps: PropTypes.object,
   /**
@@ -191,7 +192,7 @@ TablePagination.propTypes = {
    */
   labelRowsPerPage: PropTypes.node,
   /**
-   * Properties applied to the next arrow [`IconButton`](/api/icon-button/) element.
+   * Props applied to the next arrow [`IconButton`](/api/icon-button/) element.
    */
   nextIconButtonProps: PropTypes.object,
   /**
@@ -231,7 +232,7 @@ TablePagination.propTypes = {
    */
   rowsPerPageOptions: PropTypes.array,
   /**
-   * Properties applied to the rows per page [`Select`](/api/select/) element.
+   * Props applied to the rows per page [`Select`](/api/select/) element.
    */
   SelectProps: PropTypes.object,
 };

@@ -4,8 +4,12 @@ import PopperJS from 'popper.js';
 import { chainPropTypes } from '@material-ui/utils';
 import Portal from '../Portal';
 import { createChainedFunction } from '../utils/helpers';
-import { useForkRef } from '../utils/reactHelpers';
+import { setRef, useForkRef } from '../utils/reactHelpers';
 
+/**
+ * Flips placement if in <body dir="rtl" />
+ * @param {string} placement
+ */
 function flipPlacement(placement) {
   const direction = (typeof window !== 'undefined' && document.body.getAttribute('dir')) || 'ltr';
 
@@ -31,6 +35,10 @@ function getAnchorEl(anchorEl) {
   return typeof anchorEl === 'function' ? anchorEl() : anchorEl;
 }
 
+const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+
+const defaultPopperOptions = {};
+
 /**
  * Poppers rely on the 3rd party library [Popper.js](https://github.com/FezVrasta/popper.js) for positioning.
  */
@@ -43,24 +51,36 @@ const Popper = React.forwardRef(function Popper(props, ref) {
     keepMounted = false,
     modifiers,
     open,
-    placement: placementProps = 'bottom',
-    popperOptions = {},
+    placement: initialPlacement = 'bottom',
+    popperOptions = defaultPopperOptions,
+    popperRef: popperRefProp,
     transition = false,
     ...other
   } = props;
   const tooltipRef = React.useRef(null);
-  const popperRef = React.useRef();
-  const [exited, setExited] = React.useState(!props.open);
-  const [placement, setPlacement] = React.useState();
-  const handleRef = useForkRef(tooltipRef, ref);
+  const ownRef = useForkRef(tooltipRef, ref);
+
+  const popperRef = React.useRef(null);
+  const handlePopperRef = useForkRef(popperRef, popperRefProp);
+  const handlePopperRefRef = React.useRef(handlePopperRef);
+  useEnhancedEffect(() => {
+    handlePopperRefRef.current = handlePopperRef;
+  }, [handlePopperRef]);
+  React.useImperativeHandle(popperRefProp, () => popperRef.current, []);
+
+  const [exited, setExited] = React.useState(true);
+
+  const rtlPlacement = flipPlacement(initialPlacement);
+  /**
+   * placement initialized from prop but can change during lifetime if modifiers.flip.
+   * modifiers.flip is essentially a flip for controlled/uncontrolled behavior
+   */
+  const [placement, setPlacement] = React.useState(rtlPlacement);
+  if (rtlPlacement !== placement) {
+    setPlacement(rtlPlacement);
+  }
 
   const handleOpen = React.useCallback(() => {
-    const handlePopperUpdate = data => {
-      if (data.placement !== placement) {
-        setPlacement(data.placement);
-      }
-    };
-
     const popperNode = tooltipRef.current;
 
     if (!popperNode || !anchorEl || !open) {
@@ -69,11 +89,15 @@ const Popper = React.forwardRef(function Popper(props, ref) {
 
     if (popperRef.current) {
       popperRef.current.destroy();
-      popperRef.current = null;
+      handlePopperRefRef.current(null);
     }
 
-    popperRef.current = new PopperJS(getAnchorEl(anchorEl), popperNode, {
-      placement: flipPlacement(placementProps),
+    const handlePopperUpdate = data => {
+      setPlacement(data.placement);
+    };
+
+    const popper = new PopperJS(getAnchorEl(anchorEl), popperNode, {
+      placement: rtlPlacement,
       ...popperOptions,
       modifiers: {
         ...(disablePortal
@@ -89,10 +113,18 @@ const Popper = React.forwardRef(function Popper(props, ref) {
       },
       // We could have been using a custom modifier like react-popper is doing.
       // But it seems this is the best public API for this use case.
-      onCreate: createChainedFunction(handlePopperUpdate, popperOptions.onCreate),
       onUpdate: createChainedFunction(handlePopperUpdate, popperOptions.onUpdate),
     });
-  }, [anchorEl, disablePortal, modifiers, open, placement, placementProps, popperOptions]);
+    handlePopperRefRef.current(popper);
+  }, [anchorEl, disablePortal, modifiers, open, rtlPlacement, popperOptions]);
+
+  const handleRef = React.useCallback(
+    node => {
+      setRef(ownRef, node);
+      handleOpen();
+    },
+    [ownRef, handleOpen],
+  );
 
   const handleEnter = () => {
     setExited(false);
@@ -104,7 +136,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
     }
 
     popperRef.current.destroy();
-    popperRef.current = null;
+    handlePopperRefRef.current(null);
   };
 
   const handleExited = () => {
@@ -113,15 +145,15 @@ const Popper = React.forwardRef(function Popper(props, ref) {
   };
 
   React.useEffect(() => {
+    // Let's update the popper position.
+    handleOpen();
+  }, [handleOpen]);
+
+  React.useEffect(() => {
     return () => {
       handleClose();
     };
   }, []);
-
-  React.useEffect(() => {
-    // Let's update the popper position.
-    handleOpen();
-  }, [handleOpen]);
 
   React.useEffect(() => {
     if (!open && !transition) {
@@ -134,9 +166,7 @@ const Popper = React.forwardRef(function Popper(props, ref) {
     return null;
   }
 
-  const childProps = {
-    placement: placement || flipPlacement(placementProps),
-  };
+  const childProps = { placement };
 
   if (transition) {
     childProps.TransitionProps = {
@@ -147,13 +177,13 @@ const Popper = React.forwardRef(function Popper(props, ref) {
   }
 
   return (
-    <Portal onRendered={handleOpen} disablePortal={disablePortal} container={container}>
+    <Portal disablePortal={disablePortal} container={container}>
       <div
         ref={handleRef}
         role="tooltip"
         style={{
           // Prevents scroll issue, waiting for Popper.js to add this style once initiated.
-          position: 'absolute',
+          position: 'fixed',
         }}
         {...other}
       >
@@ -165,10 +195,13 @@ const Popper = React.forwardRef(function Popper(props, ref) {
 
 Popper.propTypes = {
   /**
-   * This is the DOM element, or a function that returns the DOM element,
+   * This is the reference element, or a function that returns the reference element,
    * that may be used to set the position of the popover.
    * The return value will passed as the reference object of the Popper
    * instance.
+   *
+   * The reference element should be an HTML Element instance or a referenceObject:
+   * https://popper.js.org/popper-documentation.html#referenceObject.
    */
   anchorEl: chainPropTypes(PropTypes.oneOfType([PropTypes.object, PropTypes.func]), props => {
     if (props.open) {
@@ -187,15 +220,22 @@ Popper.propTypes = {
           return new Error(
             [
               'Material-UI: the `anchorEl` prop provided to the component is invalid.',
-              'The node element should be visible.',
+              'The reference element should be part of the document layout.',
+              "Make sure the element is present in the document or that it's not display none.",
             ].join('\n'),
           );
         }
-      } else {
+      } else if (
+        !resolvedAnchorEl ||
+        typeof resolvedAnchorEl.clientWidth !== 'number' ||
+        typeof resolvedAnchorEl.clientHeight !== 'number' ||
+        typeof resolvedAnchorEl.getBoundingClientRect !== 'function'
+      ) {
         return new Error(
           [
             'Material-UI: the `anchorEl` prop provided to the component is invalid.',
-            `It should be an Element instance but it's \`${resolvedAnchorEl}\` instead.`,
+            'It should be an HTML Element instance or a referenceObject:',
+            'https://popper.js.org/popper-documentation.html#referenceObject.',
           ].join('\n'),
         );
       }
@@ -221,7 +261,7 @@ Popper.propTypes = {
   disablePortal: PropTypes.bool,
   /**
    * Always keep the children in the DOM.
-   * This property can be useful in SEO situation or
+   * This prop can be useful in SEO situation or
    * when you want to maximize the responsiveness of the Popper.
    */
   keepMounted: PropTypes.bool,
@@ -260,6 +300,10 @@ Popper.propTypes = {
    * Options provided to the [`popper.js`](https://github.com/FezVrasta/popper.js) instance.
    */
   popperOptions: PropTypes.object,
+  /**
+   * Callback fired when a new popper instance is used.
+   */
+  popperRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Help supporting a react-transition-group/Transition component.
    */

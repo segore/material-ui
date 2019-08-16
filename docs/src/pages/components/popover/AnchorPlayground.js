@@ -8,7 +8,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import Grid from '@material-ui/core/Grid';
-import green from '@material-ui/core/colors/green';
+import { green } from '@material-ui/core/colors';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
@@ -183,7 +183,7 @@ class AnchorPlayground extends React.Component {
               <FormLabel component="legend">anchorReference</FormLabel>
               <RadioGroup
                 row
-                aria-label="anchorReference"
+                aria-label="anchor reference"
                 name="anchorReference"
                 value={anchorReference}
                 onChange={this.handleChange('anchorReference')}
@@ -222,7 +222,7 @@ class AnchorPlayground extends React.Component {
             <FormControl component="fieldset">
               <FormLabel component="legend">anchorOrigin.vertical</FormLabel>
               <RadioGroup
-                aria-label="anchorOriginVertical"
+                aria-label="anchor origin vertical"
                 name="anchorOriginVertical"
                 value={anchorOriginVertical}
                 onChange={this.handleChange('anchorOriginVertical')}
@@ -249,7 +249,7 @@ class AnchorPlayground extends React.Component {
             <FormControl component="fieldset">
               <FormLabel component="legend">transformOrigin.vertical</FormLabel>
               <RadioGroup
-                aria-label="transformOriginVertical"
+                aria-label="transform origin vertical"
                 name="transformOriginVertical"
                 value={transformOriginVertical}
                 onChange={this.handleChange('transformOriginVertical')}
@@ -273,7 +273,7 @@ class AnchorPlayground extends React.Component {
               <FormLabel component="legend">anchorOrigin.horizontal</FormLabel>
               <RadioGroup
                 row
-                aria-label="anchorOriginHorizontal"
+                aria-label="anchor origin horizontal"
                 name="anchorOriginHorizontal"
                 value={anchorOriginHorizontal}
                 onChange={this.handleChange('anchorOriginHorizontal')}
@@ -301,7 +301,7 @@ class AnchorPlayground extends React.Component {
               <FormLabel component="legend">transformOrigin.horizontal</FormLabel>
               <RadioGroup
                 row
-                aria-label="transformOriginHorizontal"
+                aria-label="transform origin horizontal"
                 name="transformOriginHorizontal"
                 value={transformOriginHorizontal}
                 onChange={this.handleChange('transformOriginHorizontal')}

@@ -1,18 +1,18 @@
 ---
 title: Button React Komponente
-components: Button, Fab, IconButton, ButtonBase, Zoom
+components: Button, ButtonGroup, Fab, IconButton, ButtonBase, Zoom
 ---
 
 # Buttons
 
 <p class="description">Mit den Schaltflächen können Benutzer mit einem einzigen Tastendruck Aktionen ausführen und Entscheidungen treffen.</p>
 
-[Buttons](https://material.io/design/components/buttons.html) kommunizieren Aktionen, die Benutzer ausführen können. Sie werden normalerweise in der gesamten Benutzeroberfläche platziert, beispielsweise an folgenden Orten:
+[Buttons](https://material.io/design/components/buttons.html) communicate actions that users can take. They are typically placed throughout your UI, in places like:
 
 - Dialoge
 - Modale Fenster
 - Formulare
-- Cards
+- Karten (Cards)
 - Toolbars
 
 ## Contained Buttons
@@ -44,6 +44,18 @@ Outlined Buttons sind auch eine Alternative mit geringerer Betonung als Containe
 
 {{"demo": "pages/components/buttons/OutlinedButtons.js"}}
 
+## Grouped Buttons
+
+Mit der ButtonGroup-Komponente können Sie umrissene (Standard) oder betonte Buttons gruppieren.
+
+{{"demo": "pages/components/buttons/GroupedButtons.js"}}
+
+## Split Button
+
+ButtonGroup can also be used to create a split button. The dropdown can change the button action (as in this example), or be use to immediately trigger a related action.
+
+{{"demo": "pages/components/buttons/SplitButton.js"}}
+
 ## Floating Action Buttons
 
 Ein [Floating Action Button](https://material.io/design/components/buttons-floating-action-button.html) (FAB) führt die primäre oder gebräuchlichste Aktion auf einem Bildschirm aus. Es wird vor allen Bildschirminhalten angezeigt, normalerweise als Kreisform mit einem Symbol in der Mitte. Es gibt zwei Arten von FABs: normal und erweitert.
@@ -64,7 +76,7 @@ Hierzu kann der Zoom-Übergang verwendet werden. Da sowohl die vorhandenen als a
 
 ## Größen
 
-Lust auf größere oder kleinere Schaltflächen? Verwenden Sie die Eigenschaft `size`.
+Fancy larger or smaller buttons? Use the `size` property.
 
 {{"demo": "pages/components/buttons/ButtonSizes.js"}}
 
@@ -82,13 +94,13 @@ Icons eignen sich auch für Umschaltflächen, mit denen eine einzelne Auswahl au
 
 {{"demo": "pages/components/buttons/IconButtons.js"}}
 
-## Customized buttons
+## Benutzerdefinierte Buttons
 
-Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Hier einige Beispiele zum Anpassen der Komponente. Mehr dazu erfahren Sie auf der [Überschreibungsdokumentationsseite](/customization/components/).
 
 {{"demo": "pages/components/buttons/CustomizedButtons.js"}}
 
-
+👑 If you are looking for inspiration, you can check [MUI Treasury's customization examples](https://mui-treasury.com/components/button).
 
 ## Complex Buttons
 
@@ -98,8 +110,10 @@ Die Text Buttons, die Contained Buttons, die Floatin Action Buttons und die Icon
 
 ## Drittanbieter-Routing Bibliothek
 
-Ein häufiger Anwendungsfall ist die Verwendung eines Buttons, um eine Navigation zu einer neuen Seite auszulösen. Die `ButtonBase` Komponente stellt eine Eigenschaft für diesen Anwendungsfall bereit: `component`. Für bestimmte Fokus-Polyfills erfordert `ButtonBase` jedoch den DOM-Knoten der bereitgestellten Komponente. Dies wird erreicht, indem der Komponente ein Ref zugeordnet wird und erwartet wird, dass die Komponente diesen Ref an den zugrunde liegenden DOM-Knoten weiterleitet. Da eine Menge unserer interaktiven Komponenten auf der `ButtonBase` basieren, sollten Sie diese überall nutzen zu können:
+Ein häufiger Anwendungsfall ist die Verwendung eines Buttons, um eine Navigation zu einer neuen Seite auszulösen. Die `ButtonBase` Komponente stellt eine Eigenschaft für diesen Anwendungsfall bereit: `component`. Für bestimmte Fokus-Polyfills erfordert `ButtonBase` jedoch den DOM-Knoten der bereitgestellten Komponente. Dies wird erreicht, indem der Komponente ein Ref zugeordnet wird und erwartet wird, dass die Komponente diesen Ref an den zugrunde liegenden DOM-Knoten weiterleitet. Da eine Menge unserer interaktiven Komponenten auf der `ButtonBase` basieren, sollten Sie diese überall nutzen zu können.
+
+Here is an integration example with react-router:
 
 {{"demo": "pages/components/buttons/ButtonRouter.js", "defaultCodeOpen": true}}
 
-*Hinweis: Das Erstellen von Button Komponenten ist erforderlich, um ein unerwartetes Aushängen zu verhindern. Weitere Informationen dazu finden Sie in unserem [Guide über Komponenten-Eigenschaften ](/guides/composition/#component-property).*
+*Note: Creating the Button components is necessary to prevent unexpected unmounting. Weitere Informationen dazu finden Sie in unserem [Komponenten-Guide](/guides/composition/#component-property).*

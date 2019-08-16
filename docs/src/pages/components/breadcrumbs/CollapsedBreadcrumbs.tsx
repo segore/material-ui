@@ -24,12 +24,12 @@ function handleClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
   alert('You clicked a breadcrumb.');
 }
 
-function CollapsedBreadcrumbs() {
+export default function CollapsedBreadcrumbs() {
   const classes = useStyles();
 
   return (
     <Paper elevation={0} className={classes.paper}>
-      <Breadcrumbs maxItems={2} aria-label="Breadcrumb">
+      <Breadcrumbs maxItems={2} aria-label="breadcrumb">
         <Link color="inherit" href="#" onClick={handleClick}>
           Home
         </Link>
@@ -47,5 +47,3 @@ function CollapsedBreadcrumbs() {
     </Paper>
   );
 }
-
-export default CollapsedBreadcrumbs;

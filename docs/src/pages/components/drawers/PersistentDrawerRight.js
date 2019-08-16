@@ -76,7 +76,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function PersistentDrawerRight() {
+export default function PersistentDrawerRight() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -104,7 +104,7 @@ function PersistentDrawerRight() {
           </Typography>
           <IconButton
             color="inherit"
-            aria-label="Open drawer"
+            aria-label="open drawer"
             edge="end"
             onClick={handleDrawerOpen}
             className={clsx(open && classes.hide)}
@@ -179,5 +179,3 @@ function PersistentDrawerRight() {
     </div>
   );
 }
-
-export default PersistentDrawerRight;

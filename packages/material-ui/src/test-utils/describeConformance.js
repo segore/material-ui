@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import React from 'react';
 import findOutermostIntrinsic from './findOutermostIntrinsic';
+import ReactTestRenderer from 'react-test-renderer';
 import testRef from './testRef';
 
 /**
@@ -146,23 +147,42 @@ function testRootClass(element, getOptions) {
   });
 }
 
+/**
+ * Tests that the component can be rendered with react-test-renderer.
+ * This is important for snapshot testing with Jest (even if we don't encourage it).
+ *
+ * @param {React.ReactElement} element
+ */
+function testReactTestRenderer(element) {
+  it('should render without errors in ReactTestRenderer', () => {
+    ReactTestRenderer.act(() => {
+      ReactTestRenderer.create(element, {
+        createNodeMock: node => {
+          return document.createElement(node.type);
+        },
+      });
+    });
+  });
+}
+
 const fullSuite = {
   componentProp: testComponentProp,
   mergeClassName: testClassName,
   propsSpread: testPropsSpread,
   refForwarding: describeRef,
   rootClass: testRootClass,
+  reactTestRenderer: testReactTestRenderer,
 };
 
 /**
  * @typedef {Object} ConformanceOptions
- * @property {string} classes - `classes` of the component provided by `@material-ui/styles`
+ * @property {Record<string, string>} classes - `classes` of the component provided by `@material-ui/styles`
  * @property {string} inheritComponent - The element type that receives spread props.
  * @property {function} mount - Should be a return value from createMount
- * @property {(keyof typeof fullSuite)[]?} only - If specified only run the tests listed
- * @property {boolean} refInstanceof - `ref` will be an instanceof this constructor.
- * @property {keyof typeof fullSuite[]?} skip - Skip the specified tests
- * @property {string?} testComponentPropWith - The host component that should be rendered instead.
+ * @property {(keyof typeof fullSuite)[]} [only] - If specified only run the tests listed
+ * @property {any} refInstanceof - `ref` will be an instanceof this constructor.
+ * @property {keyof typeof fullSuite[]} [skip] - Skip the specified tests
+ * @property {string} [testComponentPropWith] - The host component that should be rendered instead.
  */
 
 /**
@@ -174,8 +194,10 @@ const fullSuite = {
  *
  */
 export default function describeConformance(minimalElement, getOptions) {
-  const { only = Object.keys(fullSuite), skip = [] } = getOptions();
+  const { after: runAfterHook = () => {}, only = Object.keys(fullSuite), skip = [] } = getOptions();
   describe('Material-UI component API', () => {
+    after(runAfterHook);
+
     Object.keys(fullSuite)
       .filter(testKey => only.indexOf(testKey) !== -1 && skip.indexOf(testKey) === -1)
       .forEach(testKey => {

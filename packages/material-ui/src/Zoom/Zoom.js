@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Transition } from 'react-transition-group';
 import { duration } from '../styles/transitions';
-import withTheme from '../styles/withTheme';
+import useTheme from '../styles/useTheme';
 import { reflow, getTransitionProps } from '../transitions/utils';
 import { useForkRef } from '../utils/reactHelpers';
 
 const styles = {
   entering: {
-    transform: 'scale(1)',
+    transform: 'none',
   },
   entered: {
-    transform: 'scale(1)',
+    transform: 'none',
   },
 };
 
@@ -32,13 +32,14 @@ const Zoom = React.forwardRef(function Zoom(props, ref) {
     onEnter,
     onExit,
     style,
-    theme,
     timeout = defaultTimeout,
     ...other
   } = props;
+
+  const theme = useTheme();
   const handleRef = useForkRef(children.ref, ref);
 
-  const handleEnter = node => {
+  const handleEnter = (node, isAppearing) => {
     reflow(node); // So the animation always start from the start.
 
     const transitionProps = getTransitionProps(
@@ -51,7 +52,7 @@ const Zoom = React.forwardRef(function Zoom(props, ref) {
     node.style.transition = theme.transitions.create('transform', transitionProps);
 
     if (onEnter) {
-      onEnter(node);
+      onEnter(node, isAppearing);
     }
   };
 
@@ -118,10 +119,6 @@ Zoom.propTypes = {
    */
   style: PropTypes.object,
   /**
-   * @ignore
-   */
-  theme: PropTypes.object.isRequired,
-  /**
    * The duration for the transition, in milliseconds.
    * You may specify a single timeout for all transitions, or individually with an object.
    */
@@ -131,4 +128,4 @@ Zoom.propTypes = {
   ]),
 };
 
-export default withTheme(Zoom);
+export default Zoom;

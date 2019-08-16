@@ -13,7 +13,7 @@ Dialoge sind absichtlich unterbrechend und sollten sparsam eingesetzt werden.
 
 ## Einfache Dialoge
 
-Einfache Dialoge können zusätzliche Details oder Aktionen zu einem Listenelement bereitstellen. Sie können zum Beispiel Avatare, Symbole, Subtexte oder orthogonale Aktionen (z. B. ein Konto hinzufügen) beinhalten.
+Simple dialogs can provide additional details or actions about a list item. For example, they can display avatars, icons, clarifying subtext, or orthogonal actions (such as adding an account).
 
 Berührungsmechanik:
 
@@ -26,12 +26,12 @@ Berührungsmechanik:
 
 Alarme sind dringende Unterbrechungen, die eine Bestätigung erfordern und den Benutzer über eine Situation informieren.
 
-Die meisten Benachrichtigungen benötigen keine Titel. Sie fassen eine Entscheidung in einem oder zwei Sätzen zusammen:
+Most alerts don't need titles. They summarize a decision in a sentence or two by either:
 
 - Eine Frage stellen (zB "Dieses Gespräch löschen?")
 - Eine Aussage zu den Aktionsschaltflächen machen
 
-Verwenden Sie Titelleisten-Alarme nur für Situationen mit hohem Risiko, z. B. den möglichen Verbindungsverlust. Benutzer sollten die Auswahlmöglichkeiten allein anhand des Titels und des Schaltflächentextes verstehen können.
+Use title bar alerts only for high-risk situations, such as the potential loss of connectivity. Users should be able to understand the choices based on the title and button text alone.
 
 Falls ein Titel erforderlich ist:
 
@@ -39,6 +39,8 @@ Falls ein Titel erforderlich ist:
 - Vermeiden Sie Entschuldigungen, Unklarheiten oder Fragen wie "Warnung!" oder "Sind Sie sicher?"
 
 {{"demo": "pages/components/dialogs/AlertDialog.js"}}
+
+## Übergänge
 
 Sie können den Übergang auch austauschen. Das nächste Beispiel verwendet `Slide (Gleiten)`.
 
@@ -50,11 +52,11 @@ Formulardialoge ermöglichen Benutzern das Ausfüllen von Formularfeldern innerh
 
 {{"demo": "pages/components/dialogs/FormDialog.js"}}
 
-## Customized dialogs
+## Benutzerdefinierter Dialoge
 
-Here is an example of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Hier ist ein Beispiel zum Anpassen der Komponente. Mehr dazu erfahren Sie auf der [Überschreibungsdokumentationsseite](/customization/components/).
 
-The dialog has a close button added to aide usability.
+Das Dialogfeld verfügt über eine Schaltfläche zum Schließen, um die Benutzerfreundlichkeit zu verbessern.
 
 {{"demo": "pages/components/dialogs/CustomizedDialogs.js"}}
 
@@ -70,7 +72,18 @@ Sie können die maximale Breite eines Dialogs festlegen, indem Sie die `maxWidth
 
 ## Responsive Vollbild
 
-You may make a dialog responsively full screen using `withMobileDialog`. By default, `withMobileDialog()(Dialog)` responsively full screens *at or below* the `sm` [screen size](/customization/breakpoints/). Sie können Ihre eigene Bruchstelle z. B. `xs` auswählen, indem Sie das Argument `breakpoint` `withMobileDialog({breakpoint: 'xs'}) (Dialog)` sezten.
+You may make a dialog responsively full screen using [`useMediaQuery`](/components/use-media-query/#usemediaquery).
+
+```jsx
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+function MyComponent() {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return <Dialog fullScreen={fullScreen} />
+}
+```
 
 {{"demo": "pages/components/dialogs/ResponsiveDialog.js"}}
 

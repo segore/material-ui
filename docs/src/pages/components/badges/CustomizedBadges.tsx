@@ -15,14 +15,12 @@ const StyledBadge = withStyles((theme: Theme) => ({
   },
 }))(Badge);
 
-function CustomizedBadges() {
+export default function CustomizedBadges() {
   return (
-    <IconButton aria-label="Cart">
+    <IconButton aria-label="cart">
       <StyledBadge badgeContent={4} color="primary">
         <ShoppingCartIcon />
       </StyledBadge>
     </IconButton>
   );
 }
-
-export default CustomizedBadges;

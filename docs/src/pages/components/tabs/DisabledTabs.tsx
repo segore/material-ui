@@ -3,7 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-function DisabledTabs() {
+export default function DisabledTabs() {
   const [value, setValue] = React.useState(2);
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
@@ -12,7 +12,13 @@ function DisabledTabs() {
 
   return (
     <Paper square>
-      <Tabs value={value} indicatorColor="primary" textColor="primary" onChange={handleChange}>
+      <Tabs
+        value={value}
+        indicatorColor="primary"
+        textColor="primary"
+        onChange={handleChange}
+        aria-label="disabled tabs example"
+      >
         <Tab label="Active" />
         <Tab label="Disabled" disabled />
         <Tab label="Active" />
@@ -20,5 +26,3 @@ function DisabledTabs() {
     </Paper>
   );
 }
-
-export default DisabledTabs;

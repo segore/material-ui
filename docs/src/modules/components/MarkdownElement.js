@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import marked from 'marked';
 import { withStyles } from '@material-ui/core/styles';
 import textToHash from 'docs/src/modules/utils/textToHash';
-import compose from 'docs/src/modules/utils/compose';
 import prism from 'docs/src/modules/components/prism';
 
 // Monkey patch to preserve non-breaking spaces
@@ -34,14 +33,19 @@ renderer.heading = (text, level) => {
     `
     <h${level}>
       <a class="anchor-link" id="${escapedText}"></a>${text}` +
-    `<a class="anchor-link-style" aria-label="Anchor" href="#${escapedText}">
+    `<a class="anchor-link-style" aria-label="anchor" href="#${escapedText}">
         <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M46.9 13.9c-.5-.6-1.2-.94-2.07-.94h-6.67l1.86-8.98c.17-.85 0-1.7-.52-2.3-.48-.6-1.2-.94-2.07-.94-1.6 0-3.2 1.27-3.54 2.93l-.5 2.42c0 .07-.07.13-.07.2l-1.37 6.62H20.7l1.88-8.96c.16-.85 0-1.7-.53-2.3-.48-.6-1.2-.94-2.07-.94-1.65 0-3.2 1.27-3.56 2.93l-.52 2.58v.08l-1.37 6.64H7.3c-1.67 0-3.22 1.3-3.58 2.96-.16.86 0 1.7.52 2.3.48.6 1.2.93 2.07.93h6.97l-2 9.65H4c-1.67 0-3.22 1.27-3.56 2.94-.2.8 0 1.67.5 2.27.5.6 1.2.93 2.08.93H10l-1.84 9.05c-.2.84 0 1.67.52 2.3.5.6 1.25.92 2.08.92 1.66 0 3.2-1.3 3.55-2.94l1.94-9.33h11.22l-1.87 9.05c-.15.84.03 1.67.53 2.3.5.6 1.2.92 2.07.92 1.65 0 3.22-1.3 3.56-2.94l1.9-9.33h7c1.6 0 3.2-1.28 3.53-2.93.2-.87 0-1.7-.52-2.3-.48-.62-1.2-.96-2.05-.96h-6.7l2.02-9.65h6.93c1.67 0 3.22-1.27 3.56-2.92.2-.85 0-1.7-.5-2.3l-.04.03zM17.53 28.77l1.95-9.65H30.7l-1.97 9.66H17.5h.03z"/></svg>
       </a></h${level}>
   `
   );
 };
 
-const externs = ['https://material.io/', 'https://getbootstrap.com/'];
+const externs = [
+  'https://material.io/',
+  'https://getbootstrap.com/',
+  'https://www.amazon.com',
+  'https://materialdesignicons.com',
+];
 
 renderer.link = (href, title, text) => {
   let more = '';
@@ -54,7 +58,7 @@ renderer.link = (href, title, text) => {
   const userLanguage = global.__MARKED_USER_LANGUAGE__;
   let finalHref = href;
 
-  if (userLanguage !== 'en' && finalHref.indexOf('/') === 0) {
+  if (userLanguage !== 'en' && finalHref.indexOf('/') === 0 && finalHref !== '/size-snapshot') {
     finalHref = `/${userLanguage}${finalHref}`;
   }
 
@@ -116,10 +120,11 @@ const styles = theme => ({
       marginTop: -96, // Offset for the anchor.
       position: 'absolute',
     },
-    '& pre, & pre[class*="language-"]': {
+    '& pre': {
       margin: '24px 0',
       padding: '12px 18px',
-      backgroundColor: theme.palette.background.level1,
+      backgroundColor: '#333',
+      direction: 'ltr',
       borderRadius: theme.shape.borderRadius,
       overflow: 'auto',
       WebkitOverflowScrolling: 'touch', // iOS momentum scrolling.
@@ -127,11 +132,17 @@ const styles = theme => ({
     '& code': {
       display: 'inline-block',
       fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
+      WebkitFontSmoothing: 'subpixel-antialiased',
       padding: '2px 6px',
       color: theme.palette.text.primary,
-      backgroundColor: theme.palette.background.level1,
+      backgroundColor:
+        theme.palette.type === 'dark' ? 'rgba(255,229,100,0.2)' : 'rgba(255,229,100,0.1)',
       fontSize: 14,
       borderRadius: 2,
+    },
+    '& code[class*="language-"]': {
+      backgroundColor: '#333',
+      color: '#fff',
     },
     '& p code, & ul code, & pre code': {
       fontSize: 14,
@@ -140,8 +151,9 @@ const styles = theme => ({
       background: 'transparent',
     },
     '& h1': {
-      ...theme.typography.h2,
-      margin: '32px 0 16px',
+      ...theme.typography.h3,
+      fontSize: 40,
+      margin: '16px 0',
     },
     '& .description': {
       ...theme.typography.h5,
@@ -149,22 +161,25 @@ const styles = theme => ({
     },
     '& h2': {
       ...theme.typography.h4,
-      margin: '32px 0 24px',
+      fontSize: 30,
+      margin: '40px 0 16px',
     },
     '& h3': {
       ...theme.typography.h5,
-      margin: '32px 0 24px',
+      margin: '40px 0 16px',
     },
     '& h4': {
       ...theme.typography.h6,
-      margin: '24px 0 16px',
+      margin: '32px 0 16px',
     },
     '& h5': {
       ...theme.typography.subtitle2,
-      margin: '24px 0 16px',
+      margin: '32px 0 16px',
     },
     '& p, & ul, & ol': {
       lineHeight: 1.6,
+      marginTop: 0,
+      marginBottom: '16px',
     },
     '& ul': {
       paddingLeft: 30,
@@ -202,6 +217,7 @@ const styles = theme => ({
       overflowX: 'auto',
       WebkitOverflowScrolling: 'touch', // iOS momentum scrolling.
       borderCollapse: 'collapse',
+      marginBottom: '16px',
       borderSpacing: 0,
       overflow: 'hidden',
       '& .prop-name': {
@@ -209,12 +225,12 @@ const styles = theme => ({
         fontFamily: 'Consolas, "Liberation Mono", Menlo, monospace',
       },
       '& .required': {
-        color: theme.palette.type === 'light' ? '#006500' : '#9bc89b',
+        color: theme.palette.type === 'light' ? '#006500' : '#a5ffa5',
       },
       '& .prop-type': {
         fontSize: 13,
         fontFamily: 'Consolas, "Liberation Mono", Menlo, monospace',
-        color: theme.palette.type === 'light' ? '#932981' : '#dbb0d0',
+        color: theme.palette.type === 'light' ? '#932981' : '#ffb6ec',
       },
       '& .prop-default': {
         fontSize: 13,
@@ -264,10 +280,13 @@ const styles = theme => ({
       height: 64,
     },
     '& blockquote': {
-      borderLeft: `5px solid ${theme.palette.text.hint}`,
-      backgroundColor: theme.palette.background.level1,
+      borderLeft: '5px solid #ffe564',
+      backgroundColor: 'rgba(255,229,100,0.2)',
       padding: '4px 24px',
       margin: '24px 0',
+      '& p': {
+        marginTop: '16px',
+      },
     },
     '& a, & a code': {
       // Style taken from the Link component
@@ -280,11 +299,22 @@ const styles = theme => ({
     '& img': {
       maxWidth: '100%',
     },
+    '& hr': {
+      height: 1,
+      margin: theme.spacing(6, 0),
+      border: 'none',
+      flexShrink: 0,
+      backgroundColor: theme.palette.divider,
+    },
   },
 });
 
 function MarkdownElement(props) {
-  const { classes, className, text, userLanguage, ...other } = props;
+  const { classes, className, text, ...other } = props;
+
+  const { userLanguage } = useSelector(state => ({
+    userLanguage: state.options.userLanguage,
+  }));
 
   // eslint-disable-next-line no-underscore-dangle
   global.__MARKED_USER_LANGUAGE__ = userLanguage;
@@ -304,15 +334,6 @@ MarkdownElement.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   text: PropTypes.string,
-  userLanguage: PropTypes.string.isRequired,
 };
 
-export default compose(
-  connect(
-    state => ({
-      userLanguage: state.options.userLanguage,
-    }),
-    {},
-  ),
-  withStyles(styles, { flip: false }),
-)(MarkdownElement);
+export default withStyles(styles, { flip: false })(MarkdownElement);

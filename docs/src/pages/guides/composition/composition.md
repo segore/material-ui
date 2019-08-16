@@ -10,7 +10,7 @@ To solve this problem we tag some of our components when needed
 with a `muiName` static property.
 
 You may, however, need to wrap a component in order to enhance it,
-which can conflict with the `muiName` solution. If you wrap a component verify if
+which can conflict with the `muiName` solution. If you wrap a component, verify if
 that component has this static property set.
 
 If you encounter this issue, you need to use the same tag for your wrapping component
@@ -81,23 +81,26 @@ Let's change our `ListItemLink` to the following:
 ```jsx
 import { Link as RouterLink } from 'react-router-dom';
 
-class ListItemLink extends React.Component {
-  renderLink = React.forwardRef((itemProps, ref) => (
-    // with react-router-dom@^5.0.0 use `ref` instead of `innerRef`
-    <RouterLink to={this.props.to} {...itemProps} innerRef={ref} />
-  ));
+function ListItemLink(props) {
+  const { icon, primary, to } = props;
 
-  render() {
-    const { icon, primary, secondary, to } = this.props;
-    return (
-      <li>
-        <ListItem button component={this.renderLink}>
-          {icon && <ListItemIcon>{icon}</ListItemIcon>}
-          <ListItemText inset primary={primary} secondary={secondary} />
-        </ListItem>
-      </li>
-    );
-  }
+  const renderLink = React.useMemo(
+    () =>
+      React.forwardRef((itemProps, ref) => (
+        // with react-router-dom@^5.0.0 use `ref` instead of `innerRef`
+        <RouterLink to={to} {...itemProps} innerRef={ref} />
+      )),
+    [to],
+  );
+
+  return (
+    <li>
+      <ListItem button component={renderLink}>
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
+  );
 }
 ```
 

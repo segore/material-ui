@@ -207,8 +207,8 @@ const Box = styled.div`
 
 <Box
   p={2}
-  sm={{ p: 3 } }
-  md={{ p: 4 } }
+  sm={{ p: 3 }}
+  md={{ p: 4 }}
 />
 
 /**
@@ -223,6 +223,8 @@ const Box = styled.div`
  * }
  */
 ```
+
+{{"demo": "pages/system/basics/CollocationApi.js"}}
 
 ## 定制样式属性
 
@@ -244,10 +246,29 @@ const Box = styled.div`
 
 `style function`：被创建的样式函数。
 
-#### 例子
+#### 示例
 
-```js
-import { style } from '@material-ui/system'
+我们可以创建一个支持一些CSS网格属性的组件，比如` grid-gap ` 。 通过提供`spacing`作为` themeKey `我们可以重用逻辑来启用我们在其他间距属性（如`padding`）中看到的行为。
+
+```jsx
+import styled from 'styled-components';
+import { style } from '@material-ui/system';
+import { Box } from '@material-ui/core';
+
+const gridGap = style({
+  prop: 'gridGap',
+  themeKey: 'spacing',
+});
+
+const Grid = styled(Box)`${gridGap}`;
+const example = <Grid display="grid" gridGap={[2, 3]}>...</Grid>;
+```
+
+我们还可以通过添加` prop `和` cssProperty `来定制属性名，还可以添加`transform`方法来转换它的值。
+
+```jsx
+import styled from 'styled-components';
+import { style } from '@material-ui/system';
 
 const borderColor = style({
   prop: 'bc',
@@ -255,6 +276,9 @@ const borderColor = style({
   themeKey: 'palette',
   transform: value => `${value} !important`,
 });
+
+const Colored = styled.div`${borderColor}`;
+const example = <Colored bc="primary.main">...</Colored>;
 ```
 
 ### `compose(...style functions) => style function`
@@ -263,7 +287,7 @@ const borderColor = style({
 
 #### 返回结果
 
-`style function`：新的样式函数。
+`style function`：被创建的样式函数。
 
 #### 例子
 
@@ -298,7 +322,7 @@ const palette = compose(textColor, bgcolor);
 
 ## 它是如何工作的
 
-风格的系统已经做了很多工作在 [解释它是如何工作的](https://github.com/jxnblk/styled-system/blob/master/docs/how-it-works.md#how-it-works)的。 它可以帮助建设一个心理模型对于这种"风格的功能"概念。
+styled-system在[解释它如何工作](https://github.com/jxnblk/styled-system/blob/master/docs/how-it-works.md#how-it-works)方面做得很好 。 它可以协助为这种“style function”概念建立神经模型。
 
 ## 实际用例
 

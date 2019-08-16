@@ -5,7 +5,7 @@ components: CircularProgress, LinearProgress
 
 # Progress（进度条）
 
-<p class="description">Progress indicators（进度指示器）能够表示一个不明确的等待时间，或者能显示处理过程的时间长短。</p>
+<p class="description">Progress indicators commonly known as spinners, express an unspecified wait time or display the length of a process. The animation works with CSS, not JavaScript.</p>
 
 [进度指示器](https://material.io/design/components/progress-indicators.html)能够将当前处理过程的状态通知用户，例如加载一个应用，提交一个表单或保存一些更新。 它们与应用程序状态进行通信并指示可用的操作，例如用户是否可从当前页面离开。
 
@@ -83,7 +83,7 @@ function Progress(props) {
 
 ## 自定义进度条
 
-以下是自定义组件的一些示例。您可以在[重写文档页面](/customization/components/)中了解有关此内容的更多信息。
+这是一些自定义样式开关的例子 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
 {{"demo": "pages/components/progress/CustomizedProgressBars.js"}}
 
@@ -99,6 +99,6 @@ function Progress(props) {
 
 ![高负载](/static/images/progress/heavy-load.gif)
 
-若这样不可行，您还可以借助 `disableShrink` 属性来缓解这个问题。详情请见[这个问题](https://github.com/mui-org/material-ui/issues/10327)。
+When it's not possible, you can leverage the `disableShrink` property to mitigate the issue. See [this issue](https://github.com/mui-org/material-ui/issues/10327).
 
 {{"demo": "pages/components/progress/CircularUnderLoad.js"}}

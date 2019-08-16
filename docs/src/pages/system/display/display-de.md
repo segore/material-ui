@@ -36,6 +36,7 @@ Verwenden Sie für eine schnellere, mobilere Entwicklung responsive Anzeigeklass
 | Sichtbar nur bei lg  | `display={{ xs: 'none', lg: 'block', xl: 'none' }}`  |
 | Sichtbar nur bei xl  | `display={{ xs: 'none', xl: 'block' }}`              |
 
+
 ```jsx
 <Box display={{ xs: 'block', md: 'none' }}>
   auf Bildschirmen ausblenden, die breiter als md sind
@@ -60,6 +61,58 @@ Verwenden Sie für eine schnellere, mobilere Entwicklung responsive Anzeigeklass
 
 {{"demo": "pages/system/display/Print.js"}}
 
+## Overflow
+
+```jsx
+<Box component="div" overflow="hidden">
+  Overflow Hidden
+</Box>
+<Box component="div" overflow="visible">
+  Overflow visible
+</Box>
+```
+
+{{"demo": "pages/system/display/Overflow.js"}}
+
+## Text Overflow
+
+```jsx
+<Box component="div" textOverflow="clip">
+  Text Overflow Clip
+</Box>
+<Box component="div" textOverflow="ellipsis">
+  Text Overflow Ellipsis
+</Box>
+```
+
+{{"demo": "pages/system/display/TextOverflow.js"}}
+
+## Visibility
+
+```jsx
+<Box component="div" visibility="visible">
+  Visibility Visible
+</Box>
+<Box component="div" visibility="hidden">
+  Visibility Hidden
+</Box>
+```
+
+{{"demo": "pages/system/display/Visibility.js"}}
+
+## White Space
+
+```jsx
+<Box component="div" whiteSpace="nowrap">
+  White Space Nowrap
+</Box>
+<Box component="div" whiteSpace="normal">
+  White Space Normal
+</Box>
+```
+
+{{"demo": "pages/system/display/WhiteSpace.js"}}
+
 ## API
 
 ```js
@@ -68,5 +121,9 @@ import { display } from '@material-ui/system';
 
 | Inportname     | Eigenschaften  | CSS-Eigenschaft | Theme-Schlüssel |
 |:-------------- |:-------------- |:--------------- |:--------------- |
-| `displayRaw`   | `display`      | `display`       | none            |
 | `displayPrint` | `displayPrint` | `display`       | none            |
+| `displayRaw`   | `display`      | `display`       | none            |
+| `overflow`     | `overflow`     | `overflow`      | none            |
+| `textOverflow` | `textOverflow` | `text-overflow` | none            |
+| `visibility`   | `visibility`   | `visibility`    | none            |
+| `whiteSpace`   | `whiteSpace`   | `white-space`   | none            |

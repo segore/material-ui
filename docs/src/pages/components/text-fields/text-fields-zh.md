@@ -1,21 +1,21 @@
 ---
-title: React Text Field（文本框）组件
+title: 文本框 React 组件
 components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputBase, InputLabel, OutlinedInput, TextField
 ---
 
-# Text Fields（文本框）
+# Text Fields
 
-<p class="description">用户可以在文本框内输入或编辑文字。</p>
+<p class="description">用户可以在文本框内输入或编辑文字</p>
 
-[文本框](https://material.io/design/components/text-fields.html)允许用户在界面中输入文本。通常我们会在表单或者对话框中使用它们。
+[Text fields](https://material.io/design/components/text-fields.html) allow users to enter text into a UI. They typically appear in forms and dialogs.
 
 ## TextField
 
-`TextField` wrapper 组件是一个完整的表单控件，包括标签，输入和帮助文本。
+` TextField `包装器组件是一个完整的表单控件，包括标签，输入和帮助文本。
 
 {{"demo": "pages/components/text-fields/TextFields.js"}}
 
-> **注意：** Material Design 文档中不再记录此版本的文本框。
+> **注意：** 此版本的文本框将不再记录在 [Material Design 指南中](https://material.io/)，但 Material-UI 将继续支持它。
 
 ## Outlined（轮廓）
 
@@ -31,19 +31,19 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 ## 组件
 
-`TextField` 是由以下较小的组件组成的 ( [`FormControl`](/api/form-control/), [`Input`](/api/input/), [`FilledInput`](/api/filled-input/), [`InputLabel`](/api/input-label/), [`OutlinedInput`](/api/outlined-input/), and [`FormHelperText`](/api/form-helper-text/) )， 你可以直接利用这一点来自定义你的表单输入.
+`TextField` 是由较小的组件组成的 ( [`FormControl`](/api/form-control/), [`Input`](/api/input/), [`FilledInput`](/api/filled-input/), [`InputLabel`](/api/input-label/), [`OutlinedInput`](/api/outlined-input/), and [`FormHelperText`](/api/form-helper-text/) ) 你可以利用这一点来自定义你的表单输入.
 
-您可能注意到了， 和原生的 HTML input 组件相比，`TextField` 组件缺缺失了一些属性。 这是故意而为之的。 该组件只负责处理最常用的一些属性，如果有其他需求，用户可以自行使用下面 Demo 中演示的基础组件。 但是同时, 为了避免过于模版化，您仍然可以使用 `inputProps` (和 `inputProps`, `InputLabelProps` 属性) 来控制原生组件的属性。
+您可能注意到了， 和原生的 HTML input 组件相比，`TextField` 组件缺缺失了一些属性。 这是故意为之的， 该组件只负责处理最常用的一些属性，如果有需求，需要由用户自己使用下面 Demo 中演示的基础组件。 但是同时, 为了避免过于模版化，您仍然可以使用 `inputProps` (和 `inputProps`, `InputLabelProps` 属性) 来控制原生组件的属性。
 
 {{"demo": "pages/components/text-fields/ComposedTextField.js"}}
 
-## Inputs（输入）
+## 输入
 
 {{"demo": "pages/components/text-fields/Inputs.js"}}
 
 ## 自定义输入
 
-以下是自定义组件的一些示例。您可以在[重写文档页面](/customization/components/)中了解有关此内容的更多信息。
+这是一些自定义样式开关的例子 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
 {{"demo": "pages/components/text-fields/CustomizedInputs.js"}}
 
@@ -67,7 +67,7 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 
 {{"demo": "pages/components/text-fields/FilledInputAdornments.js"}}
 
-### 修饰输入框的轮廓
+### 修饰轮廓
 
 {{"demo": "pages/components/text-fields/OutlinedInputAdornments.js"}}
 
@@ -78,6 +78,8 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 {{"demo": "pages/components/text-fields/TextFieldMargins.js"}}
 
 ## 局限性
+
+### Shrink
 
 输入标签 "shrink" 状态并不总是正确的。 输入标签应在输入显示内容时立即缩小。 在某些情况下, 我们无法确定 "shrink" 状态 (数字输入、日期时间输入、条带输入)。 您可能会注意到重叠的现象。
 
@@ -92,20 +94,58 @@ components: FilledInput, FormControl, FormHelperText, Input, InputAdornment, Inp
 或者
 
 ```jsx
-<InputLabel shrink>计数</InputLabel>
+<InputLabel shrink>Count</InputLabel>
 ```
 
-## 格式化输入
+### Floating label
 
-您可以使用第三方库格式化输入。 您必须提供一个带有 `inputComponent` 属性的 `<input>` 元素的自定义实现。 提供的输入组件应该处理 `inputRef` 属性。 您应调用实现 [`HTMLInputElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement) 接口的值。
+The floating label is absolutely positioned, it won't impact the layout of the page. You need to make sure that the input is larger than the label to display correctly.
 
-下面的演示使用了 [react-text-mask](https://github.com/text-mask/text-mask) 和 [react-number-format](https://github.com/s-yadav/react-number-format) 库。
+## 与第三方 input 库的整合
+
+您可以使用第三方库格式化输入。 您必须提供一个带有 `inputComponent` 属性的 `<input>` 元素的自定义实现。
+
+下面的演示使用 [react-text-mask](https://github.com/text-mask/text-mask)和 [react-number-format](https://github.com/s-yadav/react-number-format) 库。 同样的概念可以适用于 [这个例子：react-stripe-element](https://github.com/mui-org/material-ui/issues/16037)。
 
 {{"demo": "pages/components/text-fields/FormattedInputs.js"}}
 
-## 可及性
+提供的输入组件应该处理 `inputRef` 属性。 The property should be called with a value that implements the following interface:
 
-为了能够访问文本框， **输入框应该和标签和辅助文本链接在一起**。底层的 DOM 节点应具有此结构。
+```ts
+interface InputElement {
+  focus(): void;
+  value?: string;
+}
+```
+
+```jsx
+function MyInputComponent(props) {
+  const { component: Component, inputRef, ...other } = props;
+
+  // 实现 `InputElement` 界面
+  React.useImperativeHandle(inputRef, () => ({
+    focus: () => {
+      // 在这里加上来自第三方渲染的组件的逻辑 
+    },
+    // 隐藏值 例如：react-stripe-elements
+  }));
+
+  // `Component` 将会来自以下的 `SomeThirdPartyComponent`
+  return <Component {...other} />;
+}
+
+// 使用
+<TextField
+  InputProps={{
+    inputComponent: MyInputComponent,
+    inputProps: { component: SomeThirdPartyComponent },
+  }}
+/>;
+```
+
+## 无障碍设计
+
+In order for the text field to be accessible, **the input should be linked to the label and the helper text**. The underlying DOM nodes should have this structure.
 
 ```jsx
 <div class="form-control">

@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Fade from '@material-ui/core/Fade';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import JavaScriptIcon from '@material-ui/docs/svgIcons/JavaScript';
-import TypeScriptIcon from '@material-ui/docs/svgIcons/TypeScript';
+import { JavaScript as JavaScriptIcon, TypeScript as TypeScriptIcon } from '@material-ui/docs';
+import { useSelector } from 'react-redux';
 import { CODE_VARIANTS } from 'docs/src/modules/constants';
 
 const styles = {
@@ -20,6 +20,9 @@ const styles = {
 function DemoLanguages(props) {
   const { classes, codeOpen, codeVariant, demo, gaEventCategory, onLanguageClick } = props;
   const hasTSVariant = demo.rawTS;
+  const { t } = useSelector(state => ({
+    t: state.options.t,
+  }));
 
   function renderedCodeVariant() {
     if (codeVariant === CODE_VARIANTS.TS && hasTSVariant) {
@@ -39,7 +42,7 @@ function DemoLanguages(props) {
         <ToggleButton
           className={classes.toggleButton}
           value={CODE_VARIANTS.JS}
-          aria-label="Show JavaScript source"
+          aria-label={t('showJSSource')}
           data-ga-event-category={gaEventCategory}
           data-ga-event-action="source-js"
         >
@@ -49,7 +52,7 @@ function DemoLanguages(props) {
           className={classes.toggleButton}
           value={CODE_VARIANTS.TS}
           disabled={!hasTSVariant}
-          aria-label="Show TypeScript source"
+          aria-label={t('showTSSource')}
           data-ga-event-category={gaEventCategory}
           data-ga-event-action="source-ts"
         >

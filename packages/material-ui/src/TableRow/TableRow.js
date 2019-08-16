@@ -11,7 +11,7 @@ export const styles = theme => ({
     display: 'table-row',
     verticalAlign: 'middle',
     // We disable the focus ring for mouse, touch and keyboard users.
-    outline: 'none',
+    outline: 0,
     '&$selected': {
       backgroundColor:
         theme.palette.type === 'light'
@@ -25,9 +25,9 @@ export const styles = theme => ({
           : 'rgba(255, 255, 255, 0.14)',
     },
   },
-  /* Styles applied to the root element if `selected={true}`. */
+  /* Pseudo-class applied to the root element if `selected={true}`. */
   selected: {},
-  /* Styles applied to the root element if `hover={true}`. */
+  /* Pseudo-class applied to the root element if `hover={true}`. */
   hover: {},
   /* Styles applied to the root element if table variant="head". */
   head: {},

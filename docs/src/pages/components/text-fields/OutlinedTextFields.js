@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function OutlinedTextFields() {
+export default function OutlinedTextFields() {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     name: 'Cat in the Hat',
@@ -135,6 +135,15 @@ function OutlinedTextFields() {
         className={clsx(classes.textField, classes.dense)}
         margin="dense"
         variant="outlined"
+      />
+      <TextField
+        id="outlined-dense-multiline"
+        label="Dense multiline"
+        className={clsx(classes.textField, classes.dense)}
+        margin="dense"
+        variant="outlined"
+        multiline
+        rowsMax="4"
       />
       <TextField
         id="outlined-multiline-flexible"
@@ -274,5 +283,3 @@ function OutlinedTextFields() {
     </form>
   );
 }
-
-export default OutlinedTextFields;

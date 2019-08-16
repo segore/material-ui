@@ -59,7 +59,7 @@ function ListItemLink(props) {
 
 一个选择框既可以是主操作，又可以是辅助操作。
 
-该复选框是列表项的主要操作和状态指示器。 注释按钮是辅助操作和单独的目标。
+The checkbox is the primary action and the state indicator for the list item. The comment button is a secondary action and a separate target.
 
 {{"demo": "pages/components/lists/CheckboxList.js"}}
 
@@ -90,3 +90,5 @@ function ListItemLink(props) {
 在下面的示例中，我们演示了如何将 [react-window](https://github.com/bvaughn/react-window) 与 `List` 组件一起使用 它渲染了200行，可以轻松处理更多行。 可视化优化了整体的性能。
 
 {{"demo": "pages/components/lists/VirtualizedList.js"}}
+
+我们鼓励尽可能使用 [react-window](https://github.com/bvaughn/react-window)。 如果这个库不包括你的用例，你应该考虑使用 [react-virtualized](https://github.com/bvaughn/react-virtualized)，然后使用 [react-virtuoso](https://github.com/petyosi/react-virtuoso)等替代品。

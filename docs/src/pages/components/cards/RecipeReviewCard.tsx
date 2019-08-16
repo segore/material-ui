@@ -10,7 +10,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import red from '@material-ui/core/colors/red';
+import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -19,7 +19,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
-      maxWidth: 400,
+      maxWidth: 345,
     },
     media: {
       height: 0,
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function RecipeReviewCard() {
+export default function RecipeReviewCard() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -53,12 +53,12 @@ function RecipeReviewCard() {
     <Card className={classes.card}>
       <CardHeader
         avatar={
-          <Avatar aria-label="Recipe" className={classes.avatar}>
+          <Avatar aria-label="recipe" className={classes.avatar}>
             R
           </Avatar>
         }
         action={
-          <IconButton aria-label="Settings">
+          <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
@@ -77,10 +77,10 @@ function RecipeReviewCard() {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="Add to favorites">
+        <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="Share">
+        <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
         <IconButton
@@ -89,7 +89,7 @@ function RecipeReviewCard() {
           })}
           onClick={handleExpandClick}
           aria-expanded={expanded}
-          aria-label="Show more"
+          aria-label="show more"
         >
           <ExpandMoreIcon />
         </IconButton>
@@ -124,5 +124,3 @@ function RecipeReviewCard() {
     </Card>
   );
 }
-
-export default RecipeReviewCard;

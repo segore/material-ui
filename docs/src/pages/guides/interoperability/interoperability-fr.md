@@ -10,7 +10,6 @@ This guide aims to document the most popular alternatives, but you should find t
 - [CSS Modules](#css-modules)
 - [Emotion](#emotion)
 - [React JSS](#react-jss)
-- [CSS to MUI webpack Loader](#css-to-mui-webpack-loader)
 - [Glamor](#glamor)
 
 ## Plain CSS
@@ -125,7 +124,7 @@ export default function StyledComponents() {
 
 ### Controlling Priority
 
-Both styled-components and JSS inject their styles at the bottom of the `<head>`. The best approach to ensuring styled-components styles are loaded last is to change [the CSS injection order](/styles/advanced/#css-injection-order), as in the demo:
+**Note:** Both styled-components and JSS inject their styles at the bottom of the `<head>`. The best approach to ensuring styled-components styles are loaded last is to change [the CSS injection order](/styles/advanced/#css-injection-order), as in the demo:
 
 ```jsx
 import { StylesProvider } from '@material-ui/styles';
@@ -136,7 +135,7 @@ import { StylesProvider } from '@material-ui/styles';
 </StylesProvider>
 ```
 
-Another approach is to use the `&&` characters in styled-components to [bump up specificity](https://www.styled-components.com/docs/advanced#issues-with-specificity) by repeating the class name. You should avoid the usage of `!imporant`.
+Another approach is to use the `&&` characters in styled-components to [bump up specificity](https://www.styled-components.com/docs/advanced#issues-with-specificity) by repeating the class name. You should avoid the usage of `!important`.
 
 ### Deeper elements
 

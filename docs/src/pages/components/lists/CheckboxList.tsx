@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function CheckboxList() {
+export default function CheckboxList() {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
 
@@ -54,7 +54,7 @@ function CheckboxList() {
             </ListItemIcon>
             <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="Comments">
+              <IconButton edge="end" aria-label="comments">
                 <CommentIcon />
               </IconButton>
             </ListItemSecondaryAction>
@@ -64,5 +64,3 @@ function CheckboxList() {
     </List>
   );
 }
-
-export default CheckboxList;

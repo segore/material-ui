@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { capitalize } from '../utils/helpers';
 import withStyles from '../styles/withStyles';
+import { useIsFocusVisible } from '../utils/focusVisible';
+import { useForkRef } from '../utils/reactHelpers';
 import Typography from '../Typography';
 
 export const styles = {
@@ -31,7 +33,7 @@ export const styles = {
     WebkitTapHighlightColor: 'transparent',
     backgroundColor: 'transparent', // Reset default value
     // We disable the focus ring for mouse, touch and keyboard users.
-    outline: 'none',
+    outline: 0,
     border: 0,
     margin: 0, // Remove the margin in Safari
     borderRadius: 0,
@@ -44,20 +46,48 @@ export const styles = {
     '&::-moz-focus-inner': {
       borderStyle: 'none', // Remove Firefox dotted outline.
     },
+    '&$focusVisible': {
+      outline: 'auto',
+    },
   },
+  /* Pseudo-class applied to the root element if the link is keyboard focused. */
+  focusVisible: {},
 };
 
 const Link = React.forwardRef(function Link(props, ref) {
   const {
     classes,
     className,
-    component = 'a',
     color = 'primary',
+    component = 'a',
+    onBlur,
+    onFocus,
     TypographyClasses,
     underline = 'hover',
     variant = 'inherit',
     ...other
   } = props;
+
+  const { isFocusVisible, onBlurVisible, ref: focusVisibleRef } = useIsFocusVisible();
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const handlerRef = useForkRef(ref, focusVisibleRef);
+  const handleBlur = event => {
+    if (focusVisible) {
+      onBlurVisible();
+      setFocusVisible(false);
+    }
+    if (onBlur) {
+      onBlur(event);
+    }
+  };
+  const handleFocus = event => {
+    if (isFocusVisible(event)) {
+      setFocusVisible(true);
+    }
+    if (onFocus) {
+      onFocus(event);
+    }
+  };
 
   return (
     <Typography
@@ -65,6 +95,7 @@ const Link = React.forwardRef(function Link(props, ref) {
         classes.root,
         {
           [classes.button]: component === 'button',
+          [classes.focusVisible]: focusVisible,
         },
         classes[`underline${capitalize(underline)}`],
         className,
@@ -72,7 +103,9 @@ const Link = React.forwardRef(function Link(props, ref) {
       classes={TypographyClasses}
       color={color}
       component={component}
-      ref={ref}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      ref={handlerRef}
       variant={variant}
       {...other}
     />
@@ -111,11 +144,19 @@ Link.propTypes = {
    */
   component: PropTypes.elementType,
   /**
-   * `classes` property applied to the [`Typography`](/api/typography/) element.
+   * @ignore
+   */
+  onBlur: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onFocus: PropTypes.func,
+  /**
+   * `classes` prop applied to the [`Typography`](/api/typography/) element.
    */
   TypographyClasses: PropTypes.object,
   /**
-   *  Controls when the link should have an underline.
+   * Controls when the link should have an underline.
    */
   underline: PropTypes.oneOf(['none', 'hover', 'always']),
   /**

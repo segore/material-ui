@@ -59,7 +59,7 @@ Sie sollten die Ausrichtung der Listenelemente ändern, wenn Sie 3 Zeilen oder m
 
 Eine Checkbox kann entweder eine primäre oder eine sekundäre Aktion sein.
 
-Die Checkbox ist die Hauptaktion und das Zustandskennzeichen für das Listenelement. Die Kommentarschaltfläche ist eine sekundäre Aktion und ein separates Ziel.
+The checkbox is the primary action and the state indicator for the list item. The comment button is a secondary action and a separate target.
 
 {{"demo": "pages/components/lists/CheckboxList.js"}}
 
@@ -90,3 +90,5 @@ Diese Funktion basiert auf der CSS-Sticky-Positionierung. Leider ist es [ nicht 
 Im folgenden Beispiel zeigen wir wie Sie [react-window](https://github.com/bvaughn/react-window) mit der `Listen<` Komponente nutzen können. Sie zeigt 200 Zeilen an und kann auch einfach mehr verwalten. Virtualisierung hilft bei Leistungsproblemen.
 
 {{"demo": "pages/components/lists/VirtualizedList.js"}}
+
+Wir empfehlen die Verwendung von [react-window](https://github.com/bvaughn/react-window) wenn dies möglich ist. Wenn diese Bibliothek Ihren Anwendungsfall nicht abdeckt, sollten Sie [react-virtualized](https://github.com/bvaughn/react-virtualized) und Alternativen wie [react-virtuoso](https://github.com/petyosi/react-virtuoso) in Betracht ziehen.

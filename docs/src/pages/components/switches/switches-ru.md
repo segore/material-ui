@@ -5,9 +5,9 @@ components: Switch, FormControl, FormGroup, FormLabel, FormControlLabel
 
 # Switch (переключатели)
 
-<p class="description">Switches toggle the state of a single setting on or off.</p>
+<p class="description">Переключатели изменяют состояние одного отдельного параметра между "включено" и "выключено".</p>
 
-[Switches](https://material.io/design/components/selection-controls.html#switches) are the preferred way to adjust settings on mobile. Опция которую контролирует переключатель, вместе с ее состоянием должны быть четко описаны в соответствующей метке.
+[Переключатели](https://material.io/design/components/selection-controls.html#switches) – предпочтительный способ установки параметров на мобильных устройствах. Опция, которую контролирует переключатель, и её состояние должны быть четко описаны в соответствующей метке.
 
 {{"demo": "pages/components/switches/Switches.js"}}
 
@@ -23,11 +23,17 @@ components: Switch, FormControl, FormGroup, FormLabel, FormControlLabel
 
 {{"demo": "pages/components/switches/SwitchesGroup.js"}}
 
-## Customized switches
+## Кастомизация переключателей
 
-Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Ниже находятся примеры кастомизации компонента. You can learn more about this in the [overrides documentation page](/customization/components/).
 
 {{"demo": "pages/components/switches/CustomizedSwitches.js"}}
+
+## Размеры
+
+Fancy smaller switches? Use the `size` property.
+
+{{"demo": "pages/components/switches/SwitchesSize.js"}}
 
 ## Расположение метки
 
@@ -44,6 +50,6 @@ Here are some examples of customizing the component. You can learn more about th
 ```jsx
 <Switch
   value="checkedA"
-  inputProps={{ 'aria-label': 'Switch A' } }
+  inputProps={{ 'aria-label': 'Switch A' }}
 />
 ```

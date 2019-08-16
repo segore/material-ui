@@ -20,12 +20,13 @@ function handleClick(event) {
   alert('You clicked a breadcrumb.');
 }
 
-function SimpleBreadcrumbs() {
+export default function SimpleBreadcrumbs() {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <Paper elevation={0} className={classes.paper}>
-        <Breadcrumbs aria-label="Breadcrumb">
+        <Breadcrumbs aria-label="breadcrumb">
           <Link color="inherit" href="/" onClick={handleClick}>
             Material-UI
           </Link>
@@ -37,7 +38,7 @@ function SimpleBreadcrumbs() {
       </Paper>
       <br />
       <Paper elevation={0} className={classes.paper}>
-        <Breadcrumbs aria-label="Breadcrumb">
+        <Breadcrumbs aria-label="breadcrumb">
           <Link color="inherit" href="/" onClick={handleClick}>
             Material-UI
           </Link>
@@ -57,5 +58,3 @@ function SimpleBreadcrumbs() {
     </div>
   );
 }
-
-export default SimpleBreadcrumbs;

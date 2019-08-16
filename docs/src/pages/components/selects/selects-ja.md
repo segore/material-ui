@@ -21,7 +21,7 @@ As the user experience can be improved on mobile using the native select of the 
 
 ## Customized selects
 
-Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Here are some examples of customizing the component. 詳細については、 [オーバーライドのドキュメントページ](/customization/components/)を参照してください。
 
 The first step is to style the `InputBase` component. Once it's styled, you can either use it directly as a text field or provide it to the select `input` property to have a `select` field.
 
@@ -47,4 +47,4 @@ While it's discouraged by the Material Design specification, you can use a selec
 
 ## Text Fields
 
-The `TextField` wrapper component is a complete form control including a label, input and help text. You can find an example with the select mode [in this section](/components/text-fields/#textfield).
+`TextField` ラッパーコンポーネントは、ラベル、入力、およびヘルプテキストを含む完全なフォームコントロールです。 You can find an example with the select mode [in this section](/components/text-fields/#textfield).

@@ -1,21 +1,23 @@
 import React from 'react';
-import { assert } from 'chai';
-import { createMount, findOutermostIntrinsic, getClasses } from '@material-ui/core/test-utils';
+import { expect } from 'chai';
+import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
+import { cleanup, createClientRender } from 'test/utils/createClientRender';
 import FilledInput from './FilledInput';
 import InputBase from '../InputBase';
 
 describe('<FilledInput />', () => {
   let classes;
   let mount;
+  const render = createClientRender({ strict: true });
 
   before(() => {
     mount = createMount({ strict: true });
     classes = getClasses(<FilledInput />);
   });
 
-  after(() => {
-    mount.cleanUp();
+  afterEach(() => {
+    cleanup();
   });
 
   describeConformance(<FilledInput open />, () => ({
@@ -24,17 +26,18 @@ describe('<FilledInput />', () => {
     mount,
     refInstanceof: window.HTMLDivElement,
     skip: ['componentProp'],
+    after: () => mount.cleanUp(),
   }));
 
   it('should have the underline class', () => {
-    const wrapper = mount(<FilledInput />);
-    const root = findOutermostIntrinsic(wrapper);
-    assert.strictEqual(root.hasClass(classes.underline), true);
+    const { container } = render(<FilledInput />);
+    const root = container.firstChild;
+    expect(root).to.have.class(classes.underline);
   });
 
   it('can disable the underline', () => {
-    const wrapper = mount(<FilledInput disableUnderline />);
-    const root = findOutermostIntrinsic(wrapper);
-    assert.strictEqual(root.hasClass(classes.underline), false);
+    const { container } = render(<FilledInput disableUnderline />);
+    const root = container.firstChild;
+    expect(root).not.to.have.class(classes.underline);
   });
 });

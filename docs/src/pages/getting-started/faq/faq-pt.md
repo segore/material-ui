@@ -33,10 +33,10 @@ import { createMuiTheme } from '@material-ui/core';
 
 const theme = createMuiTheme({
   props: {
-    // Name of the component ⚛️
+    // Nome do componente ⚛️
     MuiButtonBase: {
-      // The properties to apply
-      disableRipple: true, // No more ripple, on the whole application 
+      // As propriedades para aplicar
+      disableRipple: true, // Sem efeito cascata, em toda aplicação 💣!
     },
   },
 });
@@ -70,9 +70,9 @@ const theme = createMuiTheme({
     create: () => 'none',
   },
   overrides: {
-    // Name of the component ⚛️
-    CssBasline: {
-      // Name of the rule
+    // Nome do componente ⚛️
+    MuiCssBaseline: {
+      // Nome da regra
       '@global': {
         '*, *::before, *::after': {
           transition: 'none !important',
@@ -93,18 +93,13 @@ const theme = createMuiTheme({
 
 ## Preciso usar o JSS para estilizar minha aplicação?
 
-É recomendado:
-
-- Ele vem embutido, portanto, não causa sobrecarga adicional no tamanho do pacote.
-- É rápido & tem um controle de memória eficiente.
-- Possui uma API limpa e consistente.
-- Ele suporta vários recursos avançados, seja nativamente ou por meio de plug-ins.
+Não, não é obrigatório. Mas essa dependência vem embutida, portanto, não sobrecarrega o tamanho do pacote.
 
 No entanto, talvez você esteja adicionando os componentes Material-UI para uma aplicação que já usa outra solução de estilos, ou já esta familiarizado com uma API diferente, e não quer aprender uma nova? Nesse caso, dirija-se à seção de [interoperabilidade da biblioteca de estilos](/guides/interoperability/), onde mostramos como é simples reestilizar os componentes do Material-UI com bibliotecas de estilos alternativas.
 
-## Quando devo usar o estilo inline vs CSS?
+## Quando devo usar o estilo em linha vs CSS?
 
-Como regra geral, use apenas o estilo inline para propriedades de estilo dinâmicas. A alternativa de uso com CSS oferece mais vantagens, em:
+Como regra geral, use apenas o estilo em linha para propriedades de estilo dinâmicas. A alternativa de uso com CSS oferece mais vantagens, em:
 
 - prefixação automática
 - melhor depuração
@@ -128,7 +123,7 @@ const ref = React.createRef();
 const element = ref.current;
 ```
 
-Se você não tem certeza se o componente do Material-UI em questão encaminha sua ref, você pode verificar a documentação da API em "Props" por exemplo, a API [/api/button/#props](Button API)
+Se você não tem certeza se o componente do Material-UI em questão encaminha sua ref, você pode verificar a documentação da API em "Props" por exemplo, a API [Button API](/api/button/#props)
 
 > O ref é encaminhado para o elemento raiz.
 
@@ -138,7 +133,7 @@ indicando que você pode acessar o elemento DOM como uma referência.
 
 Se você está vendo uma mensagem de aviso no console como a abaixo, você provavelmente tem várias instâncias de `@material-ui/styles` inicializadas na página.
 
-> It looks like there are several instances of `@material-ui/styles` initialized in this application. This may cause theme propagation issues, broken class names and makes your application bigger without a good reason.
+> It looks like there are several instances of `@material-ui/styles` initialized in this application. This may cause theme propagation issues, broken class names, specificity issues, and makes your application bigger without a good reason.
 
 ### Possíveis razões
 
@@ -294,7 +289,7 @@ function handleRender(req, res) {
 
 ## Por que as cores que estou vendo são diferentes do que vejo aqui?
 
-O site de documentação está usando um tema customizado. Assim, a paleta de cores é diferente do tema padrão que é fornecido pelo Material-UI. Por favor, consulte [esta página](/customization/themes/) para aprender sobre customização de temas.
+O site de documentação está usando um tema customizado. Assim, a paleta de cores é diferente do tema padrão que é fornecido pelo Material-UI. Por favor, consulte [esta página](/customization/theming/) para aprender sobre customização de temas.
 
 ## Material-UI é incrível. Como posso apoiar o projeto?
 
@@ -307,7 +302,7 @@ Existem muitas maneiras de apoiar o Material-UI:
 
 Se você usa o Material-UI em um projeto comercial e gostaria de apoiar seu desenvolvimento contínuo tornando-se um **Patrocinador**, ou em um projeto paralelo ou passatempo e gostaria de se tornar um apoiador, você pode fazê-lo através do [OpenCollective](https://opencollective.com/material-ui).
 
-Todos os fundos conquistados são geridos de forma transparente e os Patrocinadores recebem reconhecimento no README e na página inicial da Material-UI.
+Todos os fundos conquistados são geridos de forma transparente e os Patrocinadores recebem reconhecimento no README e na página inicial do Material-UI.
 
 ## Por que o componente X requer um nó DOM em um prop em vez de um objeto ref?
 

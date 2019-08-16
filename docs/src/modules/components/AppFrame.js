@@ -1,10 +1,11 @@
+/* eslint-disable no-underscore-dangle */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import NProgress from 'nprogress';
-import Router from 'next/router';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Router, { Router as Router2, useRouter } from 'next/router';
+import { withStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,17 +13,19 @@ import Tooltip from '@material-ui/core/Tooltip';
 import NoSsr from '@material-ui/core/NoSsr';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MenuIcon from '@material-ui/icons/Menu';
-import LanguageIcon from '@material-ui/icons/Language';
+import LanguageIcon from '@material-ui/icons/Translate';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MuiLink from '@material-ui/core/Link';
 import ColorsIcon from '@material-ui/icons/InvertColors';
-import LightbulbOutlineIcon from '@material-ui/docs/svgIcons/LightbulbOutline';
-import LightbulbFullIcon from '@material-ui/docs/svgIcons/LightbulbFull';
+import {
+  GitHub as GithubIcon,
+  LightbulbOutline as LightbulbOutlineIcon,
+  LightbulbFull as LightbulbFullIcon,
+} from '@material-ui/docs';
 import NProgressBar from '@material-ui/docs/NProgressBar';
 import FormatTextdirectionLToR from '@material-ui/icons/FormatTextdirectionLToR';
 import FormatTextdirectionRToL from '@material-ui/icons/FormatTextdirectionRToL';
-import GithubIcon from '@material-ui/docs/svgIcons/GitHub';
 import Link from 'docs/src/modules/components/Link';
 import AppDrawer from 'docs/src/modules/components/AppDrawer';
 import AppSearch from 'docs/src/modules/components/AppSearch';
@@ -30,7 +33,6 @@ import Notifications from 'docs/src/modules/components/Notifications';
 import MarkdownLinks from 'docs/src/modules/components/MarkdownLinks';
 import PageTitle from 'docs/src/modules/components/PageTitle';
 import { LANGUAGES } from 'docs/src/modules/constants';
-import compose from 'docs/src/modules/utils/compose';
 import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import { useChangeTheme } from 'docs/src/modules/components/ThemeContext';
 
@@ -84,13 +86,10 @@ export const languages = [
 const styles = theme => ({
   root: {
     display: 'flex',
+    backgroundColor: theme.palette.background.level1,
   },
   grow: {
     flex: '1 1 auto',
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: '0 1 auto',
   },
   skipNav: {
     position: 'fixed',
@@ -110,8 +109,13 @@ const styles = theme => ({
         duration: theme.transitions.duration.enteringScreen,
       }),
     },
+    '@media print': {
+      display: 'none',
+    },
   },
   appBar: {
+    color: theme.palette.type === 'dark' ? '#fff' : null,
+    backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.level2 : null,
     transition: theme.transitions.create('width'),
     '@media print': {
       position: 'absolute',
@@ -119,6 +123,9 @@ const styles = theme => ({
   },
   appBarHome: {
     boxShadow: 'none',
+  },
+  language: {
+    margin: theme.spacing(0, 1, 0, 0.5),
   },
   appBarShift: {
     [theme.breakpoints.up('lg')]: {
@@ -138,19 +145,27 @@ const styles = theme => ({
   },
   '@global': {
     '#main-content': {
-      outline: 'none',
+      outline: 0,
     },
   },
 });
 
 function AppFrame(props) {
-  const { children, classes, theme, t, userLanguage } = props;
+  const { children, classes } = props;
+  const theme = useTheme();
+  const { t, userLanguage } = useSelector(state => ({
+    t: state.options.t,
+    userLanguage: state.options.userLanguage,
+  }));
 
   const [languageMenu, setLanguageMenu] = React.useState(null);
   function handleLanguageIconClick(event) {
     setLanguageMenu(event.currentTarget);
   }
-  function handleLanguageMenuClose() {
+  function handleLanguageMenuClose(event) {
+    if (event.currentTarget.nodeName === 'A') {
+      document.cookie = `userLanguage=noDefault;path=/;max-age=31536000`;
+    }
     setLanguageMenu(null);
   }
 
@@ -165,7 +180,6 @@ function AppFrame(props) {
   const changeTheme = useChangeTheme();
   function handleTogglePaletteType() {
     const paletteType = theme.palette.type === 'light' ? 'dark' : 'light';
-    document.cookie = `paletteType=${paletteType};path=/;max-age=31536000`;
 
     changeTheme({ paletteType });
   }
@@ -173,11 +187,8 @@ function AppFrame(props) {
     changeTheme({ direction: theme.direction === 'ltr' ? 'rtl' : 'ltr' });
   }
 
-  const canonicalRef = React.useRef();
-  React.useEffect(() => {
-    const { canonical } = pathnameToLanguage(window.location.pathname);
-    canonicalRef.current = canonical;
-  }, []);
+  const router = useRouter();
+  const { canonical } = pathnameToLanguage(Router2._rewriteUrlForNextExport(router.asPath));
 
   return (
     <PageTitle t={t}>
@@ -200,7 +211,7 @@ function AppFrame(props) {
             <NProgressBar />
             <CssBaseline />
             <MuiLink color="secondary" className={classes.skipNav} href="#main-content">
-              Skip to content
+              {t('skipToContent')}
             </MuiLink>
             <Notifications />
             <MarkdownLinks />
@@ -209,17 +220,12 @@ function AppFrame(props) {
                 <IconButton
                   edge="start"
                   color="inherit"
-                  aria-label="Open drawer"
+                  aria-label={t('openDrawer')}
                   onClick={handleDrawerOpen}
                   className={navIconClassName}
                 >
                   <MenuIcon />
                 </IconButton>
-                {title !== null && (
-                  <Typography className={classes.title} variant="h6" noWrap>
-                    {title}
-                  </Typography>
-                )}
                 <div className={classes.grow} />
                 <AppSearch />
                 <Tooltip title="Change language" enterDelay={300}>
@@ -227,7 +233,7 @@ function AppFrame(props) {
                     color="inherit"
                     aria-owns={languageMenu ? 'language-menu' : undefined}
                     aria-haspopup="true"
-                    aria-label="Change language"
+                    aria-label={t('changeLanguage')}
                     onClick={handleLanguageIconClick}
                     data-ga-event-category="AppBar"
                     data-ga-event-action="language"
@@ -235,6 +241,7 @@ function AppFrame(props) {
                     <LanguageIcon />
                   </IconButton>
                 </Tooltip>
+                <span className={classes.language}>{userLanguage.toUpperCase()}</span>
                 <NoSsr>
                   <Menu
                     id="language-menu"
@@ -249,9 +256,7 @@ function AppFrame(props) {
                           component="a"
                           data-no-link="true"
                           href={
-                            language.code === 'en'
-                              ? canonicalRef.current
-                              : `/${language.code}${canonicalRef.current}`
+                            language.code === 'en' ? canonical : `/${language.code}${canonical}`
                           }
                           key={language.code}
                           selected={userLanguage === language.code}
@@ -338,18 +343,6 @@ function AppFrame(props) {
 AppFrame.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  theme: PropTypes.object.isRequired,
-  userLanguage: PropTypes.string.isRequired,
 };
 
-export default compose(
-  connect(
-    state => ({
-      t: state.options.t,
-      userLanguage: state.options.userLanguage,
-    }),
-    null,
-  ),
-  withStyles(styles, { withTheme: true }),
-)(AppFrame);
+export default withStyles(styles)(AppFrame);

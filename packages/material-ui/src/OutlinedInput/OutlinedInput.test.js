@@ -1,22 +1,23 @@
 import React from 'react';
-import { assert } from 'chai';
+import { expect } from 'chai';
 import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
+import { cleanup, createClientRender } from 'test/utils/createClientRender';
 import OutlinedInput from './OutlinedInput';
-import NotchedOutline from './NotchedOutline';
 import InputBase from '../InputBase';
 
 describe('<OutlinedInput />', () => {
   let classes;
   let mount;
+  const render = createClientRender({ strict: true });
 
   before(() => {
     classes = getClasses(<OutlinedInput />);
     mount = createMount({ strict: true });
   });
 
-  after(() => {
-    mount.cleanUp();
+  afterEach(() => {
+    cleanup();
   });
 
   describeConformance(<OutlinedInput labelWidth={0} />, () => ({
@@ -25,10 +26,14 @@ describe('<OutlinedInput />', () => {
     mount,
     refInstanceof: window.HTMLDivElement,
     skip: ['componentProp'],
+    after: () => mount.cleanUp(),
   }));
 
   it('should render a NotchedOutline', () => {
-    const wrapper = mount(<OutlinedInput labelWidth={0} />);
-    assert.strictEqual(wrapper.find(NotchedOutline).length, 1);
+    const { container } = render(
+      <OutlinedInput classes={{ notchedOutline: 'notched-outlined' }} labelWidth={0} />,
+    );
+
+    expect(container.querySelector('.notched-outlined')).to.be.ok;
   });
 });

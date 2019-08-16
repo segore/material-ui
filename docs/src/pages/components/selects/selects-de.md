@@ -21,21 +21,21 @@ Da die Benutzererfahrung auf mobilen Geräten durch die native Auswahl der Platt
 
 ## Benutzerdefinierte Auswahl
 
-Here are some examples of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Hier einige Beispiele zum Anpassen der Komponente. Mehr dazu erfahren Sie auf der [Überschreibungsdokumentationsseite](/customization/components/).
 
-Der erste Schritt besteht darin, die `InputBase` Komponente zu formatieren. Once it's styled, you can either use it directly as a text field or provide it to the select `input` property to have a `select` field.
+Der erste Schritt besteht darin, die `InputBase` Komponente zu formatieren. Anschließend können Sie es entweder direkt als Textfeld verwenden oder der Eigenschaft select `input` zuweisen, um ein Feld `select` zu erhalten.
 
 {{"demo": "pages/components/selects/CustomizedSelects.js"}}
 
 ## Mehrfach Auswahl
 
-Die `Auswahl-` Komponente kann mehrere Auswahlmöglichkeiten verarbeiten. Es wird mit der `multiple` Eigenschaft aktiviert.
+The `Select` component can handle multiple selections. It's enabled with the `multiple` property.
 
-Wie bei der Einzelauswahl können Sie den neuen Wert abrufen, indem Sie auf `event.target.value` im `onChange` Callback zugreifen. Es ist immer ein Array.
+Like with the single selection, you can pull out the new value by accessing `event.target.value` in the `onChange` callback. It's always an array.
 
 {{"demo": "pages/components/selects/MultipleSelect.js"}}
 
-## Controlled Open Select
+## Kontrollierte Auswahl
 
 {{"demo": "pages/components/selects/ControlledOpenSelect.js"}}
 

@@ -116,9 +116,9 @@ Este é o caso mais simples. O componente encapsulado aceita a propriedade `clas
 
 ```jsx
 const Nested = withStyles({
-  root: {}, // uma regra de estilo
-  label: {}, // uma regra de estilo aninhada
-})({ classes }) => (
+  root: {}, // a style rule
+  label: {}, // a nested style rule
+})(({ classes }) => (
   <button className={classes.root}>
     <span className={classes.label}> // 'jss2 my-label'
       Nested
@@ -243,13 +243,13 @@ A injeção de tags de estilo acontece na **mesma ordem** com as invocações de
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 
-const useStyleBase = makeStyles({
+const useStylesBase = makeStyles({
   root: {
     color: 'blue', // 🔵
   },
 });
 
-const useStyle = makeStyles({
+const useStyles = makeStyles({
   root: {
     color: 'red', // 🔴
   },
@@ -258,12 +258,12 @@ const useStyle = makeStyles({
 export default function MyComponent() {
   // Ordem não importa
   const classes = useStyles();
-  const classesBase = useStyleBase();
+  const classesBase = useStylesBase();
 
   // Ordem não importa
-  const className = clsx(classes.root, useStyleBase.root)
+  const className = clsx(classes.root, classesBase.root)
 
-  // color: vermelho🔴 ganha.
+  // color: red 🔴 vence.
   return <div className={className} />;
 }
 ```
@@ -440,8 +440,8 @@ const className = `${productionPrefix}-${identifier}`;
 Os nomes de classe gerados dos componentes `@material-ui/core ` se comportam de maneira diferente. Quando as seguintes condições são atendidas, os nomes das classes são **determinísticos**:
 
 - Apenas um provedor de tema é usado (**Sem aninhamento de tema **)
-- A folha de estilo tem um nome que começa com `Mui`. (Todos os componentes do Material-UI)
-- A opção `disableGlobal` do [gerador de nome de classe](/styles/api/#creategenerateclassname-options-class-name-generator) é `false`. (O padrão)
+- A folha de estilo tem um nome que começa com `Mui` (todos os componentes de Material-UI).
+- A opção `disableGlobal` do [gerador de nome de clasee](/styles/api/#creategenerateclassname-options-class-name-generator) é `false` (o padrão).
 
 Essas condições são atendidas com a forma de uso mais comum de `@material-ui/core`. Por exemplo, esta folha de estilo:
 
@@ -486,7 +486,7 @@ const StyledTextField = styled(TextField)`
   }
   .MuiOutlinedInput-root {
     fieldset {
-      border-color: red; ❤️
+      border-color: red; 💔
     }
     &:hover fieldset {
       border-color: yellow; 💛
@@ -536,7 +536,7 @@ Você pode ler mais sobre o CSP no [MDN Web Docs](https://developer.mozilla.org/
 
 ### Como se implementa o CSP?
 
-Para usar o CSP com Material-UI (e JSS), você precisa usar um nonce. Um nonce é uma string gerada aleatoriamente que é usada apenas uma vez, portanto, você precisa adicionar um middleware de servidor para gerar um em cada solicitação. JSS tem um [ótimo tutorial](https://github.com/cssinjs/jss/blob/next/docs/csp.md) sobre como conseguir isso com Express and React Helmet. Para um resumo básico, continue lendo.
+Para usar o CSP com Material-UI (e JSS), você precisa usar um nonce. Um nonce é uma string gerada aleatoriamente que é usada apenas uma vez, portanto, você precisa adicionar um middleware de servidor para gerar um em cada solicitação. JSS tem um [ótimo tutorial](https://github.com/cssinjs/jss/blob/master/docs/csp.md) sobre como conseguir isso com Express and React Helmet. Para um resumo básico, continue lendo.
 
 Um nonce CSP é uma string codificada na Base 64. Você pode gerar um assim:
 
@@ -559,7 +559,7 @@ Se você estiver usando renderização do lado do servidor(Server-Side Rendering
 <style
   id="jss-server-side"
   nonce={nonce}
-  dangerouslySetInnerHTML={{ __html: sheets.toString() } }
+  dangerouslySetInnerHTML={{ __html: sheets.toString() }}
 />
 ```
 

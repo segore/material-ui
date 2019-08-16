@@ -36,7 +36,7 @@ export const styles = theme => ({
       marginBottom: 6,
     },
   },
-  /* Styles applied to the root element if `textColor="inherit"`. */
+  /* Styles applied to the root element if the parent [`Tabs`](/api/tabs/) has `textColor="inherit"`. */
   textColorInherit: {
     color: 'inherit',
     opacity: 0.7,
@@ -47,7 +47,7 @@ export const styles = theme => ({
       opacity: 0.4,
     },
   },
-  /* Styles applied to the root element if `textColor="primary"`. */
+  /* Styles applied to the root element if the parent [`Tabs`](/api/tabs/) has `textColor="primary"`. */
   textColorPrimary: {
     color: theme.palette.text.secondary,
     '&$selected': {
@@ -57,7 +57,7 @@ export const styles = theme => ({
       color: theme.palette.text.disabled,
     },
   },
-  /* Styles applied to the root element if `textColor="secondary"`. */
+  /* Styles applied to the root element if the parent [`Tabs`](/api/tabs/) has `textColor="secondary"`. */
   textColorSecondary: {
     color: theme.palette.text.secondary,
     '&$selected': {
@@ -67,9 +67,9 @@ export const styles = theme => ({
       color: theme.palette.text.disabled,
     },
   },
-  /* Styles applied to the root element if `selected={true}` (controlled by the Tabs component). */
+  /* Pseudo-class applied to the root element if `selected={true}` (controlled by the Tabs component). */
   selected: {},
-  /* Styles applied to the root element if `disabled={true}` (controlled by the Tabs component). */
+  /* Pseudo-class applied to the root element if `disabled={true}` (controlled by the Tabs component). */
   disabled: {},
   /* Styles applied to the root element if `fullWidth={true}` (controlled by the Tabs component). */
   fullWidth: {
@@ -155,8 +155,8 @@ const Tab = React.forwardRef(function Tab(props, ref) {
 
 Tab.propTypes = {
   /**
-   * This property isn't supported.
-   * Use the `component` property if you need to change the children structure.
+   * This prop isn't supported.
+   * Use the `component` prop if you need to change the children structure.
    */
   children: unsupportedProp,
   /**

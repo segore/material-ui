@@ -59,7 +59,7 @@ function ListItemLink(props) {
 
 Checkbox может быть основным или второстепенным действием.
 
-В этом примере checkbox является основным действием и индикатором состояния для элемента списка. Кнопка комментария является второстепенным действием.
+The checkbox is the primary action and the state indicator for the list item. The comment button is a secondary action and a separate target.
 
 {{"demo": "pages/components/lists/CheckboxList.js"}}
 
@@ -90,3 +90,5 @@ Switch является второстепенным действием.
 In the following example, we demonstrate how to use [react-window](https://github.com/bvaughn/react-window) with the `List` component. Он отображает 200 строк и c легкостью может еще больше. Virtualization helps with performance issues.
 
 {{"demo": "pages/components/lists/VirtualizedList.js"}}
+
+We encourage the use of [react-window](https://github.com/bvaughn/react-window) when possible. If this library doesn't cover your use case, you should consider using [react-virtualized](https://github.com/bvaughn/react-virtualized), then alternatives like [react-virtuoso](https://github.com/petyosi/react-virtuoso).

@@ -40,10 +40,7 @@ export const styles = theme => ({
     marginTop: 0,
     height: '100%',
     width: '100%',
-    animation: 'buffer 3s infinite linear',
-    // Backward compatible logic between JSS v9 and v10.
-    // To remove with the release of Material-UI v4
-    animationName: '$buffer',
+    animation: '$buffer 3s infinite linear',
   },
   /* Styles applied to the additional bar element if `variant="buffer"` & `color="primary"`. */
   dashedColorPrimary: {
@@ -84,10 +81,7 @@ export const styles = theme => ({
   /* Styles applied to the bar1 element if `variant="indeterminate or query"`. */
   bar1Indeterminate: {
     width: 'auto',
-    animation: 'mui-indeterminate1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite',
-    // Backward compatible logic between JSS v9 and v10.
-    // To remove with the release of Material-UI v4
-    animationName: '$mui-indeterminate1',
+    animation: '$mui-indeterminate1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite',
   },
   /* Styles applied to the bar1 element if `variant="determinate"`. */
   bar1Determinate: {
@@ -101,10 +95,7 @@ export const styles = theme => ({
   /* Styles applied to the bar2 element if `variant="indeterminate or query"`. */
   bar2Indeterminate: {
     width: 'auto',
-    animation: 'mui-indeterminate2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite',
-    // Backward compatible logic between JSS v9 and v10.
-    // To remove with the release of Material-UI v4
-    animationName: '$mui-indeterminate2',
+    animation: '$mui-indeterminate2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite',
     animationDelay: '1.15s',
   },
   /* Styles applied to the bar2 element if `variant="buffer"`. */
@@ -175,6 +166,7 @@ const LinearProgress = React.forwardRef(function LinearProgress(props, ref) {
     classes,
     className: classNameProp,
     color = 'primary',
+    theme,
     value,
     valueBuffer,
     variant = 'indeterminate',
@@ -218,22 +210,30 @@ const LinearProgress = React.forwardRef(function LinearProgress(props, ref) {
   if (variant === 'determinate' || variant === 'buffer') {
     if (value !== undefined) {
       rootProps['aria-valuenow'] = Math.round(value);
-      inlineStyles.bar1.transform = `translateX(${value - 100}%)`;
+      let transform = value - 100;
+      if (theme.direction === 'rtl') {
+        transform = -transform;
+      }
+      inlineStyles.bar1.transform = `translateX(${transform}%)`;
     } else {
       warning(
         false,
-        'Material-UI: you need to provide a value property ' +
+        'Material-UI: you need to provide a value prop ' +
           'when using the determinate or buffer variant of LinearProgress .',
       );
     }
   }
   if (variant === 'buffer') {
     if (valueBuffer !== undefined) {
-      inlineStyles.bar2.transform = `translateX(${(valueBuffer || 0) - 100}%)`;
+      let transform = (valueBuffer || 0) - 100;
+      if (theme.direction === 'rtl') {
+        transform = -transform;
+      }
+      inlineStyles.bar2.transform = `translateX(${transform}%)`;
     } else {
       warning(
         false,
-        'Material-UI: you need to provide a valueBuffer property ' +
+        'Material-UI: you need to provide a valueBuffer prop ' +
           'when using the buffer variant of LinearProgress.',
       );
     }
@@ -265,6 +265,10 @@ LinearProgress.propTypes = {
    */
   color: PropTypes.oneOf(['primary', 'secondary']),
   /**
+   * @ignore
+   */
+  theme: PropTypes.object,
+  /**
    * The value of the progress indicator for the determinate and buffer variants.
    * Value between 0 and 100.
    */
@@ -281,4 +285,4 @@ LinearProgress.propTypes = {
   variant: PropTypes.oneOf(['determinate', 'indeterminate', 'buffer', 'query']),
 };
 
-export default withStyles(styles, { name: 'MuiLinearProgress' })(LinearProgress);
+export default withStyles(styles, { name: 'MuiLinearProgress', withTheme: true })(LinearProgress);

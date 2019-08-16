@@ -23,11 +23,17 @@ components: Switch, FormControl, FormGroup, FormLabel, FormControlLabel
 
 {{"demo": "pages/components/switches/SwitchesGroup.js"}}
 
-## Customized switches
+## 自定义样式开关
 
-Here are some examples of customizing the component. 您可以在[重写文档页](/customization/components/)中了解有关此内容的更多信息。
+这是一些自定义样式开关的例子 您可以在[样式重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
 {{"demo": "pages/components/switches/CustomizedSwitches.js"}}
+
+## 尺寸
+
+Fancy smaller switches? Use the `size` property.
+
+{{"demo": "pages/components/switches/SwitchesSize.js"}}
 
 ## 标签放置
 
@@ -35,7 +41,7 @@ Here are some examples of customizing the component. 您可以在[重写文档�
 
 {{"demo": "pages/components/switches/FormControlLabelPosition.js"}}
 
-## 无障碍功能
+## 可访问性
 
 所有表单控件都应该带有标签，而这包括了单选按钮，复选框和开关。 在大多数情况下，这是通过使用一个 `<label>` 元素（[FormControlLabel](/api/form-control-label/)）实现的。
 
@@ -44,6 +50,6 @@ Here are some examples of customizing the component. 您可以在[重写文档�
 ```jsx
 <Switch
   value="checkedA"
-  inputProps={{ 'aria-label': 'Switch A' } }
+  inputProps={{ 'aria-label': 'Switch A' }}
 />
 ```

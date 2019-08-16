@@ -19,7 +19,6 @@ const BootstrapInput = withStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #ced4da',
     fontSize: 16,
-    width: 'auto',
     padding: '10px 26px 10px 12px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     // Use the system font instead of the default Roboto font.
@@ -53,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CustomizedSelects() {
+export default function CustomizedSelects() {
   const classes = useStyles();
   const [age, setAge] = React.useState('');
   const handleChange = event => {
@@ -96,5 +95,3 @@ function CustomizedSelects() {
     </form>
   );
 }
-
-export default CustomizedSelects;

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   },
 });
 
-function IconLabelTabs() {
+export default function IconLabelTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -30,6 +30,7 @@ function IconLabelTabs() {
         variant="fullWidth"
         indicatorColor="secondary"
         textColor="secondary"
+        aria-label="icon label tabs example"
       >
         <Tab icon={<PhoneIcon />} label="RECENTS" />
         <Tab icon={<FavoriteIcon />} label="FAVORITES" />
@@ -38,5 +39,3 @@ function IconLabelTabs() {
     </Paper>
   );
 }
-
-export default IconLabelTabs;

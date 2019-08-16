@@ -17,7 +17,7 @@ components: Typography
 Shown below is a sample link markup used to load the Roboto font from a CDN:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
 ```
 
 ## 通过 npm 安装
@@ -34,7 +34,7 @@ import 'typeface-roboto';
 
 有关详细信息, 请查看 [typeface](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto) 项目。
 
-⚠️使用这种方法时要小心。 确保您的包不急于加载所有字体变体 (100/300/400/500/700/900, 斜体/常规, SVG/woff)。 内联所有字体文件可以显着增加捆绑包的大小。 Material-UI默认排版配置仅依赖于300,400和500字体权重。
+⚠️使用这种方法时要小心。 确保您的包不急于加载所有字体变体 (100/300/400/500/700/900, 斜体/常规, SVG/woff)。 内联所有字体文件可以显着增加捆绑包的大小。 Material-UI default typography configuration only relies on 300, 400, 500, and 700 font weights.
 
 ## 组件
 
@@ -48,9 +48,9 @@ import 'typeface-roboto';
 
 ## 改变语义元素
 
-The Typography component uses the `variantMapping` property to associate a UI variant with a semantic element. It’s important to realize that the style of a typography is independent from the semantic underlying element.
+Typography组件使用 `variantMapping` 属性将某一种UI变体与某一种语义元素标签相关联。 有一点需要意识到： 一个Typography的style是独立于其底层语义化标签的
 
-- You can change the underlying element for a one time occassion with the `component` property:
+- You can change the underlying element for a one time occasion with the `component` property:
 
 ```jsx
 {/* We already have an h1 in the page, let's not duplicate it. */}
@@ -59,7 +59,7 @@ The Typography component uses the `variantMapping` property to associate a UI va
 </Typography>
 ```
 
-- You can change the mapping [globally using the theme](/customization/globals/#default-props):
+- 你也可以通过theme[全局改变](/customization/globals/#default-props)对应关联:
 
 ```js
 const theme = createMuiTheme({

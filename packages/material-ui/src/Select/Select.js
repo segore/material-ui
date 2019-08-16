@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { mergeClasses } from '@material-ui/styles';
 import SelectInput from './SelectInput';
 import formControlState from '../FormControl/formControlState';
-import withFormControlContext from '../FormControl/withFormControlContext';
+import useFormControl from '../FormControl/useFormControl';
 import withStyles from '../styles/withStyles';
 import ArrowDropDownIcon from '../internal/svg-icons/ArrowDropDown';
 import Input from '../Input';
@@ -24,7 +24,6 @@ const Select = React.forwardRef(function Select(props, ref) {
     input = defaultInput,
     inputProps,
     MenuProps,
-    muiFormControl,
     multiple = false,
     native = false,
     onClose,
@@ -37,6 +36,8 @@ const Select = React.forwardRef(function Select(props, ref) {
   } = props;
 
   const inputComponent = native ? NativeSelectInput : SelectInput;
+
+  const muiFormControl = useFormControl();
   const fcs = formControlState({
     props,
     muiFormControl,
@@ -47,6 +48,7 @@ const Select = React.forwardRef(function Select(props, ref) {
     // Most of the logic is implemented in `SelectInput`.
     // The `Select` component is a simple API wrapper to expose something better to play with.
     inputComponent,
+    select: true,
     inputProps: {
       children,
       IconComponent,
@@ -99,8 +101,10 @@ Select.propTypes = {
    */
   classes: PropTypes.object.isRequired,
   /**
-   * If `true`, the selected item is displayed even if its value is empty.
-   * You can only use it when the `native` property is `false` (default).
+   * If `true`, a value is displayed even if no items are selected.
+   *
+   * In order to display a meaningful value, a function should be passed to the `renderValue` prop which returns the value to be displayed when no items are selected.
+   * You can only use it when the `native` prop is `false` (default).
    */
   displayEmpty: PropTypes.bool,
   /**
@@ -117,14 +121,9 @@ Select.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * Properties applied to the [`Menu`](/api/menu/) element.
+   * Props applied to the [`Menu`](/api/menu/) element.
    */
   MenuProps: PropTypes.object,
-  /**
-   * @ignore
-   * from `withFormControlContext`
-   */
-  muiFormControl: PropTypes.object,
   /**
    * If true, `value` must be an array and the menu will support multiple selections.
    */
@@ -157,24 +156,24 @@ Select.propTypes = {
   onOpen: PropTypes.func,
   /**
    * Control `select` open state.
-   * You can only use it when the `native` property is `false` (default).
+   * You can only use it when the `native` prop is `false` (default).
    */
   open: PropTypes.bool,
   /**
    * Render the selected value.
-   * You can only use it when the `native` property is `false` (default).
+   * You can only use it when the `native` prop is `false` (default).
    *
    * @param {*} value The `value` provided to the component.
    * @returns {ReactElement}
    */
   renderValue: PropTypes.func,
   /**
-   * Properties applied to the clickable div element.
+   * Props applied to the clickable div element.
    */
   SelectDisplayProps: PropTypes.object,
   /**
    * The input value.
-   * This property is required when the `native` property is `false` (default).
+   * This prop is required when the `native` prop is `false` (default).
    */
   value: PropTypes.any,
   /**
@@ -185,4 +184,4 @@ Select.propTypes = {
 
 Select.muiName = 'Select';
 
-export default withStyles(styles, { name: 'MuiSelect' })(withFormControlContext(Select));
+export default withStyles(styles, { name: 'MuiSelect' })(Select);

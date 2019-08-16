@@ -1,6 +1,6 @@
-# Display
+# Exibição
 
-<p class="description">Quickly and responsively toggle the display value of components and more with our display utilities. Includes support for some of the more common values, as well as some extras for controlling display when printing.</p>
+<p class="description">Rapidamente e responsivamente alterne o valor de exibição de componentes e muito mais com nossos utilitários de exibição. Inclui suporte para alguns dos valores mais comuns, bem como alguns extras para controlar a exibição durante a impressão.</p>
 
 ## Exemplos
 
@@ -18,23 +18,24 @@
 
 {{"demo": "pages/system/display/Block.js"}}
 
-## Hiding elements
+## Ocultando elementos
 
-For faster mobile-friendly development, use responsive display classes for showing and hiding elements by device. Avoid creating entirely different versions of the same site, instead hide element responsively for each screen size.
+Para um desenvolvimento mais rápido para dispositivos móveis, use classes de exibição responsivas para mostrar e ocultar elementos por dispositivo. Evite criar versões totalmente diferentes do mesmo site, em vez disso, oculte o elemento de forma responsiva para cada tamanho de tela.
 
-| Screen Size        | Class                                                |
-|:------------------ |:---------------------------------------------------- |
-| Hidden on all      | `display="none"`                                     |
-| Hidden only on xs  | `display={{ xs: 'none', sm: 'block' }}`              |
-| Hidden only on sm  | `display={{ xs: 'block', sm: 'none', md: 'block' }}` |
-| Hidden only on md  | `display={{ xs: 'block', md: 'none', lg: 'block' }}` |
-| Hidden only on lg  | `display={{ xs: 'block', lg: 'none', xl: 'block' }}` |
-| Hidden only on xl  | `display={{ xs: 'block', xl: 'none' }}`              |
-| Visible only on xs | `display={{ xs: 'block', sm: 'none' }}`              |
-| Visible only on sm | `display={{ xs: 'none', sm: 'block', md: 'none' }}`  |
-| Visible only on md | `display={{ xs: 'none', md: 'block', lg: 'none' }}`  |
-| Visible only on lg | `display={{ xs: 'none', lg: 'block', xl: 'none' }}`  |
-| Visible only on xl | `display={{ xs: 'none', xl: 'block' }}`              |
+| Tamanho da tela | Classe                                               |
+|:--------------- |:---------------------------------------------------- |
+| Oculto em todas | `display="none"`                                     |
+| Oculto em xs    | `display={{ xs: 'none', sm: 'block' }}`              |
+| Oculto em sm    | `display={{ xs: 'block', sm: 'none', md: 'block' }}` |
+| Oculto em md    | `display={{ xs: 'block', md: 'none', lg: 'block' }}` |
+| Oculto em lg    | `display={{ xs: 'block', lg: 'none', xl: 'block' }}` |
+| Oculto em xl    | `display={{ xs: 'block', xl: 'none' }}`              |
+| Visível em xs   | `display={{ xs: 'block', sm: 'none' }}`              |
+| Visível em sm   | `display={{ xs: 'none', sm: 'block', md: 'none' }}`  |
+| Visível em md   | `display={{ xs: 'none', md: 'block', lg: 'none' }}`  |
+| Visível em lg   | `display={{ xs: 'none', lg: 'block', xl: 'none' }}`  |
+| Visível em xl   | `display={{ xs: 'none', xl: 'block' }}`              |
+
 
 ```jsx
 <Box display={{ xs: 'block', md: 'none' }}>
@@ -47,7 +48,7 @@ For faster mobile-friendly development, use responsive display classes for showi
 
 {{"demo": "pages/system/display/Hiding.js"}}
 
-## Display in print
+## Exibição na impressão
 
 ```jsx
 <Box display="block" displayPrint="none">
@@ -60,13 +61,69 @@ For faster mobile-friendly development, use responsive display classes for showi
 
 {{"demo": "pages/system/display/Print.js"}}
 
+## Estouro
+
+```jsx
+<Box component="div" overflow="hidden">
+  Estouro oculto
+</Box>
+<Box component="div" overflow="visible">
+  Estouro visível
+</Box>
+```
+
+{{"demo": "pages/system/display/Overflow.js"}}
+
+## Estouro de texto
+
+```jsx
+<Box component="div" textOverflow="clip">
+  Estouro de texto com corte
+</Box>
+<Box component="div" textOverflow="ellipsis">
+  Estouro de texto com reticências
+</Box>
+```
+
+{{"demo": "pages/system/display/TextOverflow.js"}}
+
+## Visibilidade
+
+```jsx
+<Box component="div" visibility="visible">
+  Visibilidade visível
+</Box>
+<Box component="div" visibility="hidden">
+  Visibilidade oculta
+</Box>
+```
+
+{{"demo": "pages/system/display/Visibility.js"}}
+
+## Espaço em branco
+
+```jsx
+<Box component="div" whiteSpace="nowrap">
+  Espaço em branco sem quebra
+</Box>
+<Box component="div" whiteSpace="normal">
+  Espaço em branco normal
+</Box>
+```
+
+{{"demo": "pages/system/display/WhiteSpace.js"}}
+
 ## API
 
 ```js
 import { display } from '@material-ui/system';
 ```
 
-| Nome da importação | Prop           | Propriedade CSS | Chave do tema |
+| Nome da importação | Propriedade    | Propriedade CSS | Chave do tema |
 |:------------------ |:-------------- |:--------------- |:------------- |
-| `displayRaw`       | `display`      | `display`       | none          |
 | `displayPrint`     | `displayPrint` | `display`       | none          |
+| `displayRaw`       | `display`      | `display`       | none          |
+| `overflow`         | `overflow`     | `overflow`      | none          |
+| `textOverflow`     | `textOverflow` | `text-overflow` | none          |
+| `visibility`       | `visibility`   | `visibility`    | none          |
+| `whiteSpace`       | `whiteSpace`   | `white-space`   | none          |

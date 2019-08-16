@@ -13,7 +13,7 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 
 ## 简单的对话框
 
-简单的对话框可以提供有关一个列表项的额外信息或操作。例如, 它们可以显示头像、图标、解释或交互操作 (如添加帐户)。
+Simple dialogs can provide additional details or actions about a list item. For example, they can display avatars, icons, clarifying subtext, or orthogonal actions (such as adding an account).
 
 触摸操作机制：
 
@@ -26,12 +26,12 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 
 警告框是一种紧急中断的行为，用以将某一情况通知用户，并需要确认。
 
-大多数警告不需要标题。他们简要地通过以下其中一种方式，用一两句话列出了选项：
+Most alerts don't need titles. They summarize a decision in a sentence or two by either:
 
 - 问一个问题（例如："是否删除此对话？”）
 - 发表一个和动作按钮相关的声明
 
-仅对高风险情况使用带标题栏地警告框，而如此一来可能会导致连接地丢失。用户应该仅根据标题和按钮文本，就能理解所提供的选择项。
+Use title bar alerts only for high-risk situations, such as the potential loss of connectivity. Users should be able to understand the choices based on the title and button text alone.
 
 如果需要加上标题请:
 
@@ -39,6 +39,8 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 - 避免道歉、模棱两可或问一些问题，例如：“警告！” 或 “你确定吗?”
 
 {{"demo": "pages/components/dialogs/AlertDialog.js"}}
+
+## 过渡动画
 
 当然你也可以换掉过渡效果，下面的示例使用了 ` Slide（幻灯片）`。
 
@@ -52,7 +54,7 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 
 ## 自定义对话框
 
-以下是自定义组件的一个示例。您可以在[重写文档页面](/customization/components/)中了解有关此内容的更多信息。
+以下是自定义组件的一个示例。 您可以在[样式重写文档页](/customization/components/)中了解有关此内容的更多信息。
 
 该对话框加上了一个关闭按钮来辅助可用性。
 
@@ -70,11 +72,22 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 
 ## 响应式全屏
 
-您可以使用 `withMobileDialog` 显示响应式的全屏对话框。 默认情况下, `withMobileDialog() (Dialog)` 在 [屏幕大小](/customization/breakpoints/)*小于等于* `sm`时响应式全屏。 通过传递 `breakpoint`参数，您可以自主选择全屏切换点，比如使用`xs`：`withMobileDialog({breakpoint: 'xs'})(Dialog)`。
+您可以使用[`useMediaQuery`](/components/use-media-query/#usemediaquery)来实现一个全屏显示的对话框。
+
+```jsx
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+function MyComponent() {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return <Dialog fullScreen={fullScreen} />
+}
+```
 
 {{"demo": "pages/components/dialogs/ResponsiveDialog.js"}}
 
-## 确认型对话框
+## 确认对话框
 
 确认型对话框明确要求用户在提交选项之前确认他们的选择。 比如说，用户可以听到多种铃声，但只有在点击 “OK” 后才意味着做出了选择。
 
@@ -82,11 +95,11 @@ components: Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 
 {{"demo": "pages/components/dialogs/ConfirmationDialog.js"}}
 
-## 可及性
+## 无障碍设计
 
 参考[模态框可及性的部分](/components/modal/#accessibility)。
 
-## 冗长内容的滚动
+## 长内容滚动
 
 由于用户设备的不同或视图的大小，对话框会变得很长，此时对话框是可以滚动的。
 

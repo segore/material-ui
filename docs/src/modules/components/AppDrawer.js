@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,7 +12,6 @@ import AppDrawerNavItem from 'docs/src/modules/components/AppDrawerNavItem';
 import Link from 'docs/src/modules/components/Link';
 import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
 import PageContext from 'docs/src/modules/components/PageContext';
-import compose from 'docs/src/modules/utils/compose';
 
 let savedScrollTop = null;
 function PersistScroll(props) {
@@ -53,6 +52,7 @@ PersistScroll.propTypes = {
 const styles = theme => ({
   paper: {
     width: 240,
+    backgroundColor: theme.palette.background.level1,
   },
   title: {
     color: theme.palette.text.secondary,
@@ -76,8 +76,9 @@ const styles = theme => ({
   },
 });
 
-// eslint-disable-next-line react/prop-types
-function renderNavItems({ pages, ...params }) {
+function renderNavItems(options) {
+  const { pages, ...params } = options;
+
   return (
     <List>
       {pages.reduce(
@@ -100,6 +101,7 @@ function reduceChildRoutes({ props, activePage, items, page, depth, t }) {
 
     items.push(
       <AppDrawerNavItem
+        linkProps={page.linkProps}
         depth={depth}
         key={title}
         topLevel={topLevel && !page.subheader}
@@ -115,6 +117,7 @@ function reduceChildRoutes({ props, activePage, items, page, depth, t }) {
 
     items.push(
       <AppDrawerNavItem
+        linkProps={page.linkProps}
         depth={depth}
         key={title}
         title={title}
@@ -133,8 +136,11 @@ function reduceChildRoutes({ props, activePage, items, page, depth, t }) {
 const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 function AppDrawer(props) {
-  const { classes, className, disablePermanent, mobileOpen, onClose, onOpen, t } = props;
+  const { classes, className, disablePermanent, mobileOpen, onClose, onOpen } = props;
   const { activePage, pages } = React.useContext(PageContext);
+  const { t } = useSelector(state => ({
+    t: state.options.t,
+  }));
 
   const drawer = (
     <PersistScroll>
@@ -156,7 +162,7 @@ function AppDrawer(props) {
   );
 
   return (
-    <nav className={className} role="navigation" aria-label="Main navigation">
+    <nav className={className} aria-label={t('mainNavigation')}>
       <Hidden lgUp={!disablePermanent} implementation="js">
         <SwipeableDrawer
           classes={{
@@ -198,12 +204,6 @@ AppDrawer.propTypes = {
   mobileOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
-export default compose(
-  connect(state => ({
-    t: state.options.t,
-  })),
-  withStyles(styles),
-)(AppDrawer);
+export default withStyles(styles)(AppDrawer);

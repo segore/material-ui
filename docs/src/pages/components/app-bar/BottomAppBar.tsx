@@ -99,8 +99,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function BottomAppBar() {
+export default function BottomAppBar() {
   const classes = useStyles();
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -125,10 +126,10 @@ function BottomAppBar() {
       </Paper>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="Open drawer">
+          <IconButton edge="start" color="inherit" aria-label="open drawer">
             <MenuIcon />
           </IconButton>
-          <Fab color="secondary" aria-label="Add" className={classes.fabButton}>
+          <Fab color="secondary" aria-label="add" className={classes.fabButton}>
             <AddIcon />
           </Fab>
           <div className={classes.grow} />
@@ -143,5 +144,3 @@ function BottomAppBar() {
     </React.Fragment>
   );
 }
-
-export default BottomAppBar;

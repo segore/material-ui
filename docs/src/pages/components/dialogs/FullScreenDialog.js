@@ -27,7 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function FullScreenDialog() {
+export default function FullScreenDialog() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -47,7 +47,7 @@ function FullScreenDialog() {
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
@@ -71,5 +71,3 @@ function FullScreenDialog() {
     </div>
   );
 }
-
-export default FullScreenDialog;

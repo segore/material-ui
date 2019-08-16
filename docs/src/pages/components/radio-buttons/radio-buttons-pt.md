@@ -1,13 +1,13 @@
 ---
-title: Componente React Botões de Opção
+title: Componente React para Botões de Opção
 components: Radio, RadioGroup, FormControl, FormLabel, FormControlLabel
 ---
 
-# Botões de Opção
+# Botões de opção
 
-<p class="description">Botões de opções permitem o usuário selecionar uma das opções de um conjunto.</p>
+<p class="description">Botões de opção permitem o usuário selecionar uma das opções de um conjunto.</p>
 
-Use [botões de opções](https://material.io/design/components/selection-controls.html#radio-buttons) quando um usuário precisar ver todas as opções disponíveis. Se várias opções podem ser suprimidas da visualização, considere usar um menu suspenso (dropdown), pois ele utiliza menos espaço.
+Use [botões de opção](https://material.io/design/components/selection-controls.html#radio-buttons) quando um usuário precisar ver todas as opções disponíveis. Se várias opções podem ser suprimidas da visualização, considere usar um menu suspenso (dropdown), pois ele utiliza menos espaço.
 
 Os botões de opção devem ter a opção mais comumente usada selecionada por padrão.
 
@@ -29,17 +29,17 @@ Você pode alterar o posicionamento do rótulo:
 
 ## Acessibilidade
 
-Todos os controles de formulário devem ter rótulos, e isso inclui os botões de opção, caixas de seleção e seletores. Na maioria dos casos, isso é feito usando `<label>` ([FormControlLabel](/api/form-control-label/)).
+Todos os controles de formulário devem ter rótulos, e isso inclui os botões de opção, caixas de seleção e seletores. Na maioria dos casos, isso é feito usando o elemento `<label>` ([FormControlLabel](/api/form-control-label/)).
 
-Quando uma label não pode ser usada, é necessário adicionar um atributo diretamente no componente de input. Nesse caso você pode aplicar um atributo adicional (e.g.`aria-label`,`aria-labelledby`, `title`) através do `inputProps`.
+Quando um rótulo não pode ser usado, é necessário adicionar um atributo diretamente no componente de entrada. Nesse caso você pode aplicar um atributo adicional (e.g.`aria-label`,`aria-labelledby`, `title`) através da propriedade `inputProps`.
 
 ```jsx
 <RadioButton
   value="radioA"
-  inputProps={{ 'aria-label': 'Opção A' } }
+  inputProps={{ 'aria-label': 'Radio A' }}
 />
 ```
 
-## Orientação
+## Guia
 
 - [Caixas de Seleção vs. Botões de Opção](https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/)

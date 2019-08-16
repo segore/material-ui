@@ -1,13 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { assert } from 'chai';
-import { createMount, findOutermostIntrinsic, getClasses } from '@material-ui/core/test-utils';
+import { expect } from 'chai';
+import { createMount, getClasses } from '@material-ui/core/test-utils';
 import describeConformance from '../test-utils/describeConformance';
+import { cleanup, createClientRender } from 'test/utils/createClientRender';
 import FormHelperText from './FormHelperText';
-import FormControlContext from '../FormControl/FormControlContext';
+import FormControl from '../FormControl';
 
 describe('<FormHelperText />', () => {
   let mount;
+  const render = createClientRender({ strict: true });
   let classes;
 
   before(() => {
@@ -15,8 +16,8 @@ describe('<FormHelperText />', () => {
     classes = getClasses(<FormHelperText />);
   });
 
-  after(() => {
-    mount.cleanUp();
+  afterEach(() => {
+    cleanup();
   });
 
   describeConformance(<FormHelperText />, () => ({
@@ -25,73 +26,79 @@ describe('<FormHelperText />', () => {
     mount,
     refInstanceof: window.HTMLParagraphElement,
     testComponentPropWith: 'div',
+    after: () => mount.cleanUp(),
   }));
 
   describe('prop: error', () => {
     it('should have an error class', () => {
-      const wrapper = findOutermostIntrinsic(mount(<FormHelperText error />));
-      assert.strictEqual(wrapper.hasClass(classes.error), true);
+      const { container } = render(<FormHelperText error />);
+      expect(container.firstChild).to.have.class(classes.error);
     });
   });
 
-  describe('with muiFormControl context', () => {
-    let wrapper;
-
-    function setFormControlContext(muiFormControlContext) {
-      wrapper.setProps({ context: muiFormControlContext });
-    }
-
-    beforeEach(() => {
-      function Provider(props) {
-        const { context, ...other } = props;
-
-        return (
-          <FormControlContext.Provider value={context}>
-            <FormHelperText {...other}>Foo</FormHelperText>
-          </FormControlContext.Provider>
-        );
-      }
-      Provider.propTypes = {
-        context: PropTypes.object,
-      };
-
-      wrapper = mount(<Provider />);
-    });
+  describe('with FormControl', () => {
     ['error', 'disabled'].forEach(visualState => {
       describe(visualState, () => {
-        beforeEach(() => {
-          setFormControlContext({ [visualState]: true });
-        });
+        function FormHelperTextInFormControl(props) {
+          return (
+            <FormControl {...{ [visualState]: true }}>
+              <FormHelperText {...props}>Foo</FormHelperText>
+            </FormControl>
+          );
+        }
 
         it(`should have the ${visualState} class`, () => {
-          assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes[visualState]), true);
+          const { getByText } = render(
+            <FormHelperTextInFormControl>Foo</FormHelperTextInFormControl>,
+          );
+
+          expect(getByText(/Foo/)).to.have.class(classes[visualState]);
         });
 
         it('should be overridden by props', () => {
-          assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes[visualState]), true);
-          wrapper.setProps({ [visualState]: false });
-          assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes[visualState]), false);
-          wrapper.setProps({ [visualState]: true });
-          assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes[visualState]), true);
+          const { getByText, setProps } = render(
+            <FormHelperTextInFormControl {...{ [visualState]: false }}>
+              Foo
+            </FormHelperTextInFormControl>,
+          );
+
+          expect(getByText(/Foo/)).not.to.have.class(classes[visualState]);
+
+          setProps({ [visualState]: true });
+          expect(getByText(/Foo/)).to.have.class(classes[visualState]);
         });
       });
     });
 
     describe('margin', () => {
-      describe('context margin: dense', () => {
-        beforeEach(() => {
-          setFormControlContext({ margin: 'dense' });
-        });
-
+      describe('dense margin FormControl', () => {
         it('should have the dense class', () => {
-          assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes.marginDense), true);
+          const { getByText } = render(
+            <FormControl margin="dense">
+              <FormHelperText>Foo</FormHelperText>
+            </FormControl>,
+          );
+
+          expect(getByText(/Foo/)).to.have.class(classes.marginDense);
         });
       });
 
       it('should be overridden by props', () => {
-        assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes.marginDense), false);
-        wrapper.setProps({ margin: 'dense' });
-        assert.strictEqual(findOutermostIntrinsic(wrapper).hasClass(classes.marginDense), true);
+        function FormHelperTextInFormControl(props) {
+          return (
+            <FormControl dense="none">
+              <FormHelperText {...props}>Foo</FormHelperText>
+            </FormControl>
+          );
+        }
+
+        const { getByText, setProps } = render(
+          <FormHelperTextInFormControl>Foo</FormHelperTextInFormControl>,
+        );
+
+        expect(getByText(/Foo/)).not.to.have.class(classes.marginDense);
+        setProps({ margin: 'dense' });
+        expect(getByText(/Foo/)).to.have.class(classes.marginDense);
       });
     });
   });

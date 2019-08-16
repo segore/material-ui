@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -36,17 +35,19 @@ export interface ConfirmationDialogRawProps {
   keepMounted: boolean;
   value: string;
   open: boolean;
-  onClose: (value: string) => void;
+  onClose: (value?: string) => void;
 }
 
 function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
-  const { onClose, value: valueProp, ...other } = props;
+  const { onClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
   const radioGroupRef = React.useRef<HTMLElement>(null);
 
-  if (valueProp !== value) {
-    setValue(valueProp);
-  }
+  React.useEffect(() => {
+    if (!open) {
+      setValue(valueProp);
+    }
+  }, [valueProp, open]);
 
   function handleEntering() {
     if (radioGroupRef.current != null) {
@@ -55,7 +56,7 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
   }
 
   function handleCancel() {
-    onClose(value);
+    onClose();
   }
 
   function handleOk() {
@@ -73,13 +74,14 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
       maxWidth="xs"
       onEntering={handleEntering}
       aria-labelledby="confirmation-dialog-title"
+      open={open}
       {...other}
     >
       <DialogTitle id="confirmation-dialog-title">Phone Ringtone</DialogTitle>
       <DialogContent dividers>
         <RadioGroup
           ref={radioGroupRef}
-          aria-label="Ringtone"
+          aria-label="ringtone"
           name="ringtone"
           value={value}
           onChange={handleChange}
@@ -101,24 +103,21 @@ function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
   );
 }
 
-ConfirmationDialogRaw.propTypes = {
-  onClose: PropTypes.func,
-  value: PropTypes.string,
-};
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+    paper: {
+      width: '80%',
+      maxHeight: 435,
+    },
+  }),
+);
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-  paper: {
-    width: '80%',
-    maxHeight: 435,
-  },
-}));
-
-function ConfirmationDialog() {
+export default function ConfirmationDialog() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('Dione');
@@ -127,9 +126,12 @@ function ConfirmationDialog() {
     setOpen(true);
   }
 
-  function handleClose(newValue: string) {
+  function handleClose(newValue?: string) {
     setOpen(false);
-    setValue(newValue);
+
+    if (newValue) {
+      setValue(newValue);
+    }
   }
 
   return (
@@ -143,7 +145,7 @@ function ConfirmationDialog() {
           divider
           aria-haspopup="true"
           aria-controls="ringtone-menu"
-          aria-label="Phone ringtone"
+          aria-label="phone ringtone"
           onClick={handleClickListItem}
           role="listitem"
         >
@@ -166,5 +168,3 @@ function ConfirmationDialog() {
     </div>
   );
 }
-
-export default ConfirmationDialog;

@@ -4,20 +4,20 @@
 
 ## `createGenerateClassName([options]) => class name generator`
 
-返回 [ 类名称生成器函数 ](http://cssinjs.org/jss-api/#generate-your-class-names) 的函数。
+返回 [ 类名称生成器函数 ](https://cssinjs.org/jss-api/#generate-your-class-names) 的函数。
 
 #### 参数
 
-1. `选项` (*Object* [optional]): 
-    - `options.disableGlobal` (*Boolan* [optional]): Defaults to `false`. Disable the generation of deterministic class names.
-    - `options.productionPrefix` (*String* [optional])：初始值为`'jss'`. 用于在生产中对类名称进行前缀的字符串。
-    - `options.seed` (*String* [optional])：初始值为 `''`. 用于唯一标识生成器的字符串。 It can be used to avoid class name collisions when using multiple generators in the same document.
+1. `options` (*Object* [optional]): 
+  - `options.disableGlobal` (*Boolean* [optional]): 默认值为`false`。 Disable the generation of deterministic class names.
+  - `options.productionPrefix` (*String* [optional])：初始值为`'jss'`. 用于在生产中对类名称进行前缀的字符串。
+  - `options.seed` (*String* [optional])：初始值为 `''`. 用于唯一标识生成器的字符串。 It can be used to avoid class name collisions when using multiple generators in the same document.
 
 #### 返回结果
 
 `类名生成器`：应该将生成器提供给JSS。
 
-#### 例子
+#### 示例
 
 ```jsx
 import React from 'react';
@@ -51,7 +51,7 @@ export default function App() {
 ```jsx
 import { makeStyles, createStyles } from '@material-ui/styles';
 
-const styles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     backgroundColor: theme.color.red,
   },
@@ -72,16 +72,15 @@ export default MyComponent;
 #### 参数
 
 1. ` styles `(* Function | Object *): 生成样式或样式对象的函数。 它将链接到组件。 如果需要访问主题, 请使用函数签名。 它作为第一个参数提供。
-2. `选项` (*Object* [optional]): 
-    - `options.defaultTheme`（*Object* [optional]）：如果未通过主题提供者提供主题，则使用默认主题。
-    - ` options.withTheme ` (*Boolean* [optional]): 默认值为 `false`。 将 ` theme ` 对象作为属性提供给组件。
-    - ` options.name ` (*String* [optional]): 样式表的名称。 用于调试。 如果未提供该值, 它将尝试回退到组件的名称。
-    - `options.flip` (*Boolean* [optional])：当设置为 `false` 时, 此工作表将选择退出 ` rtl ` 转换。 如果设置为 ` true `, 则会反转样式。 当设置为`null`，它跟随`theme.direction`。
-    - 其他键被转发到[jss.createStyleSheet([styles], [options])](http://cssinjs.org/jss-api/#create-style-sheet)。
+2. `options` (*Object* [optional]): 
+  - `options.defaultTheme`（*Object* [optional]）：如果未通过主题提供者提供主题，则使用默认主题。
+  - ` options.name ` (*String* [optional]): 样式表的名称。 用于调试。 如果未提供该值, 它将尝试回退到组件的名称。
+  - `options.flip` (*Boolean* [optional])：当设置为 `false` 时, 此工作表将选择退出 ` rtl ` 转换。 如果设置为 ` true `, 则会反转样式。 当设置为`null`，它跟随`theme.direction`。
+  - 其他键被转发到[jss.createStyleSheet([styles], [options])](https://cssinjs.org/jss-api/#create-style-sheet)。
 
 #### 返回结果
 
-`hook` ： 一个钩子。 该钩子可以用在功能组件中。 它接受一个参数：将用于在“内插”的属性 样式表。
+`hook` ： 一个钩子。 该钩子可以用在功能组件中。 The documentation often calls this returned hook `useStyles`. 它接受一个参数：将用于在“内插”的属性 样式表。
 
 #### 例子
 
@@ -92,11 +91,12 @@ import { makeStyles } from '@material-ui/styles';
 const useStyles = makeStyles({
   root: {
     backgroundColor: 'red',
+    color: props => props.color,
   },
 });
 
-export default function MyComponent() {
-  const classes = useStyles();
+export default function MyComponent(props) {
+  const classes = useStyles(props);
   return <div className={classes.root} />;
 }
 ```
@@ -155,11 +155,11 @@ The method is an alternative to `.toString()` when you are rendering the whole p
 1. `Component` ：将被包装的组件。
 2. ` styles `(* Function | Object *): 生成样式或样式对象的函数。 它将链接到组件。 如果需要访问主题, 请使用函数签名。 It's provided as property of the first argument.
 3. `options` (*Object* [optional]): 
-    - `options.defaultTheme`（*Object* [optional]）：如果未通过主题提供者提供主题，则使用默认主题。
-    - ` options.withTheme ` (*Boolean* [optional]): 默认值为 `false`。 将 ` theme ` 对象作为属性提供给组件。
-    - ` options.name ` (*String* [optional]): 样式表的名称。 用于调试。 如果未提供该值, 它将尝试回退到组件的名称。
-    - `options.flip` (*Boolean* [optional])：当设置为 `false` 时, 此工作表将选择退出 ` rtl ` 转换。 如果设置为 ` true `, 则会反转样式。 当设置为`null`，它跟随`theme.direction`。
-    - 其他键被转发到[jss.createStyleSheet([styles], [options])](http://cssinjs.org/jss-api/#create-style-sheet)。
+  - `options.defaultTheme`（*Object* [optional]）：如果未通过主题提供者提供主题，则使用默认主题。
+  - ` options.withTheme ` (*Boolean* [optional]): 默认值为 `false`。 将 ` theme ` 对象作为属性提供给组件。
+  - ` options.name ` (*String* [optional]): 样式表的名称。 用于调试。 如果未提供该值, 它将尝试回退到组件的名称。
+  - `options.flip` (*Boolean* [optional])：当设置为 `false` 时, 此工作表将选择退出 ` rtl ` 转换。 如果设置为 ` true `, 则会反转样式。 当设置为`null`，它跟随`theme.direction`。
+  - 其他键被转发到[jss.createStyleSheet([styles], [options])](https://cssinjs.org/jss-api/#create-style-sheet)。
 
 #### 返回结果
 
@@ -259,7 +259,7 @@ ReactDOM.render(&lt;App /&gt;, document.querySelector('#app'));
       </th>
       
       <th align="left">
-        默认
+        默认值
       </th>
       
       <th align="left">
@@ -365,17 +365,17 @@ export default function MyComponent() {
     一些可能有趣的实现细节：
   </p>
   
-  <ul>
-    <li>
+  <ul spaces="0" level="0" marker="-">
+    <li level="0">
       它添加了一个 <code>classes</code> 属性，因此您可以从外部覆盖注入的类名。
     </li>
-    <li>
+    <li level="0">
       It forwards refs to the inner component.
     </li>
-    <li>
+    <li level="0">
       The <code>innerRef</code> prop is deprecated. Use <code>ref</code> instead.
     </li>
-    <li>
+    <li level="0">
       It does <strong>not</strong> copy over statics. 例如，它可用于定义 <code> getInitialProps()</code> 静态方法 (next.js)。
     </li>
   </ul>
@@ -384,27 +384,27 @@ export default function MyComponent() {
     参数
   </h4>
   
-  <ol start="1">
-    <li>
+  <ol start="1" spaces="2" level="0">
+    <li level="0">
       <code> styles </code>(<em> Function | Object </em>): 生成样式或样式对象的函数。 它将链接到组件。 如果需要访问主题, 请使用函数签名。 它作为第一个参数提供。
     </li>
     
-    <li>
-      <code>options</code> (<em>Object</em> [optional]): <ul>
-        <li>
+    <li level="0">
+      <code>options</code> (<em>Object</em> [optional]): <ul spaces="0" level="1" marker="-">
+        <li level="1">
           <code>options.defaultTheme</code>（<em>Object</em> [optional]）：如果未通过主题提供者提供主题，则使用默认主题。
         </li>
-        <li>
+        <li level="1">
           <code> options.withTheme </code> (<em>Boolean</em> [optional]): 默认值为 <code>false</code>。 将 <code> theme </code> 对象作为属性提供给组件。
         </li>
-        <li>
+        <li level="1">
           <code> options.name </code> (<em>String</em> [optional]): 样式表的名称。 用于调试。 如果未提供该值, 它将尝试回退到组件的名称。
         </li>
-        <li>
+        <li level="1">
           <code>options.flip</code> (<em>Boolean</em> [optional])：当设置为 <code>false</code> 时, 此工作表将选择退出 <code> rtl </code> 转换。 如果设置为 <code> true </code>, 则会反转样式。 当设置为<code>null</code>，它跟随<code>theme.direction</code>。
         </li>
-        <li>
-          其他键被转发到<a href="http://cssinjs.org/jss-api/#create-style-sheet">jss.createStyleSheet([styles], [options])</a>。
+        <li level="1">
+          其他键被转发到<a href="https://cssinjs.org/jss-api/#create-style-sheet">jss.createStyleSheet([styles], [options])</a>。
         </li>
       </ul>
     </li>
@@ -475,8 +475,8 @@ export default MyComponent
     参数
   </h4>
   
-  <ol start="1">
-    <li>
+  <ol start="1" spaces="0" level="0">
+    <li level="0">
       <code>Component</code> ：将被包装的组件。
     </li>
   </ol>

@@ -24,7 +24,7 @@ function Theming() {
 
 {{"demo": "pages/styles/advanced/Theming.js"}}
 
-### Accessing the theme in a component
+### Accéder au thème dans un composant
 
 You might need to access the theme variables inside your React components.
 
@@ -57,7 +57,7 @@ const DeepChild = withTheme(DeepChildRaw);
 
 ### Theme nesting
 
-You can nest multiple theme providers. This can be really useful when dealing with different areas of your application that have distinct appearance from each other.
+Vous pouvez imbriquer plusieurs fournisseurs de thème. This can be really useful when dealing with different areas of your application that have distinct appearance from each other.
 
 ```jsx
 <ThemeProvider theme={outerTheme}>
@@ -70,7 +70,7 @@ You can nest multiple theme providers. This can be really useful when dealing wi
 
 {{"demo": "pages/styles/advanced/ThemeNesting.js"}}
 
-The inner theme will **override** the outer theme. You can extend the outer theme by providing a function:
+Le thème intérieur **remplacera** le thème extérieur. Vous pouvez étendre le thème externe en fournissant une fonction :
 
 ```jsx
 <ThemeProvider theme={…} >
@@ -83,7 +83,7 @@ The inner theme will **override** the outer theme. You can extend the outer them
 
 ## Overriding styles - `classes` prop
 
-The `makeStyles` (hook generator) and `withStyles` (HOC) APIs allow the creation of multiple style rules per style sheet. Each style rule has its own class name. The class names are provided to the component with the `classes` variable. The is particularly useful when styling nested elements in a component.
+The `makeStyles` (hook generator) and `withStyles` (HOC) APIs allow the creation of multiple style rules per style sheet. Each style rule has its own class name. The class names are provided to the component with the `classes` variable. This is particularly useful when styling nested elements in a component.
 
 ```jsx
 // A style sheet
@@ -118,7 +118,7 @@ This is the simplest case. the wrapped component accepts a `classes` prop, it si
 const Nested = withStyles({
   root: {}, // a style rule
   label: {}, // a nested style rule
-})({ classes }) => (
+})(({ classes }) => (
   <button className={classes.root}>
     <span className={classes.label}> // 'jss2 my-label'
       Nested
@@ -243,13 +243,13 @@ The injection of style tags happens in the **same order** as the `makeStyles` / 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 
-const useStyleBase = makeStyles({
+const useStylesBase = makeStyles({
   root: {
     color: 'blue', // 🔵
   },
 });
 
-const useStyle = makeStyles({
+const useStyles = makeStyles({
   root: {
     color: 'red', // 🔴
   },
@@ -258,10 +258,10 @@ const useStyle = makeStyles({
 export default function MyComponent() {
   // Order doesn't matter
   const classes = useStyles();
-  const classesBase = useStyleBase();
+  const classesBase = useStylesBase();
 
   // Order doesn't matter
-  const className = clsx(classes.root, useStyleBase.root)
+  const className = clsx(classes.root, classesBase.root)
 
   // color: red 🔴 wins.
   return <div className={className} />;
@@ -440,8 +440,8 @@ const className = `${productionPrefix}-${identifier}`;
 The generated class names of the `@material-ui/core` components behave differently. When the following conditions are met, the class names are **deterministic**:
 
 - Only one theme provider is used (**No theme nesting**)
-- The style sheet has a name that starts with `Mui`. (All Material-UI components)
-- The `disableGlobal` option of the [class name generator](/styles/api/#creategenerateclassname-options-class-name-generator) is `false`. (The default)
+- The style sheet has a name that starts with `Mui` (all Material-UI components).
+- The `disableGlobal` option of the [class name generator](/styles/api/#creategenerateclassname-options-class-name-generator) is `false` (the default).
 
 These conditions are met with the most common use cases of `@material-ui/core`. For instance, this style sheet:
 
@@ -461,7 +461,7 @@ const useStyles = makeStyles({
 }, { name: 'MuiButton' });
 ```
 
-generates the following class names you that can override:
+generates the following class names that you can override:
 
 ```css
 .MuiButton-root { /* … */ }
@@ -486,7 +486,7 @@ const StyledTextField = styled(TextField)`
   }
   .MuiOutlinedInput-root {
     fieldset {
-      border-color: red; ❤️
+      border-color: red; 💔
     }
     &:hover fieldset {
       border-color: yellow; 💛
@@ -536,7 +536,7 @@ You can read more about CSP on the [MDN Web Docs](https://developer.mozilla.org/
 
 ### Comment met-on en place un CSP?
 
-Pour utiliser CSP avec Material-UI (et JSS), vous devez utiliser un "nonce". A nonce is a randomly generated string that is only used once, therefore you need to add server middleware to generate one on each request. JSS a un [ excellent tutoriel ](https://github.com/cssinjs/jss/blob/next/docs/csp.md) comment y parvenir avec Express et React Helmet. Pour un aperçu de base, continuez à lire.
+Pour utiliser CSP avec Material-UI (et JSS), vous devez utiliser un "nonce". A nonce is a randomly generated string that is only used once, therefore you need to add server middleware to generate one on each request. JSS a un [ excellent tutoriel ](https://github.com/cssinjs/jss/blob/master/docs/csp.md) comment y parvenir avec Express et React Helmet. Pour un aperçu de base, continuez à lire.
 
 Un nonce CSP est une chaîne codée en Base 64. Vous pouvez en générer un comme ceci:
 
@@ -559,11 +559,11 @@ If you are using Server-Side Rendering (SSR), you should pass the nonce in the `
 <style
   id="jss-server-side"
   nonce={nonce}
-  dangerouslySetInnerHTML={{ __html: sheets.toString() } }
+  dangerouslySetInnerHTML={{ __html: sheets.toString() }}
 />
 ```
 
-Ensuite, vous devez transmettre ce nonce à JSS afin qu’il puisse l’ajouter aux balises `<style>` suivantes. Le côté client obtient le nonce à partir d'un en-tête. Vous devez inclure cet en-tête, que le SSR soit utilisé ou non.
+Ensuite, vous devez transmettre ce nonce à JSS afin qu’il puisse l’ajouter aux balises `<style>` suivantes. The client-side gets the nonce from a header. Vous devez inclure cet en-tête, que le SSR soit utilisé ou non.
 
 ```jsx
 <meta property="csp-nonce" content={nonce} />

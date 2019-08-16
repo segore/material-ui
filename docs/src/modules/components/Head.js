@@ -2,13 +2,17 @@
 
 import React from 'react';
 import NextHead from 'next/head';
-import { Router, withRouter } from 'next/router';
+import { Router as Router2, useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import compose from 'docs/src/modules/utils/compose';
+import { useSelector } from 'react-redux';
 
-function Head(props) {
-  const { t, description = t('strapline'), router, title = t('headTitle'), userLanguage } = props;
+export default function Head(props) {
+  const router = useRouter();
+  const { t, userLanguage } = useSelector(state => ({
+    t: state.options.t,
+    userLanguage: state.options.userLanguage,
+  }));
+  const { description = t('strapline'), title = t('headTitle'), children } = props;
 
   return (
     <NextHead>
@@ -25,7 +29,7 @@ function Head(props) {
       <meta property="og:title" content={title} />
       <meta
         property="og:url"
-        content={`https://material-ui.com${Router._rewriteUrlForNextExport(router.asPath)}`}
+        content={`https://material-ui.com${Router2._rewriteUrlForNextExport(router.asPath)}`}
       />
       <meta property="og:description" content={description} />
       <meta property="og:image" content="https://material-ui.com/static/brand.png" />
@@ -33,22 +37,13 @@ function Head(props) {
       {/* Algolia */}
       <meta name="docsearch:language" content={userLanguage} />
       <meta name="docsearch:version" content="master" />
+      {children}
     </NextHead>
   );
 }
 
 Head.propTypes = {
+  children: PropTypes.node,
   description: PropTypes.string,
-  router: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
   title: PropTypes.string,
-  userLanguage: PropTypes.string.isRequired,
 };
-
-export default compose(
-  withRouter,
-  connect(state => ({
-    t: state.options.t,
-    userLanguage: state.options.userLanguage,
-  })),
-)(Head);

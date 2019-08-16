@@ -13,9 +13,9 @@ export const styles = theme => ({
   root: {
     color: theme.palette.text.secondary,
   },
-  /* Styles applied to the root element if `checked={true}`. */
+  /* Pseudo-class applied to the root element if `checked={true}`. */
   checked: {},
-  /* Styles applied to the root element if `disabled={true}`. */
+  /* Pseudo-class applied to the root element if `disabled={true}`. */
   disabled: {},
   /* Styles applied to the root element if `color="primary"`. */
   colorPrimary: {
@@ -137,7 +137,7 @@ Radio.propTypes = {
    */
   inputProps: PropTypes.object,
   /**
-   * This property can be used to pass a ref callback to the `input` element.
+   * This prop can be used to pass a ref callback to the `input` element.
    */
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
@@ -153,7 +153,11 @@ Radio.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * The input component property `type`.
+   * If `true`, the `input` element will be required.
+   */
+  required: PropTypes.bool,
+  /**
+   * The input component prop `type`.
    */
   type: PropTypes.string,
   /**

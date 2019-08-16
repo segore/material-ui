@@ -1,12 +1,11 @@
 import React from 'react';
-import { withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import { fade, withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import green from '@material-ui/core/colors/green';
+import { green } from '@material-ui/core/colors';
 
 const CssTextField = withStyles({
   root: {
@@ -100,17 +99,34 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const ValidationTextField = withStyles({
+  root: {
+    '& input:valid + fieldset': {
+      borderColor: 'green',
+      borderWidth: 2,
+    },
+    '& input:invalid + fieldset': {
+      borderColor: 'red',
+      borderWidth: 2,
+    },
+    '& input:valid:focus + fieldset': {
+      borderLeftWidth: 6,
+      padding: '4px !important', // override inline-style
+    },
+  },
+})(TextField);
+
 const theme = createMuiTheme({
   palette: {
     primary: green,
   },
 });
 
-function CustomizedInputs() {
+export default function CustomizedInputs() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <form className={classes.root} noValidate>
       <CssTextField className={classes.margin} id="custom-css-standard-input" label="Custom CSS" />
       <CssTextField
         className={classes.margin}
@@ -149,8 +165,14 @@ function CustomizedInputs() {
         defaultValue="Naked input"
         inputProps={{ 'aria-label': 'naked' }}
       />
-    </div>
+      <ValidationTextField
+        className={classes.margin}
+        label="CSS validation style"
+        required
+        variant="outlined"
+        defaultValue="Success"
+        id="validation-outlined-input"
+      />
+    </form>
   );
 }
-
-export default CustomizedInputs;

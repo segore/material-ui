@@ -2,7 +2,7 @@
 
 <p class="description">You can easily customize the appearance of a Material-UI component.</p>
 
-As components can be used in different contexts, the are several approaches to this. Going from the narrowest use-case to the broadest, these are:
+As components can be used in different contexts, there are several approaches to this. Going from the narrowest use-case to the broadest, these are:
 
 1. [Specific variation for a one-time situation](#1-specific-variation-for-a-one-time-situation)
 1. [Dynamic variation for a one-time situation](#2-dynamic-variation-for-a-one-time-situation)
@@ -31,8 +31,9 @@ of the `<head />` to ensure the components always render correctly.
 ### Overriding styles with classes
 
 When the `className` property isn't enough, and you need to access deeper elements, you can take advantage of the `classes` object property to customize all the CSS injected by Material-UI for a given component.
+
 The list of  classes for each
-component is documented in the **Component API** section.
+component is documented in the component API page, you should refer to the **CSS section** and **rule name column**.
 For instance, you can have a look at the [Button CSS API](/api/button/#css).
 Alternatively, you can use the [browser dev tools](#using-the-dev-tools).
 
@@ -44,6 +45,10 @@ you wish to add or override.
 Notice that in addition to the button styling, the button label's capitalization has been changed:
 
 {{"demo": "pages/customization/components/ClassesNesting.js"}}
+
+### Overriding styles with global class names
+
+[Follow this section](/styles/advanced/#with-material-ui-core).
 
 ### Using the dev tools
 
@@ -190,7 +195,7 @@ compiles to:
   classes={{
     root: classes.root, // class name, e.g. `root-x`
     disabled: classes.disabled, // class name, e.g. `disabled-x`
-  } }
+  }}
 >
 ```
 
@@ -250,9 +255,25 @@ Material-UI attempts to implement all of these variations. Please refer to the [
 
 ## 5. Global theme variation
 
+In order to promote consistency between components, and manage the user interface appearance as a whole, Material-UI provides a mechanism to apply global changes.
+
+The demos of this section covers how to the change the button's font size.
+
 ### Theme variables
 
-In order to promote consistency between components, and manage the user interface appearance as a whole, Material-UI provides a mechanism to apply global changes by adjusting the [theme configuration variables](/customization/themes/#theme-configuration-variables).
+You can adjust the [theme configuration variables](/customization/theming/#theme-configuration-variables).
+
+```jsx
+const theme = createMuiTheme({
+  typography: {
+    button: {
+      fontSize: '1rem',
+    },
+  },
+});
+```
+
+{{"demo": "pages/customization/components/ThemeVariables.js"}}
 
 ### Global CSS override
 
@@ -260,7 +281,39 @@ You can also customize all instances of a component with CSS.
 We expose [global class names](/styles/advanced/#with-material-ui-core) to do so.
 It's very similar to how you would customize Bootstrap.
 
+```jsx
+const GlobalCss = withStyles({
+  // @global is handled by jss-plugin-global.
+  '@global': {
+    // You should target [class*="MuiButton-root"] instead if you nest themes.
+    '.MuiButton-root': {
+      fontSize: '1rem',
+    },
+  },
+})(() => null);
+
+// …
+
+<GlobalCss />
+```
+
+{{"demo": "pages/customization/components/GlobalCssOverride.js", "iframe": true, "height": 70}}
+
 ### Global theme override
 
 You can take advantage of the `overrides` key of the `theme` to potentially change every single style injected by Material-UI into the DOM.
-Learn more about it in the [themes section](/customization/globals/) of the documentation.
+Learn more about it in the [themes section](/customization/globals/#css) of the documentation.
+
+```jsx
+const theme = createMuiTheme({
+  overrides: {
+    MuiButton: {
+      root: {
+        fontSize: '1rem',
+      },
+    },
+  },
+});
+```
+
+{{"demo": "pages/customization/components/GlobalThemeOverride.js"}}

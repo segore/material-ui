@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -16,19 +15,28 @@ export const styles = theme => ({
   /* Styles applied to the root element. */
   root: {
     '@media print': {
-      position: 'absolute',
+      // Use !important to override the Modal inline-style.
+      position: 'absolute !important',
     },
   },
-  /* Styles applied to the root element if `scroll="paper"`. */
+  /* Styles applied to the container element if `scroll="paper"`. */
   scrollPaper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  /* Styles applied to the root element if `scroll="body"`. */
+  /* Styles applied to the container element if `scroll="body"`. */
   scrollBody: {
     overflowY: 'auto',
     overflowX: 'hidden',
+    textAlign: 'center',
+    '&:after': {
+      content: '""',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+      height: '100%',
+      width: '0',
+    },
   },
   /* Styles applied to the container element. */
   container: {
@@ -37,12 +45,10 @@ export const styles = theme => ({
       height: 'auto',
     },
     // We disable the focus ring for mouse, touch and keyboard users.
-    outline: 'none',
+    outline: 0,
   },
   /* Styles applied to the `Paper` component. */
   paper: {
-    display: 'flex',
-    flexDirection: 'column',
     margin: 48,
     position: 'relative',
     overflowY: 'auto', // Fix IE 11 issue, to remove at some point.
@@ -53,25 +59,26 @@ export const styles = theme => ({
   },
   /* Styles applied to the `Paper` component if `scroll="paper"`. */
   paperScrollPaper: {
-    flex: '0 1 auto',
+    display: 'flex',
+    flexDirection: 'column',
     maxHeight: 'calc(100% - 96px)',
   },
   /* Styles applied to the `Paper` component if `scroll="body"`. */
   paperScrollBody: {
-    margin: '48px auto',
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    textAlign: 'left', // 'initial' doesn't work on IE 11
   },
   /* Styles applied to the `Paper` component if `maxWidth=false`. */
   paperWidthFalse: {
-    '&$paperScrollBody': {
-      margin: 48,
-    },
+    maxWidth: 'calc(100% - 96px)',
   },
   /* Styles applied to the `Paper` component if `maxWidth="xs"`. */
   paperWidthXs: {
     maxWidth: Math.max(theme.breakpoints.values.xs, 444),
     '&$paperScrollBody': {
       [theme.breakpoints.down(Math.max(theme.breakpoints.values.xs, 444) + 48 * 2)]: {
-        margin: 48,
+        maxWidth: 'calc(100% - 96px)',
       },
     },
   },
@@ -80,7 +87,7 @@ export const styles = theme => ({
     maxWidth: theme.breakpoints.values.sm,
     '&$paperScrollBody': {
       [theme.breakpoints.down(theme.breakpoints.values.sm + 48 * 2)]: {
-        margin: 48,
+        maxWidth: 'calc(100% - 96px)',
       },
     },
   },
@@ -89,7 +96,7 @@ export const styles = theme => ({
     maxWidth: theme.breakpoints.values.md,
     '&$paperScrollBody': {
       [theme.breakpoints.down(theme.breakpoints.values.md + 48 * 2)]: {
-        margin: 48,
+        maxWidth: 'calc(100% - 96px)',
       },
     },
   },
@@ -98,7 +105,7 @@ export const styles = theme => ({
     maxWidth: theme.breakpoints.values.lg,
     '&$paperScrollBody': {
       [theme.breakpoints.down(theme.breakpoints.values.lg + 48 * 2)]: {
-        margin: 48,
+        maxWidth: 'calc(100% - 96px)',
       },
     },
   },
@@ -107,16 +114,13 @@ export const styles = theme => ({
     maxWidth: theme.breakpoints.values.xl,
     '&$paperScrollBody': {
       [theme.breakpoints.down(theme.breakpoints.values.xl + 48 * 2)]: {
-        margin: 48,
+        maxWidth: 'calc(100% - 96px)',
       },
     },
   },
   /* Styles applied to the `Paper` component if `fullWidth={true}`. */
   paperFullWidth: {
-    width: '100%',
-    '&$paperScrollBody': {
-      width: 'initial',
-    },
+    width: 'calc(100% - 96px)',
   },
   /* Styles applied to the `Paper` component if `fullScreen={true}`. */
   paperFullScreen: {
@@ -128,6 +132,7 @@ export const styles = theme => ({
     borderRadius: 0,
     '&$paperScrollBody': {
       margin: 0,
+      maxWidth: '100%',
     },
   },
 });
@@ -208,7 +213,6 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
       onClose={onClose}
       open={open}
       ref={ref}
-      role="dialog"
       {...other}
     >
       <TransitionComponent
@@ -221,17 +225,21 @@ const Dialog = React.forwardRef(function Dialog(props, ref) {
         onExit={onExit}
         onExiting={onExiting}
         onExited={onExited}
+        role="none presentation"
         {...TransitionProps}
       >
+        {/* roles are applied via cloneElement from TransitionComponent */}
+        {/* roles needs to be applied on the immediate child of Modal or it'll inject one */}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
           className={clsx(classes.container, classes[`scroll${capitalize(scroll)}`])}
           onClick={handleBackdropClick}
           onMouseDown={handleMouseDown}
-          role="document"
           data-mui-test="FakeBackdrop"
         >
           <PaperComponent
             elevation={24}
+            role="dialog"
             {...PaperProps}
             className={clsx(
               classes.paper,
@@ -341,7 +349,7 @@ Dialog.propTypes = {
    */
   PaperComponent: PropTypes.elementType,
   /**
-   * Properties applied to the [`Paper`](/api/paper/) element.
+   * Props applied to the [`Paper`](/api/paper/) element.
    */
   PaperProps: PropTypes.object,
   /**
@@ -361,7 +369,7 @@ Dialog.propTypes = {
     PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
   ]),
   /**
-   * Properties applied to the `Transition` element.
+   * Props applied to the `Transition` element.
    */
   TransitionProps: PropTypes.object,
 };

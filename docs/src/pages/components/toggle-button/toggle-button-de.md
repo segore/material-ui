@@ -3,7 +3,7 @@ title: Schalter React Komponente
 components: ToggleButton, ToggleButtonGroup
 ---
 
-# Schalter
+# Schalter (Toggle Buttons)
 
 <p class="description">Schalter können verwendet werden, um verwandte Optionen zu gruppieren.</p>
 
@@ -15,6 +15,6 @@ Die `ToggleButtonGroup` wird die Auswahl von den untergeordneten Schaltern steue
 
 ## Größen
 
-Lust auf größere oder kleinere Schaltflächen? Verwenden Sie die Eigenschaft `size`.
+Fancy larger or smaller buttons? Use the `size` property.
 
 {{"demo": "pages/components/toggle-button/ToggleButtonSizes.js"}}

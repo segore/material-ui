@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import green from '@material-ui/core/colors/green';
+import { green } from '@material-ui/core/colors';
 import Radio, { RadioProps } from '@material-ui/core/Radio';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
@@ -15,7 +15,7 @@ const GreenRadio = withStyles({
   checked: {},
 })((props: RadioProps) => <Radio color="default" {...props} />);
 
-function RadioButtons() {
+export default function RadioButtons() {
   const [selectedValue, setSelectedValue] = React.useState('a');
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -66,5 +66,3 @@ function RadioButtons() {
     </div>
   );
 }
-
-export default RadioButtons;

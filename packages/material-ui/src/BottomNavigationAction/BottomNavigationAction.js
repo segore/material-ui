@@ -24,9 +24,9 @@ export const styles = theme => ({
       color: theme.palette.primary.main,
     },
   },
-  /* Styles applied to the root element if selected. */
+  /* Pseudo-class applied to the root element if selected. */
   selected: {},
-  /* Styles applied to the root element if `showLabel={false}` and not selected. */
+  /* Pseudo-class applied to the root element if `showLabel={false}` and not selected. */
   iconOnly: {},
   /* Styles applied to the span element that wraps the icon and label. */
   wrapper: {
@@ -109,8 +109,8 @@ const BottomNavigationAction = React.forwardRef(function BottomNavigationAction(
 
 BottomNavigationAction.propTypes = {
   /**
-   * This property isn't supported.
-   * Use the `component` property if you need to change the children structure.
+   * This prop isn't supported.
+   * Use the `component` prop if you need to change the children structure.
    */
   children: unsupportedProp,
   /**

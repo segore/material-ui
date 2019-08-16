@@ -17,13 +17,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function DenseAppBar() {
+export default function DenseAppBar() {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu">
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit">
@@ -34,4 +35,3 @@ function DenseAppBar() {
     </div>
   );
 }
-export default DenseAppBar;

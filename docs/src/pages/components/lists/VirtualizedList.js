@@ -25,11 +25,11 @@ function Row(props) {
 }
 
 Row.propTypes = {
-  index: PropTypes.number,
-  style: PropTypes.object,
+  index: PropTypes.number.isRequired,
+  style: PropTypes.object.isRequired,
 };
 
-function VirtualizedList() {
+export default function VirtualizedList() {
   const classes = useStyles();
 
   return (
@@ -40,5 +40,3 @@ function VirtualizedList() {
     </div>
   );
 }
-
-export default VirtualizedList;

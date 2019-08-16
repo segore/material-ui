@@ -2,8 +2,10 @@ import React from 'react';
 import { assert } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
 import PropTypes from 'prop-types';
-import { createMount, describeConformance } from '@material-ui/core/test-utils';
+import { createMount } from '@material-ui/core/test-utils';
+import describeConformance from '@material-ui/core/test-utils/describeConformance';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
+import PopperJS from 'popper.js';
 import Grow from '../Grow';
 import Popper from './Popper';
 
@@ -28,7 +30,11 @@ describe('<Popper />', () => {
     inheritComponent: 'div',
     mount,
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp'],
+    skip: [
+      'componentProp',
+      // https://github.com/facebook/react/issues/11565
+      'reactTestRenderer',
+    ],
   }));
 
   describe('prop: placement', () => {
@@ -202,6 +208,46 @@ describe('<Popper />', () => {
     });
   });
 
+  describe('prop: popperRef', () => {
+    it('should return a ref', () => {
+      const ref1 = React.createRef();
+      const ref2 = React.createRef();
+      const wrapper = mount(<Popper {...defaultProps} popperRef={ref1} />);
+      assert.strictEqual(ref1.current instanceof PopperJS, true);
+      wrapper.setProps({
+        popperRef: ref2,
+      });
+      assert.strictEqual(ref1.current, null);
+      assert.strictEqual(ref2.current instanceof PopperJS, true);
+    });
+  });
+
+  describe('prop: disablePortal', () => {
+    it('should work', () => {
+      const popperRef = React.createRef();
+      const wrapper = mount(<Popper {...defaultProps} disablePortal popperRef={popperRef} />);
+      // renders
+      assert.strictEqual(wrapper.find('[role="tooltip"]').exists(), true);
+      // correctly sets modifiers
+      assert.strictEqual(
+        popperRef.current.options.modifiers.preventOverflow.boundariesElement,
+        'scrollParent',
+      );
+    });
+
+    it('sets preventOverflow to window when disablePortal is false', () => {
+      const popperRef = React.createRef();
+      const wrapper = mount(<Popper {...defaultProps} popperRef={popperRef} />);
+      // renders
+      assert.strictEqual(wrapper.find('[role="tooltip"]').exists(), true);
+      // correctly sets modifiers
+      assert.strictEqual(
+        popperRef.current.options.modifiers.preventOverflow.boundariesElement,
+        'window',
+      );
+    });
+  });
+
   describe('warnings', () => {
     beforeEach(() => {
       consoleErrorMock.spy();
@@ -215,7 +261,7 @@ describe('<Popper />', () => {
     it('should warn if anchorEl is not valid', () => {
       mount(<Popper {...defaultProps} open anchorEl={null} />);
       assert.strictEqual(consoleErrorMock.callCount(), 1);
-      assert.include(consoleErrorMock.args()[0][0], 'It should be an Element instance');
+      assert.include(consoleErrorMock.args()[0][0], 'It should be an HTML Element instance');
     });
 
     // it('should warn if anchorEl is not visible', () => {

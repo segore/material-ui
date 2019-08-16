@@ -1,12 +1,15 @@
 import React from 'react';
-import { assert } from 'chai';
+import { expect, assert } from 'chai';
 import { spy, stub, useFakeTimers } from 'sinon';
 import { createShallow, createMount } from '@material-ui/core/test-utils';
+import { cleanup, createClientRender } from 'test/utils/createClientRender';
 import Menu from '../Menu';
 import MenuItem from '../MenuItem';
 import SelectInput from './SelectInput';
 
 describe('<SelectInput />', () => {
+  const render = createClientRender({ strict: true });
+
   let shallow;
   let mount;
   const defaultProps = {
@@ -37,11 +40,12 @@ describe('<SelectInput />', () => {
 
   after(() => {
     mount.cleanUp();
+    cleanup();
   });
 
   it('should render a correct top element', () => {
     const wrapper = shallow(<SelectInput {...defaultProps} />);
-    assert.strictEqual(wrapper.name(), 'div');
+    assert.strictEqual(wrapper.name(), 'Fragment');
     assert.strictEqual(
       wrapper
         .find(MenuItem)
@@ -102,7 +106,7 @@ describe('<SelectInput />', () => {
   });
 
   describe('prop: MenuProps', () => {
-    it('should apply additional properties to the Menu component', () => {
+    it('should apply additional props to the Menu component', () => {
       const wrapper = shallow(
         <SelectInput {...defaultProps} MenuProps={{ transitionDuration: 100 }} />,
       );
@@ -118,12 +122,12 @@ describe('<SelectInput />', () => {
   });
 
   describe('prop: SelectDisplayProps', () => {
-    it('should apply additional properties to the clickable div element', () => {
+    it('should apply additional props to the clickable div element', () => {
       const wrapper = shallow(
         <SelectInput {...defaultProps} SelectDisplayProps={{ 'data-test': 'SelectDisplay' }} />,
       );
 
-      const selectDisplay = wrapper.find('[data-mui-test="SelectDisplay"]');
+      const selectDisplay = wrapper.find('[role="button"]');
       assert.strictEqual(selectDisplay.props()['data-test'], 'SelectDisplay');
     });
   });
@@ -140,9 +144,14 @@ describe('<SelectInput />', () => {
     });
   });
 
+  it('should render a placeholder if there is no value to display', () => {
+    const { getByRole } = render(<SelectInput {...defaultProps} renderValue={() => '   '} />);
+    expect(getByRole('button').querySelector('span')).to.be.ok;
+  });
+
   describe('prop: displayEmpty', () => {
     it('should display the selected item even if its value is empty', () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <SelectInput {...defaultProps} value="" displayEmpty>
           <MenuItem value="">Ten</MenuItem>
           <MenuItem value={20}>Twenty</MenuItem>
@@ -154,9 +163,9 @@ describe('<SelectInput />', () => {
   });
 
   describe('prop: renderValue', () => {
-    it('should use the property to render the value', () => {
+    it('should use the prop to render the value', () => {
       const renderValue = x => String(-x);
-      const wrapper = shallow(<SelectInput {...defaultProps} renderValue={renderValue} />);
+      const wrapper = mount(<SelectInput {...defaultProps} renderValue={renderValue} />);
       assert.strictEqual(wrapper.find(`.${defaultProps.classes.select}`).text(), '-10');
     });
   });
@@ -288,7 +297,7 @@ describe('<SelectInput />', () => {
   describe('prop: autoWidth', () => {
     it('should take the anchor width into account', () => {
       const wrapper = mount(<SelectInput {...defaultProps} />);
-      const selectDisplay = wrapper.find('[data-mui-test="SelectDisplay"]').instance();
+      const selectDisplay = wrapper.find('[role="button"]').instance();
       stub(selectDisplay, 'clientWidth').get(() => 14);
       wrapper.find(`.${defaultProps.classes.select}`).simulate('click');
       assert.strictEqual(wrapper.find(Menu).props().PaperProps.style.minWidth, 14);
@@ -296,7 +305,7 @@ describe('<SelectInput />', () => {
 
     it('should not take the anchor width into account', () => {
       const wrapper = mount(<SelectInput {...defaultProps} autoWidth />);
-      const selectDisplay = wrapper.find('[data-mui-test="SelectDisplay"]').instance();
+      const selectDisplay = wrapper.find('[role="button"]').instance();
       stub(selectDisplay, 'clientWidth').get(() => 14);
       wrapper.find(`.${defaultProps.classes.select}`).simulate('click');
       assert.strictEqual(wrapper.find(Menu).props().PaperProps.style.minWidth, null);
@@ -306,7 +315,7 @@ describe('<SelectInput />', () => {
   describe('prop: multiple', () => {
     it('should take precedence', () => {
       const wrapper = shallow(<SelectInput {...defaultProps} disabled tabIndex={0} />);
-      assert.strictEqual(wrapper.find('[data-mui-test="SelectDisplay"]').props().tabIndex, 0);
+      assert.strictEqual(wrapper.find('[role="button"]').props().tabIndex, 0);
     });
 
     it('should serialize multiple select value', () => {
@@ -361,7 +370,7 @@ describe('<SelectInput />', () => {
     it('should throw if non array', () => {
       assert.throw(() => {
         shallow(<SelectInput {...defaultProps} multiple />);
-      }, /the `value` property must be an array/);
+      }, /the `value` prop must be an array/);
     });
 
     describe('prop: onChange', () => {
@@ -419,6 +428,16 @@ describe('<SelectInput />', () => {
     });
   });
 
+  it('should be able to return the input node via a ref object', () => {
+    const ref = React.createRef();
+    const wrapper = mount(<SelectInput {...defaultProps} ref={ref} />);
+    assert.strictEqual(ref.current.node.tagName, 'INPUT');
+    wrapper.setProps({
+      value: 20,
+    });
+    assert.strictEqual(ref.current.node.tagName, 'INPUT');
+  });
+
   describe('prop: inputRef', () => {
     it('should be able to return the input node via a ref object', () => {
       const ref = React.createRef();
@@ -443,12 +462,12 @@ describe('<SelectInput />', () => {
 
   describe('prop: name', () => {
     it('should have no id when name is not provided', () => {
-      const wrapper = shallow(<SelectInput {...defaultProps} />);
+      const wrapper = mount(<SelectInput {...defaultProps} />);
       assert.strictEqual(wrapper.find('.select').props().id, undefined);
     });
 
     it('should have select-`name` id when name is provided', () => {
-      const wrapper = shallow(<SelectInput {...defaultProps} name="foo" />);
+      const wrapper = mount(<SelectInput {...defaultProps} name="foo" />);
       assert.strictEqual(wrapper.find('.select').props().id, 'select-foo');
     });
   });

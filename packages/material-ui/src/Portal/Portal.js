@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { useForkRef } from '../utils/reactHelpers';
 import { exactProp } from '@material-ui/utils';
+import { setRef, useForkRef } from '../utils/reactHelpers';
 
 function getContainer(container) {
   container = typeof container === 'function' ? container() : container;
@@ -17,10 +17,9 @@ const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect 
  * that exists outside the DOM hierarchy of the parent component.
  */
 const Portal = React.forwardRef(function Portal(props, ref) {
-  const { children, container, disablePortal, onRendered } = props;
+  const { children, container, disablePortal = false, onRendered } = props;
   const [mountNode, setMountNode] = React.useState(null);
-  const childRef = React.useRef(null);
-  const handleRef = useForkRef(children.ref, childRef);
+  const handleRef = useForkRef(children.ref, ref);
 
   useEnhancedEffect(() => {
     if (!disablePortal) {
@@ -29,12 +28,21 @@ const Portal = React.forwardRef(function Portal(props, ref) {
   }, [container, disablePortal]);
 
   useEnhancedEffect(() => {
-    if (onRendered && mountNode) {
+    if (mountNode && !disablePortal) {
+      setRef(ref, mountNode);
+      return () => {
+        setRef(ref, null);
+      };
+    }
+
+    return undefined;
+  }, [ref, mountNode, disablePortal]);
+
+  useEnhancedEffect(() => {
+    if (onRendered && (mountNode || disablePortal)) {
       onRendered();
     }
-  }, [mountNode, onRendered]);
-
-  React.useImperativeHandle(ref, () => mountNode || childRef.current, [mountNode]);
+  }, [onRendered, mountNode, disablePortal]);
 
   if (disablePortal) {
     React.Children.only(children);
@@ -50,14 +58,18 @@ Portal.propTypes = {
   /**
    * The children to render into the `container`.
    */
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   /**
    * A node, component instance, or function that returns either.
    * The `container` will have the portal children appended to it.
    * By default, it uses the body of the top-level document object,
    * so it's simply `document.body` most of the time.
    */
-  container: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+  container: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.instanceOf(React.Component),
+    PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
+  ]),
   /**
    * Disable the portal behavior.
    * The children stay within it's parent DOM hierarchy.
@@ -65,12 +77,10 @@ Portal.propTypes = {
   disablePortal: PropTypes.bool,
   /**
    * Callback fired once the children has been mounted into the `container`.
+   *
+   * This prop will be deprecated and removed in v5, the ref can be used instead.
    */
   onRendered: PropTypes.func,
-};
-
-Portal.defaultProps = {
-  disablePortal: false,
 };
 
 if (process.env.NODE_ENV !== 'production') {

@@ -50,7 +50,7 @@ describe('makeStyles', () => {
     mount.cleanUp();
   });
 
-  it('should accept a classes property', () => {
+  it('should accept a classes prop', () => {
     const styles = { root: {} };
     const mountWithProps = createGetClasses(styles);
     const output = mountWithProps();
@@ -62,7 +62,7 @@ describe('makeStyles', () => {
     assert.strictEqual(extendedClasses.root, `${baseClasses.root} h1`);
   });
 
-  it('should ignore undefined property', () => {
+  it('should ignore undefined prop', () => {
     const styles = { root: {} };
     const mountWithProps = createGetClasses(styles);
     const output = mountWithProps();
@@ -94,7 +94,7 @@ describe('makeStyles', () => {
       assert.strictEqual(consoleErrorMock.callCount(), 1);
       assert.include(
         consoleErrorMock.args()[0][0],
-        'Material-UI: the key `bar` provided to the classes property is not implemented',
+        'Material-UI: the key `bar` provided to the classes prop is not implemented',
       );
     });
 
@@ -105,7 +105,7 @@ describe('makeStyles', () => {
       const args = consoleErrorMock.args();
       assert.include(
         consoleErrorMock.args()[args.length - 1][0],
-        'You might want to use the className property instead',
+        'You might want to use the className prop instead',
       );
     });
 
@@ -118,7 +118,7 @@ describe('makeStyles', () => {
       assert.strictEqual(consoleErrorMock.callCount(), 1);
       assert.include(
         consoleErrorMock.args()[0][0],
-        'Material-UI: the key `root` provided to the classes property is not valid',
+        'Material-UI: the key `root` provided to the classes prop is not valid',
       );
     });
 
@@ -141,7 +141,7 @@ describe('makeStyles', () => {
       mountWithProps = createGetClasses(styles);
     });
 
-    it('should recycle with no classes property', () => {
+    it('should recycle with no classes prop', () => {
       const output = mountWithProps();
       const classes1 = output.classes;
       output.wrapper.update();
@@ -149,7 +149,7 @@ describe('makeStyles', () => {
       assert.strictEqual(classes1, classes2);
     });
 
-    it('should recycle even when a classes property is provided', () => {
+    it('should recycle even when a classes prop is provided', () => {
       const inputClasses = { root: 'foo' };
       const output = mountWithProps({ classes: inputClasses });
       const classes1 = output.classes;
@@ -244,49 +244,84 @@ describe('makeStyles', () => {
       assert.deepEqual(sheetsRegistry.registry[0].classes, { root: 'MuiTextField-root' });
     });
 
-    it('should support the overrides key', () => {
-      const useStyles = makeStyles(
-        {
-          root: {
-            padding: 8,
-            margin: [1, 3],
+    describe('overrides', () => {
+      it('should support the overrides key', () => {
+        const useStyles = makeStyles(
+          {
+            root: {
+              padding: 8,
+              margin: [1, 3],
+            },
           },
-        },
-        {
-          name: 'MuiTextField',
-        },
-      );
-      const StyledComponent = () => {
-        useStyles();
-        return <div />;
-      };
+          {
+            name: 'MuiTextField',
+          },
+        );
+        const StyledComponent = () => {
+          useStyles();
+          return <div />;
+        };
 
-      mount(
-        <ThemeProvider
-          theme={createMuiTheme({
-            overrides: {
-              MuiTextField: {
-                root: {
-                  padding: 9,
-                  margin: [2, 2, 3],
+        mount(
+          <ThemeProvider
+            theme={createMuiTheme({
+              overrides: {
+                MuiTextField: {
+                  root: {
+                    padding: 9,
+                    margin: [2, 2, 3],
+                  },
                 },
               },
-            },
-          })}
-        >
-          <StylesProvider sheetsRegistry={sheetsRegistry} sheetsCache={new Map()}>
-            <StyledComponent />
-          </StylesProvider>
-        </ThemeProvider>,
-      );
+            })}
+          >
+            <StylesProvider sheetsRegistry={sheetsRegistry} sheetsCache={new Map()}>
+              <StyledComponent />
+            </StylesProvider>
+          </ThemeProvider>,
+        );
 
-      assert.strictEqual(sheetsRegistry.registry.length, 1);
-      assert.deepEqual(sheetsRegistry.registry[0].rules.raw, {
-        root: { padding: 9, margin: [2, 2, 3] },
+        assert.strictEqual(sheetsRegistry.registry.length, 1);
+        assert.deepEqual(sheetsRegistry.registry[0].rules.raw, {
+          root: { padding: 9, margin: [2, 2, 3] },
+        });
+      });
+
+      it('can be used to remove styles', () => {
+        const theme = {
+          overrides: {
+            Test: {
+              root: {
+                margin: null,
+              },
+            },
+          },
+        };
+
+        const useStyles = makeStyles({ root: { margin: 5, padding: 3 } }, { name: 'Test' });
+        function Test() {
+          const classes = useStyles();
+          return <div className={classes.root} />;
+        }
+
+        const wrapper = mount(
+          <ThemeProvider theme={theme}>
+            <StylesProvider sheetsRegistry={sheetsRegistry} sheetsCache={new Map()}>
+              <Test />
+            </StylesProvider>
+          </ThemeProvider>,
+        );
+
+        const div = wrapper.find('div').instance();
+
+        assert.strictEqual(sheetsRegistry.registry.length, 1);
+        assert.deepEqual(sheetsRegistry.registry[0].rules.raw, {
+          root: { margin: null, padding: 3 },
+        });
       });
     });
 
-    it('should handle dynamic properties', () => {
+    it('should handle dynamic props', () => {
       const useStyles = makeStyles({
         root: props => ({ margin: 8, padding: props.padding || 8 }),
       });
@@ -502,8 +537,7 @@ describe('makeStyles', () => {
       assert.strictEqual(sheetsRegistry.registry.length, 2);
       assert.strictEqual(
         sheetsRegistry.toString(),
-        `
-.makeStyles-root-2 {
+        `.makeStyles-root-2 {
   color: white;
   background-color: black;
 }`,
@@ -514,8 +548,7 @@ describe('makeStyles', () => {
       });
       assert.strictEqual(
         sheetsRegistry.toString(),
-        `
-.makeStyles-root-4 {
+        `.makeStyles-root-4 {
   color: blue;
   background-color: black;
 }`,
@@ -525,8 +558,7 @@ describe('makeStyles', () => {
       });
       assert.strictEqual(
         sheetsRegistry.toString(),
-        `
-.makeStyles-root-4 {
+        `.makeStyles-root-4 {
   color: blue;
   background-color: green;
 }`,

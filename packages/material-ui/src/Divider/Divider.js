@@ -42,13 +42,10 @@ const Divider = React.forwardRef(function Divider(props, ref) {
     className,
     component: Component = 'hr',
     light = false,
+    role = Component !== 'hr' ? 'separator' : undefined,
     variant = 'fullWidth',
     ...other
   } = props;
-
-  if (Component === 'li' && !other.role) {
-    other.role = 'separator';
-  }
 
   return (
     <Component
@@ -62,6 +59,7 @@ const Divider = React.forwardRef(function Divider(props, ref) {
         },
         className,
       )}
+      role={role}
       ref={ref}
       {...other}
     />
@@ -92,7 +90,11 @@ Divider.propTypes = {
    */
   light: PropTypes.bool,
   /**
-   *  The variant to use.
+   * @ignore
+   */
+  role: PropTypes.string,
+  /**
+   * The variant to use.
    */
   variant: PropTypes.oneOf(['fullWidth', 'inset', 'middle']),
 };

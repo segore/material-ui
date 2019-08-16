@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import formControlState from '../FormControl/formControlState';
-import withFormControlContext from '../FormControl/withFormControlContext';
+import useFormControl from '../FormControl/useFormControl';
 import withStyles from '../styles/withStyles';
 import FormLabel from '../FormLabel';
 
@@ -12,15 +12,15 @@ export const styles = theme => ({
     display: 'block',
     transformOrigin: 'top left',
   },
-  /* Styles applied to the root element if `focused={true}`. */
+  /* Pseudo-class applied to the root element if `focused={true}`. */
   focused: {},
-  /* Styles applied to the root element if `disabled={true}`. */
+  /* Pseudo-class applied to the root element if `disabled={true}`. */
   disabled: {},
-  /* Styles applied to the root element if `error={true}`. */
+  /* Pseudo-class applied to the root element if `error={true}`. */
   error: {},
-  /* Styles applied to the root element if `required={true}`. */
+  /* Pseudo-class applied to the root element if `required={true}`. */
   required: {},
-  /* Styles applied to the asterisk element. */
+  /* Pseudo-class applied to the asterisk element. */
   asterisk: {},
   /* Styles applied to the root element if the component is a descendant of `FormControl`. */
   formControl: {
@@ -73,7 +73,7 @@ export const styles = theme => ({
     pointerEvents: 'none',
     transform: 'translate(14px, 20px) scale(1)',
     '&$marginDense': {
-      transform: 'translate(14px, 17px) scale(1)',
+      transform: 'translate(14px, 12px) scale(1)',
     },
     '&$shrink': {
       transform: 'translate(14px, -6px) scale(0.75)',
@@ -87,11 +87,12 @@ const InputLabel = React.forwardRef(function InputLabel(props, ref) {
     className,
     disableAnimation = false,
     margin,
-    muiFormControl,
     shrink: shrinkProp,
     variant,
     ...other
   } = props;
+
+  const muiFormControl = useFormControl();
 
   let shrink = shrinkProp;
   if (typeof shrink === 'undefined' && muiFormControl) {
@@ -168,10 +169,6 @@ InputLabel.propTypes = {
    */
   margin: PropTypes.oneOf(['dense']),
   /**
-   * @ignore
-   */
-  muiFormControl: PropTypes.object,
-  /**
    * if `true`, the label will indicate that the input is required.
    */
   required: PropTypes.bool,
@@ -185,4 +182,4 @@ InputLabel.propTypes = {
   variant: PropTypes.oneOf(['standard', 'outlined', 'filled']),
 };
 
-export default withStyles(styles, { name: 'MuiInputLabel' })(withFormControlContext(InputLabel));
+export default withStyles(styles, { name: 'MuiInputLabel' })(InputLabel);

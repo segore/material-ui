@@ -27,11 +27,11 @@ export const styles = theme => ({
     fontSize: theme.typography.caption.fontSize,
     fontFamily: theme.typography.fontFamily,
   },
-  /* Styles applied to the root element if `active={true}`. */
+  /* Pseudo-class applied to the root element if `active={true}`. */
   active: {},
-  /* Styles applied to the root element if `completed={true}`. */
+  /* Pseudo-class applied to the root element if `completed={true}`. */
   completed: {},
-  /* Styles applied to the root element if `error={true}`. */
+  /* Pseudo-class applied to the root element if `error={true}`. */
   error: {},
 });
 
@@ -82,7 +82,7 @@ StepIcon.propTypes = {
    */
   error: PropTypes.bool,
   /**
-   * The icon displayed by the step label.
+   * The label displayed in the step icon.
    */
   icon: PropTypes.node.isRequired,
 };

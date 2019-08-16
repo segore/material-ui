@@ -28,7 +28,7 @@ export default MyApp;
 
 ### Page
 
-Les éléments `<html>` et `<body>` sont mis à jour pour fournir de meilleurs paramètres par défaut pour l'ensemble de la page. Plus précisément:
+The `<html>` and `<body>` elements are updated to provide better page-wide defaults. More specifically:
 
 - La marge dans tous les navigateurs est supprimée.
 - La couleur d'arrière-plan par défaut de Material Design est appliquée. Ceci est réalisé à l'aide de [`thème.la palette.arrière-plan.par défaut`](/customization/default-theme/?expend-path=$.palette.background) pour les appareils standard et un fond blanc pour les périphériques d'impression.
@@ -39,5 +39,7 @@ Les éléments `<html>` et `<body>` sont mis à jour pour fournir de meilleurs p
 
 ### Typographie
 
-- L'anticrénelage des polices est activé pour un meilleur affichage de la police Roboto.
 - Aucune taille de police de base n’est déclarée sur le `<html>`, mais 16px est utilisée (valeur par défaut du navigateur). Vous pouvez en apprendre davantage sur les implications de l' évolution du `<html>` taille de la police par défaut dans [la documentation abordant les thèmes](/customization/typography/#typography-html-font-size) page.
+- Set the `theme.typography.body2` style on the `<body>` element.
+- Set the font-weight to "bolder" for the `<b>` and `<strong>` elements. Bolder is one font weight heavier than the parent element (among the available weights of the font).
+- L'anticrénelage des polices est activé pour un meilleur affichage de la police Roboto.

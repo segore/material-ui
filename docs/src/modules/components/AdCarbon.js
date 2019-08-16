@@ -6,15 +6,15 @@ const styles = theme => ({
   '@global': {
     '#carbonads': {
       overflow: 'hidden',
-      backgroundColor: theme.palette.background.level1,
-      padding: `${theme.spacing(1)}px ${theme.spacing(1)}px ${theme.spacing(1)}px ${theme.spacing(
-        1,
-      ) + 130}px`,
+      backgroundColor: theme.palette.background.level2,
+      padding: `${theme.spacing(1.5)}px ${theme.spacing(1.5)}px ${theme.spacing(
+        1.5,
+      )}px ${theme.spacing(1.5) + 130}px`,
       borderRadius: theme.shape.borderRadius,
       '& .carbon-img': {
         float: 'left',
         marginLeft: -130,
-        marginRight: theme.spacing(1),
+        marginRight: theme.spacing(1.5),
       },
       '& img': {
         verticalAlign: 'middle',

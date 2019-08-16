@@ -28,7 +28,7 @@ export default MyApp;
 
 ### Seite
 
-Die Elemente `<html>` und `<body>` werden aktualisiert, um bessere seitenweite Standardeinstellungen zu erhalten. Genauer:
+The `<html>` and `<body>` elements are updated to provide better page-wide defaults. More specifically:
 
 - Der Rand in allen Browsern wird entfernt.
 - Die Standardhintergrundfarbe des Materialdesigns wird angewendet. Es verwendet [`theme.palette.background.default`](/customization/default-theme/?expend-path=$.palette.background) für Standardgeräte und einen weißen Hintergrund für Druckgeräte.
@@ -39,5 +39,7 @@ Die Elemente `<html>` und `<body>` werden aktualisiert, um bessere seitenweite S
 
 ### Typografie
 
-- Das Antialiasing von Schriftarten ist aktiviert, um die Roboto-Schrift besser anzuzeigen.
 - Für das `<html>`-Element wird keine Basisschriftgröße deklariert, es wird jedoch von 16px ausgegangen (Standardeinstellung des Browsers). Sie können mehr über die Auswirkungen lernen von den sich ändernden `<html>` Standard - Schriftgröße auf [der Theme Dokumentation](/customization/typography/#typography-html-font-size) Seite.
+- Set the `theme.typography.body2` style on the `<body>` element.
+- Set the font-weight to "bolder" for the `<b>` and `<strong>` elements. Bolder is one font weight heavier than the parent element (among the available weights of the font).
+- Das Antialiasing von Schriftarten ist aktiviert, um die Roboto-Schrift besser anzuzeigen.

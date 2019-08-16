@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -100,13 +99,6 @@ function renderSuggestion(suggestionProps: RenderSuggestionProps) {
     </MenuItem>
   );
 }
-renderSuggestion.propTypes = {
-  highlightedIndex: PropTypes.number,
-  index: PropTypes.number,
-  itemProps: PropTypes.object,
-  selectedItem: PropTypes.string,
-  suggestion: PropTypes.shape({ label: PropTypes.string }).isRequired,
-};
 
 function getSuggestions(value: string, { showEmpty = false } = {}) {
   const inputValue = deburr(value.trim()).toLowerCase();
@@ -227,10 +219,6 @@ function DownshiftMultiple(props: DownshiftMultipleProps) {
   );
 }
 
-DownshiftMultiple.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -266,7 +254,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 let popperNode: HTMLDivElement | null | undefined;
 
-function IntegrationDownshift() {
+export default function IntegrationDownshift() {
   const classes = useStyles();
 
   return (
@@ -424,5 +412,3 @@ function IntegrationDownshift() {
     </div>
   );
 }
-
-export default IntegrationDownshift;

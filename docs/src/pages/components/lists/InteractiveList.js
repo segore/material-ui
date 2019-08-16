@@ -37,7 +37,7 @@ function generate(element) {
   );
 }
 
-function InteractiveList() {
+export default function InteractiveList() {
   const classes = useStyles();
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
@@ -146,7 +146,7 @@ function InteractiveList() {
                     secondary={secondary ? 'Secondary text' : null}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="Delete">
+                    <IconButton edge="end" aria-label="delete">
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
@@ -159,5 +159,3 @@ function InteractiveList() {
     </div>
   );
 }
-
-export default InteractiveList;

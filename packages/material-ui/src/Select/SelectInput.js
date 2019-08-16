@@ -14,6 +14,10 @@ function areEqualValues(a, b) {
   return String(a) === String(b);
 }
 
+function isEmpty(display) {
+  return display == null || (typeof display === 'string' && !display.trim());
+}
+
 /**
  * @ignore - internal component.
  */
@@ -27,7 +31,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     disabled,
     displayEmpty,
     IconComponent,
-    inputRef,
+    inputRef: inputRefProp,
     MenuProps = {},
     multiple,
     name,
@@ -47,13 +51,15 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     variant,
     ...other
   } = props;
+
+  const inputRef = React.useRef(null);
   const displayRef = React.useRef(null);
   const ignoreNextBlur = React.useRef(false);
-  const { current: isOpenControlled } = React.useRef(props.open != null);
+  const { current: isOpenControlled } = React.useRef(openProp != null);
   const [menuMinWidthState, setMenuMinWidthState] = React.useState();
   const [openState, setOpenState] = React.useState(false);
   const [, forceUpdate] = React.useState(0);
-  const handleRef = useForkRef(ref, inputRef);
+  const handleRef = useForkRef(ref, inputRefProp);
 
   React.useImperativeHandle(
     handleRef,
@@ -61,10 +67,10 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
       focus: () => {
         displayRef.current.focus();
       },
-      node: inputRef ? inputRef.current : null,
+      node: inputRef.current,
       value,
     }),
-    [inputRef, value],
+    [value],
   );
 
   React.useEffect(() => {
@@ -172,7 +178,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
   delete other['aria-invalid'];
 
   let display;
-  let displaySingle = '';
+  let displaySingle;
   const displayMultiple = [];
   let computeDisplay = false;
 
@@ -203,7 +209,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     if (multiple) {
       if (!Array.isArray(value)) {
         throw new Error(
-          'Material-UI: the `value` property must be an array ' +
+          'Material-UI: the `value` prop must be an array ' +
             'when using the `Select` component with `multiple`.',
         );
       }
@@ -220,6 +226,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
     }
 
     return React.cloneElement(child, {
+      'aria-selected': selected ? 'true' : undefined,
       onClick: handleItemClick(child),
       role: 'option',
       selected,
@@ -235,7 +242,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
   // Avoid performing a layout computation in the render method.
   let menuMinWidth = menuMinWidthState;
 
-  if (!autoWidth && isOpenControlled.current && displayRef.current) {
+  if (!autoWidth && isOpenControlled && displayRef.current) {
     menuMinWidth = displayRef.current.clientWidth;
   }
 
@@ -247,9 +254,10 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
   }
 
   return (
-    <div className={classes.root}>
+    <React.Fragment>
       <div
         className={clsx(
+          classes.root, // TODO v5: merge root and select
           classes.select,
           classes.selectMenu,
           {
@@ -261,11 +269,11 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
         )}
         ref={displayRef}
         data-mui-test="SelectDisplay"
-        aria-pressed={open ? 'true' : 'false'}
         tabIndex={tabIndex}
         role="button"
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="listbox"
         aria-owns={open ? `menu-${name || ''}` : undefined}
-        aria-haspopup="true"
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
         onClick={disabled || readOnly ? null : handleClick}
@@ -275,13 +283,17 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
         {...SelectDisplayProps}
       >
         {/* So the vertical align positioning algorithm kicks in. */}
-        {/* eslint-disable-next-line react/no-danger */}
-        {display != null ? display : <span dangerouslySetInnerHTML={{ __html: '&#8203;' }} />}
+        {isEmpty(display) ? (
+          // eslint-disable-next-line react/no-danger
+          <span dangerouslySetInnerHTML={{ __html: '&#8203;' }} />
+        ) : (
+          display
+        )}
       </div>
       <input
         value={Array.isArray(value) ? value.join(',') : value}
         name={name}
-        ref={handleRef}
+        ref={inputRef}
         type={type}
         autoFocus={autoFocus}
         {...other}
@@ -308,7 +320,7 @@ const SelectInput = React.forwardRef(function SelectInput(props, ref) {
       >
         {items}
       </Menu>
-    </div>
+    </React.Fragment>
   );
 });
 
@@ -349,11 +361,11 @@ SelectInput.propTypes = {
    */
   IconComponent: PropTypes.elementType,
   /**
-   * Use that property to pass a ref callback to the native select element.
+   * Use that prop to pass a ref callback to the native select element.
    */
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
-   * Properties applied to the [`Menu`](/api/menu/) element.
+   * Props applied to the [`Menu`](/api/menu/) element.
    */
   MenuProps: PropTypes.object,
   /**
@@ -414,7 +426,7 @@ SelectInput.propTypes = {
    */
   required: PropTypes.bool,
   /**
-   * Properties applied to the clickable div element.
+   * Props applied to the clickable div element.
    */
   SelectDisplayProps: PropTypes.object,
   /**

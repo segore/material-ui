@@ -31,11 +31,7 @@ function insertSeparators(items, className, separator) {
     if (index < items.length - 1) {
       acc = acc.concat(
         current,
-        <BreadcrumbSeparator
-          // eslint-disable-next-line react/no-array-index-key
-          key={`separator-${index}`}
-          className={className}
-        >
+        <BreadcrumbSeparator key={`separator-${index}`} className={className}>
           {separator}
         </BreadcrumbSeparator>,
       );
@@ -73,7 +69,7 @@ const Breadcrumbs = React.forwardRef(function Breadcrumbs(props, ref) {
       warning(
         false,
         [
-          'Material-UI: you have provided an invalid combination of properties to the Breadcrumbs.',
+          'Material-UI: you have provided an invalid combination of props to the Breadcrumbs.',
           `itemsAfterCollapse={${itemsAfterCollapse}} +itemsBeforeCollapse={${itemsBeforeCollapse}} >= maxItems={${maxItems}}`,
         ].join('\n'),
       );
@@ -90,7 +86,6 @@ const Breadcrumbs = React.forwardRef(function Breadcrumbs(props, ref) {
   const allItems = React.Children.toArray(children)
     .filter(child => React.isValidElement(child))
     .map((child, index) => (
-      // eslint-disable-next-line react/no-array-index-key
       <li className={classes.li} key={`child-${index}`}>
         {child}
       </li>

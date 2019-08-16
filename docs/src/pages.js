@@ -7,7 +7,7 @@ const pages = [
       { pathname: '/getting-started/installation' },
       { pathname: '/getting-started/usage' },
       { pathname: '/getting-started/example-projects' },
-      { pathname: '/getting-started/page-layout-examples' },
+      { pathname: '/getting-started/templates' },
       { pathname: '/getting-started/learn' },
       { pathname: '/getting-started/faq', title: 'FAQs' },
       { pathname: '/getting-started/supported-components' },
@@ -38,6 +38,7 @@ const pages = [
           { pathname: '/components/pickers' },
           { pathname: '/components/radio-buttons' },
           { pathname: '/components/selects' },
+          { pathname: '/components/slider' },
           { pathname: '/components/switches' },
           { pathname: '/components/text-fields' },
           { pathname: '/components/transfer-list' },
@@ -84,6 +85,7 @@ const pages = [
           { pathname: '/components/chips' },
           { pathname: '/components/dividers' },
           { pathname: '/components/icons' },
+          { pathname: '/components/material-icons' },
           { pathname: '/components/lists' },
           { pathname: '/components/tables' },
           { pathname: '/components/tooltips' },
@@ -101,6 +103,7 @@ const pages = [
           { pathname: '/components/popover' },
           { pathname: '/components/popper' },
           { pathname: '/components/portal' },
+          { pathname: '/components/textarea-autosize' },
           { pathname: '/components/transitions' },
           { pathname: '/components/use-media-query', title: 'useMediaQuery' },
         ],
@@ -110,9 +113,11 @@ const pages = [
         subheader: '/components/lab',
         children: [
           { pathname: '/components/about-the-lab' },
-          { pathname: '/components/slider' },
+          { pathname: '/components/rating' },
+          { pathname: '/components/skeleton' },
           { pathname: '/components/speed-dial' },
           { pathname: '/components/toggle-button' },
+          { pathname: '/components/tree-view' },
         ],
       },
     ],
@@ -147,13 +152,14 @@ const pages = [
     children: [
       {
         pathname: '/customization',
-        subheader: '/customization/theme',
+        subheader: '/customization/theming',
         children: [
-          { pathname: '/customization/themes', title: 'Overview' },
+          { pathname: '/customization/theming', title: 'Overview' },
           { pathname: '/customization/palette' },
           { pathname: '/customization/typography' },
           { pathname: '/customization/spacing' },
           { pathname: '/customization/breakpoints' },
+          { pathname: '/customization/density' },
           { pathname: '/customization/z-index', title: 'z-index' },
           { pathname: '/customization/globals' },
         ],
@@ -173,15 +179,22 @@ const pages = [
       { pathname: '/guides/composition' },
       { pathname: '/guides/server-rendering' },
       { pathname: '/guides/responsive-ui', title: 'Responsive UI' },
-      { pathname: '/guides/migration-v3', title: 'Migration From v3' },
-      { pathname: '/guides/migration-v0x', title: 'Migration From v0.x' },
+      { pathname: '/guides/migration-v3', title: 'Migration From v3 to v4' },
+      { pathname: '/guides/migration-v0x', title: 'Migration From v0.x to v1' },
       { pathname: '/guides/testing' },
       { pathname: '/guides/right-to-left', title: 'Right-to-left' },
       { pathname: '/guides/flow' },
     ],
   },
-  { pathname: '/premium-themes' },
-
+  {
+    pathname: 'https://themes.material-ui.com/',
+    title: 'Premium Themes',
+    linkProps: {
+      'data-ga-event-category': 'premium-themes',
+      'data-ga-event-action': 'click',
+      'data-ga-event-label': 'sidenav-link',
+    },
+  },
   {
     pathname: '/discover-more',
     children: [
@@ -200,6 +213,9 @@ const pages = [
   {
     pathname: '/blog',
     children: [
+      { pathname: '/blog/2019-july-update' },
+      { pathname: '/blog/june-2019-update' },
+      { pathname: '/blog/may-2019-update' },
       {
         pathname: '/blog/material-ui-v4-is-out',
         title: 'Material-UI v4 is out',
@@ -207,6 +223,10 @@ const pages = [
       { pathname: '/blog/april-2019-update' },
       { pathname: '/blog/march-2019-update' },
       { pathname: '/blog/2019-developer-survey-results' },
+      {
+        pathname: '/blog/material-ui-v1-is-out',
+        title: 'Material-UI v1 is out',
+      },
     ],
   },
   { pathname: '/versions', displayNav: false },

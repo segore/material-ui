@@ -1,14 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import keycode from 'keycode';
 import warning from 'warning';
 import { duration, withStyles } from '@material-ui/core/styles';
 import Zoom from '@material-ui/core/Zoom';
 import Fab from '@material-ui/core/Fab';
 import { isMuiElement, useForkRef } from '@material-ui/core/utils';
 import * as utils from './utils';
-import { clamp } from '../utils';
+
+function clamp(value, min, max) {
+  if (value < min) {
+    return min;
+  }
+  if (value > max) {
+    return max;
+  }
+  return value;
+}
 
 const dialRadius = 32;
 const spacingActions = 16;
@@ -143,11 +151,11 @@ const SpeedDial = React.forwardRef(function SpeedDial(props, ref) {
   };
 
   const handleKeyboardNavigation = event => {
-    const key = keycode(event);
+    const key = event.key.replace('Arrow', '').toLowerCase();
     const { current: nextItemArrowKeyCurrent = key } = nextItemArrowKey;
 
-    if (key === 'esc') {
-      closeActions(event, key);
+    if (event.key === 'Escape') {
+      closeActions(event, 'esc');
     } else if (utils.sameOrientation(key, direction)) {
       event.preventDefault();
 
@@ -277,7 +285,7 @@ SpeedDial.propTypes = {
    */
   ariaLabel: PropTypes.string.isRequired,
   /**
-   * Properties applied to the [`Button`](/api/button/) element.
+   * Props applied to the [`Button`](/api/button/) element.
    */
   ButtonProps: PropTypes.object,
   /**
@@ -342,7 +350,7 @@ SpeedDial.propTypes = {
     PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
   ]),
   /**
-   * Properties applied to the `Transition` element.
+   * Props applied to the `Transition` element.
    */
   TransitionProps: PropTypes.object,
 };

@@ -49,23 +49,23 @@ Ein seitliches Suchfeld.
 
 Eine App-Bar die sich beim Scrollen versteckt.
 
-{{"demo": "pages/components/app-bar/HideAppBar.js", "iframe": "true", "maxWidth": 500}}
+{{"demo": "pages/components/app-bar/HideAppBar.js", "iframe": true, "maxWidth": 500}}
 
 ### App-Bar anheben
 
 Eine App-Bar die sich beim Scrollen anhebt.
 
-{{"demo": "pages/components/app-bar/ElevateAppBar.js", "iframe": "true", "maxWidth": 500}}
+{{"demo": "pages/components/app-bar/ElevateAppBar.js", "iframe": true, "maxWidth": 500}}
 
 ### `useScrollTrigger([options]) => trigger`
 
 #### Parameter
 
 1. `options` (*Object* [optional]):
-    
-    - `options.disableHysteresis ` (*Boolean* [optional]): Standardeinstellung ist `false`. Hysterese deaktivieren. Die Bildlaufrichtung wird beim Bestimmen des `trigger`-Werts ignoriert.
-    - `options.target` (*Node* [optional]): Standardwert `window`.
-    - `options.threshold` (*Number* [optional]): Standardwert `100`. Ändert den `trigger`-Wert wenn der vertikale Bildlauf den Schwellwert (streng) überschreitet (exklusiv).
+
+- `options.disableHysteresis ` (*Boolean* [optional]): Standardeinstellung ist `false`. Hysterese deaktivieren. Die Bildlaufrichtung wird beim Bestimmen des `trigger`-Werts ignoriert.
+- `options.target` (*Node* [optional]): Standardwert `window`.
+- `options.threshold` (*Number* [optional]): Defaults to `100`. Change the `trigger` value when the vertical scroll strictly crosses this threshold (exclusive).
 
 #### Rückgabewerte
 

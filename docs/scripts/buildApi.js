@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import { mkdir, readFileSync, writeFileSync } from 'fs';
+import { getLineFeed } from './helpers';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import { defaultHandlers, parse as docgenParse } from 'react-docgen';
@@ -11,6 +12,9 @@ import { getHeaders } from '../src/modules/utils/parseMarkdown';
 import parseTest from '../src/modules/utils/parseTest';
 import createMuiTheme from '../../packages/material-ui/src/styles/createMuiTheme';
 import getStylesCreator from '../../packages/material-ui-styles/src/getStylesCreator';
+import createGenerateClassName from '../../packages/material-ui-styles/src/createGenerateClassName';
+
+const generateClassName = createGenerateClassName();
 
 function ensureExists(pat, mask, cb) {
   mkdir(pat, mask, err => {
@@ -63,7 +67,7 @@ function getInheritance(testInfo, src) {
 
   switch (inheritedComponentName) {
     case 'Transition':
-      pathname = 'https://reactcommunity.org/react-transition-group/#Transition';
+      pathname = 'https://reactcommunity.org/react-transition-group/transition#Transition-props';
       break;
 
     default:
@@ -102,6 +106,20 @@ async function buildDocs(options) {
       className => !className.match(/^(@media|@keyframes)/),
     );
     styles.name = component.default.options.name;
+    styles.globalClasses = styles.classes.reduce((acc, key) => {
+      acc[key] = generateClassName(
+        {
+          key,
+        },
+        {
+          options: {
+            name: styles.name,
+            theme: {},
+          },
+        },
+      );
+      return acc;
+    }, {});
 
     let styleSrc = src;
     // Exception for Select where the classes are imported from NativeSelect
@@ -146,6 +164,7 @@ async function buildDocs(options) {
   reactAPI.pagesMarkdown = pagesMarkdown;
   reactAPI.src = src;
   reactAPI.spread = spread;
+  reactAPI.EOL = getLineFeed(src);
 
   const testInfo = await parseTest(componentObject.filename);
   // no Object.assign to visually check for collisions
@@ -174,12 +193,13 @@ async function buildDocs(options) {
       return;
     }
 
-    writeFileSync(path.resolve(docsApiDirectory, `${kebabCase(reactAPI.name)}.md`), markdown);
+    writeFileSync(
+      path.resolve(docsApiDirectory, `${kebabCase(reactAPI.name)}.md`),
+      markdown.replace(/\r?\n/g, reactAPI.EOL),
+    );
     writeFileSync(
       path.resolve(docsApiDirectory, `${kebabCase(reactAPI.name)}.js`),
-      `import 'docs/src/modules/components/bootstrap';
-// --- Post bootstrap -----
-import React from 'react';
+      `import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import markdown from './${kebabCase(reactAPI.name)}.md';
 
@@ -188,7 +208,7 @@ function Page() {
 }
 
 export default Page;
-`,
+`.replace(/\r?\n/g, reactAPI.EOL),
     );
 
     console.log('Built markdown docs for', reactAPI.name);

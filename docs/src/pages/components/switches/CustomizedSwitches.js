@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
+import { purple } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -31,7 +31,6 @@ const IOSSwitch = withStyles(theme => ({
   switchBase: {
     padding: 1,
     '&$checked': {
-      transform: 'translateX(16px)',
       color: theme.palette.common.white,
       '& + $track': {
         backgroundColor: '#52d869',
@@ -85,7 +84,6 @@ const AntSwitch = withStyles(theme => ({
     padding: 2,
     color: theme.palette.grey[500],
     '&$checked': {
-      transform: 'translateX(12px)',
       color: theme.palette.common.white,
       '& + $track': {
         opacity: 1,
@@ -108,7 +106,7 @@ const AntSwitch = withStyles(theme => ({
   checked: {},
 }))(Switch);
 
-function CustomizedSwitches() {
+export default function CustomizedSwitches() {
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
@@ -157,5 +155,3 @@ function CustomizedSwitches() {
     </FormGroup>
   );
 }
-
-export default CustomizedSwitches;

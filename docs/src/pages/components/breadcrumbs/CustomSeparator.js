@@ -21,13 +21,13 @@ function handleClick(event) {
   alert('You clicked a breadcrumb.');
 }
 
-function CustomSeparator() {
+export default function CustomSeparator() {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Paper elevation={0} className={classes.paper}>
-        <Breadcrumbs separator="›" aria-label="Breadcrumb">
+        <Breadcrumbs separator="›" aria-label="breadcrumb">
           <Link color="inherit" href="/" onClick={handleClick}>
             Material-UI
           </Link>
@@ -39,7 +39,7 @@ function CustomSeparator() {
       </Paper>
       <br />
       <Paper elevation={0} className={classes.paper}>
-        <Breadcrumbs separator="-" aria-label="Breadcrumb">
+        <Breadcrumbs separator="-" aria-label="breadcrumb">
           <Link color="inherit" href="/" onClick={handleClick}>
             Material-UI
           </Link>
@@ -51,7 +51,7 @@ function CustomSeparator() {
       </Paper>
       <br />
       <Paper elevation={0} className={classes.paper}>
-        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="Breadcrumb">
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
           <Link color="inherit" href="/" onClick={handleClick}>
             Material-UI
           </Link>
@@ -64,5 +64,3 @@ function CustomSeparator() {
     </div>
   );
 }
-
-export default CustomSeparator;

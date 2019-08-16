@@ -1,12 +1,12 @@
 # API设计方法
 
-<p class="description">我们已经学习了很多关于如何使用Material-UI的知识，而v1重写允许我们完全重新思考组件API。</p>
+<p class="description">开发团队在之前的版本了解了 Material-UI 如何被使用。在v1重写时，重新考虑了组件API的设计方法论。</p>
 
-> API设计很难，因为你可以让它看起来很简单，但它实际上看似复杂，或者说它实际上很简单但看起来很复杂。
+> API设计的难点在于你可以让一些复杂的东西看起来简单，也可能把简单的东西搞得复杂。
 
 [@sebmarkbage](https://twitter.com/sebmarkbage/status/728433349337841665)
 
-正如Sebastian Markbage [指出](https://2014.jsconf.eu/speakers/sebastian-markbage-minimal-api-surface-area-learning-patterns-instead-of-frameworks.html)，没有抽象优于错误的抽象。 我们提供低级组件以最大化组合功能。
+正如Sebastian Markbage [指出](https://2014.jsconf.eu/speakers/sebastian-markbage-minimal-api-surface-area-learning-patterns-instead-of-frameworks.html)，没有抽象优于错误的抽象。 我们提供低级的组件以最大化保留可用性。
 
 ## 构成
 
@@ -101,13 +101,13 @@ const styles = {
     
     ```tsx
     type Props = {
-    variant: 'text' | 'contained' | 'fab';
+      variant: 'text' | 'contained' | 'fab';
     }
     ```
     
     这个API更详细： `<Button>`,`<Button variant="contained">`,`<Button variant="fab">`。
     
-    但是它可以防止使用无效组合， 限制暴露的属性数量， 并且可以在将来轻松支持新的价值观。
+    However it prevents an invalid combination from being used, bounds the number of properties exposed, and can easily support new values in the future.
 
 Material-UI组件根据以下规则使用两种方法的组合：
 

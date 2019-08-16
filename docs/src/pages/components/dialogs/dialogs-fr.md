@@ -13,7 +13,7 @@ Les dialogues sont délibérément interruptifs, ils doivent donc être utilisé
 
 ## Dialogues simples
 
-Des boîtes de dialogue simples peuvent fournir des détails supplémentaires ou des actions sur un élément de la liste. Par exemple, ils peuvent afficher des avatars, des icônes, des clarifications de sous-texte ou des actions orthogonales (telles que l'ajout d'un compte).
+Simple dialogs can provide additional details or actions about a list item. For example, they can display avatars, icons, clarifying subtext, or orthogonal actions (such as adding an account).
 
 Mécanique tactile:
 
@@ -26,12 +26,12 @@ Mécanique tactile:
 
 Les alertes sont des interruptions urgentes, nécessitant un acquittement, qui informent l'utilisateur de la situation.
 
-La plupart des alertes n'ont pas besoin de titres. Ils résument une décision en une phrase ou deux en:
+Most alerts don't need titles. They summarize a decision in a sentence or two by either:
 
 - Poser une question (par exemple "Supprimer cette conversation?")
 - Faire une déclaration relative aux boutons d'action
 
-Utilisez les alertes de la barre de titre uniquement dans les situations à haut risque, telles que la perte de connectivité potentielle. Les utilisateurs devraient être en mesure de comprendre les choix basés sur le titre et le texte du bouton seul.
+Use title bar alerts only for high-risk situations, such as the potential loss of connectivity. Users should be able to understand the choices based on the title and button text alone.
 
 Si un titre est requis:
 
@@ -39,6 +39,8 @@ Si un titre est requis:
 - Évitez les excuses, les ambiguïtés ou les questions telles que "Attention"
 
 {{"demo": "pages/components/dialogs/AlertDialog.js"}}
+
+## Les transitions
 
 Vous pouvez également permuter la transition. L’exemple suivant utilise `Slide`.
 
@@ -70,7 +72,18 @@ Vous pouvez définir une largeur maximale dans la boîte de dialogue à l’aide
 
 ## Responsive full-screen
 
-You may make a dialog responsively full screen using `withMobileDialog`. By default, `withMobileDialog()(Dialog)` responsively full screens *at or below* the `sm` [screen size](/customization/breakpoints/). You can choose your own breakpoint for example `xs` by passing the `breakpoint` argument: `withMobileDialog({breakpoint: 'xs'})(Dialog)`.
+You may make a dialog responsively full screen using [`useMediaQuery`](/components/use-media-query/#usemediaquery).
+
+```jsx
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+function MyComponent() {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return <Dialog fullScreen={fullScreen} />
+}
+```
 
 {{"demo": "pages/components/dialogs/ResponsiveDialog.js"}}
 

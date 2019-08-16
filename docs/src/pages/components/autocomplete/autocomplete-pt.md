@@ -1,13 +1,13 @@
 ---
-title: Componente React para Auto Completar
+title: Componente React para Autocompletar
 components: TextField, Paper, MenuItem, Popper
 ---
 
-# Autocomplete (Autocompletar)
+# Autocompletar
 
-<p class="description">O autocomplete é uma entrada de texto normal aprimorada por um painel de opções sugeridas.</p>
+<p class="description">O autocompletar é uma entrada de texto normal aprimorada por um painel de opções sugeridas.</p>
 
-O Material-UI não fornece nenhuma API de alto nível para resolver esse problema. Recomendamos utilizarem soluções que a comunidade React construiu.
+Material-UI, não fornece nenhuma API de alto nível para resolver este problema. Encorajamos as pessoas a confiar nas soluções que a comunidade React construiu.
 
 ## downshift
 
@@ -15,7 +15,7 @@ O Material-UI não fornece nenhuma API de alto nível para resolver esse problem
 
 No exemplo a seguir, demonstramos como usar [downshift](https://github.com/downshift-js/downshift).
 
-A última demonstração permite que em um campo vazio com o foco, seja exibido várias opções.
+A última demonstração permite ao usuário limpar a entrada e mostrar várias opções em foco.
 
 {{"demo": "pages/components/autocomplete/IntegrationDownshift.js"}}
 

@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function FilledInputAdornments() {
+export default function FilledInputAdornments() {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     amount: '',
@@ -52,6 +52,10 @@ function FilledInputAdornments() {
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  const handleMouseDownPassword = event => {
+    event.preventDefault();
   };
 
   return (
@@ -118,8 +122,9 @@ function FilledInputAdornments() {
             <InputAdornment position="end">
               <IconButton
                 edge="end"
-                aria-label="Toggle password visibility"
+                aria-label="toggle password visibility"
                 onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
               >
                 {values.showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
@@ -127,8 +132,29 @@ function FilledInputAdornments() {
           ),
         }}
       />
+      <TextField
+        id="filled-adornment-dense"
+        className={clsx(classes.margin, classes.textField)}
+        variant="filled"
+        margin="dense"
+        label="Amount in Euro"
+        InputProps={{
+          startAdornment: <InputAdornment position="start">€</InputAdornment>,
+        }}
+      />
+      <TextField
+        id="filled-adornment-extra-dense"
+        className={clsx(classes.margin, classes.textField)}
+        variant="filled"
+        margin="dense"
+        hiddenLabel
+        InputProps={{
+          inputProps: {
+            'aria-label': 'amount in Euro',
+          },
+          startAdornment: <InputAdornment position="start">€</InputAdornment>,
+        }}
+      />
     </div>
   );
 }
-
-export default FilledInputAdornments;

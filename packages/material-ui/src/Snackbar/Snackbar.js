@@ -96,14 +96,14 @@ export const styles = theme => {
 const Snackbar = React.forwardRef(function Snackbar(props, ref) {
   const {
     action,
-    anchorOrigin: { vertical, horizontal },
+    anchorOrigin: { vertical, horizontal } = { vertical: 'bottom', horizontal: 'center' },
     autoHideDuration,
     children,
     classes,
     className,
     ClickAwayListenerProps,
     ContentProps,
-    disableWindowBlurListener,
+    disableWindowBlurListener = false,
     message,
     onClose,
     onEnter,
@@ -116,14 +116,17 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
     onMouseLeave,
     open,
     resumeHideDuration,
-    TransitionComponent,
-    transitionDuration,
+    TransitionComponent = Grow,
+    transitionDuration = {
+      enter: duration.enteringScreen,
+      exit: duration.leavingScreen,
+    },
     TransitionProps,
     ...other
   } = props;
 
   const timerAutoHide = React.useRef();
-  const [exited, setExited] = React.useState(!open);
+  const [exited, setExited] = React.useState(true);
 
   // Timer that controls delay before snackbar auto hides
   const setAutoHideTimer = React.useCallback(
@@ -149,7 +152,9 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
   );
 
   React.useEffect(() => {
-    if (open) setAutoHideTimer();
+    if (open) {
+      setAutoHideTimer();
+    }
 
     return () => {
       clearTimeout(timerAutoHide.current);
@@ -203,7 +208,7 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
   };
 
   React.useEffect(() => {
-    if (!disableWindowBlurListener) {
+    if (!disableWindowBlurListener && open) {
       window.addEventListener('focus', handleResume);
       window.addEventListener('blur', handlePause);
 
@@ -214,7 +219,7 @@ const Snackbar = React.forwardRef(function Snackbar(props, ref) {
     }
 
     return undefined;
-  }, [disableWindowBlurListener, handleResume]);
+  }, [disableWindowBlurListener, handleResume, open]);
 
   // So we only render active snackbars.
   if (!open && exited) {
@@ -287,11 +292,11 @@ Snackbar.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Properties applied to the `ClickAwayListener` element.
+   * Props applied to the `ClickAwayListener` element.
    */
   ClickAwayListenerProps: PropTypes.object,
   /**
-   * Properties applied to the [`SnackbarContent`](/api/snackbar-content/) element.
+   * Props applied to the [`SnackbarContent`](/api/snackbar-content/) element.
    */
   ContentProps: PropTypes.object,
   /**
@@ -300,7 +305,7 @@ Snackbar.propTypes = {
   disableWindowBlurListener: PropTypes.bool,
   /**
    * When displaying multiple consecutive Snackbars from a parent rendering a single
-   * <Snackbar/>, add the key property to ensure independent treatment of each message.
+   * <Snackbar/>, add the key prop to ensure independent treatment of each message.
    * e.g. <Snackbar key={message} />, otherwise, the message may update-in-place and
    * features such as autoHideDuration may be canceled.
    */
@@ -358,8 +363,8 @@ Snackbar.propTypes = {
   open: PropTypes.bool,
   /**
    * The number of milliseconds to wait before dismissing after user interaction.
-   * If `autoHideDuration` property isn't specified, it does nothing.
-   * If `autoHideDuration` property is specified but `resumeHideDuration` isn't,
+   * If `autoHideDuration` prop isn't specified, it does nothing.
+   * If `autoHideDuration` prop is specified but `resumeHideDuration` isn't,
    * we default to `autoHideDuration / 2` ms.
    */
   resumeHideDuration: PropTypes.number,
@@ -376,22 +381,9 @@ Snackbar.propTypes = {
     PropTypes.shape({ enter: PropTypes.number, exit: PropTypes.number }),
   ]),
   /**
-   * Properties applied to the `Transition` element.
+   * Props applied to the `Transition` element.
    */
   TransitionProps: PropTypes.object,
-};
-
-Snackbar.defaultProps = {
-  anchorOrigin: {
-    vertical: 'bottom',
-    horizontal: 'center',
-  },
-  disableWindowBlurListener: false,
-  TransitionComponent: Grow,
-  transitionDuration: {
-    enter: duration.enteringScreen,
-    exit: duration.leavingScreen,
-  },
 };
 
 export default withStyles(styles, { flip: false, name: 'MuiSnackbar' })(Snackbar);

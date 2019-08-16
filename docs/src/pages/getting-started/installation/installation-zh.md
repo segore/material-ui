@@ -23,7 +23,7 @@ yarn add @material-ui/core
 Material-UI 的设计与 [Roboto](https://fonts.google.com/specimen/Roboto) 字体相配。 因此，请按照[此说明](/components/typography/#general)载入字体。 例如，使用 Google Web Fonts：
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
 ```
 
 ## 字体图标
@@ -31,12 +31,6 @@ Material-UI 的设计与 [Roboto](https://fonts.google.com/specimen/Roboto) 字�
 为了使用字体`Icon` 组件, 你必须添加[Material icons](https://material.io/tools/icons/)字体. 这是如何去做的 [一些说明](/components/icons/#font-icons) 例如，使用 Google Web Fonts：
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-```
-
-如果要使用 JSX 嵌套 HTML 来渲染页面头部，可以使用：
-
-```jsx
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 ```
 
@@ -56,13 +50,13 @@ yarn add @material-ui/icons
 
 您可以使用最少的前端基础架构开始使用Material-UI，这对于原型设计很有用
 
-We are providing two Universal Module Definition (**UMD**) files:
+我们提供两个通用模块规范 (**UMD**) 文件：
 
 - 一个用于开发: https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js
 - 一个用于生产: https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js
 
 您可以按照[此CDN示例](https://github.com/mui-org/material-ui/tree/master/examples/cdn)快速开始。
 
-⚠️ We **discourage** using this approach in **production** though - the client has to download the entire library, regardless of which components are actually used, affecting performance and bandwidth utilization.
+尽管我们**不鼓励**在**生产环境**中使用这种方式 - 无论实际使用哪些组件，客户端必须下载整个库而这将会影响到性能和带宽利用率。
 
-⚠️ The UMD links are using the `latest` tag to point to the latest version of the library. This pointer is **unstable**, it shifts as we release new versions. You should consider pointing to a specific version like [v3.9.3](https://unpkg.com/@material-ui/core@3.9.3/umd/material-ui.development.js).
+⚠️ UMD 链接使用 `latest` 标签指向最新版本的库。 这个指向是**不稳定的**，它随着我们发布的新版本而改变。 您应该考虑指向一个具体的版本，如 [v3.9.3](https://unpkg.com/@material-ui/core@3.9.3/umd/material-ui.development.js)。

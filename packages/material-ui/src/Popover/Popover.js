@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import warning from 'warning';
-import debounce from 'debounce'; // < 1kb payload overhead when lodash/debounce is > 3kb.
+import debounce from '../utils/debounce';
 import clsx from 'clsx';
 import { chainPropTypes, elementTypeAcceptingRef } from '@material-ui/utils';
 import ownerDocument from '../utils/ownerDocument';
@@ -76,7 +76,7 @@ export const styles = {
     maxWidth: 'calc(100% - 32px)',
     maxHeight: 'calc(100% - 32px)',
     // We disable the focus ring for mouse, touch and keyboard users.
-    outline: 'none',
+    outline: 0,
   },
 };
 
@@ -84,15 +84,18 @@ const Popover = React.forwardRef(function Popover(props, ref) {
   const {
     action,
     anchorEl,
-    anchorOrigin,
+    anchorOrigin = {
+      vertical: 'top',
+      horizontal: 'left',
+    },
     anchorPosition,
-    anchorReference,
+    anchorReference = 'anchorEl',
     children,
     classes,
     container: containerProp,
-    elevation,
+    elevation = 8,
     getContentAnchorEl,
-    marginThreshold,
+    marginThreshold = 16,
     ModalClasses,
     onEnter,
     onEntered,
@@ -102,9 +105,12 @@ const Popover = React.forwardRef(function Popover(props, ref) {
     onExiting,
     open,
     PaperProps = {},
-    transformOrigin,
-    TransitionComponent,
-    transitionDuration: transitionDurationProp,
+    transformOrigin = {
+      vertical: 'top',
+      horizontal: 'left',
+    },
+    TransitionComponent = Grow,
+    transitionDuration: transitionDurationProp = 'auto',
     TransitionProps = {},
     ...other
   } = props;
@@ -126,7 +132,7 @@ const Popover = React.forwardRef(function Popover(props, ref) {
       if (anchorReference === 'anchorPosition') {
         warning(
           anchorPosition,
-          'Material-UI: you need to provide a `anchorPosition` property when using ' +
+          'Material-UI: you need to provide a `anchorPosition` prop when using ' +
             '<Popover anchorReference="anchorPosition" />.',
         );
         return anchorPosition;
@@ -168,8 +174,8 @@ const Popover = React.forwardRef(function Popover(props, ref) {
           anchorOrigin.vertical === 'top',
           [
             'Material-UI: you can not change the default `anchorOrigin.vertical` value ',
-            'when also providing the `getContentAnchorEl` property to the popover component.',
-            'Only use one of the two properties.',
+            'when also providing the `getContentAnchorEl` prop to the popover component.',
+            'Only use one of the two props.',
             'Set `getContentAnchorEl` to `null | undefined`' +
               ' or leave `anchorOrigin.vertical` unchanged.',
           ].join('\n'),
@@ -291,9 +297,9 @@ const Popover = React.forwardRef(function Popover(props, ref) {
     [getPositioningStyle],
   );
 
-  const handleEntering = element => {
+  const handleEntering = (element, isAppearing) => {
     if (onEntering) {
-      onEntering(element);
+      onEntering(element, isAppearing);
     }
 
     setPositioningStyles(element);
@@ -306,14 +312,14 @@ const Popover = React.forwardRef(function Popover(props, ref) {
 
   React.useEffect(() => {
     handleResizeRef.current = debounce(() => {
-      // Because we debounce the event, the open property might no longer be true
+      // Because we debounce the event, the open prop might no longer be true
       // when the callback resolves.
       if (!open) {
         return;
       }
 
       setPositioningStyles(paperRef.current);
-    }, 166); // Corresponds to 10 frames at 60 Hz.
+    });
     window.addEventListener('resize', handleResizeRef.current);
     return () => {
       handleResizeRef.current.clear();
@@ -359,6 +365,7 @@ const Popover = React.forwardRef(function Popover(props, ref) {
           elevation={elevation}
           ref={handlePaperRef}
           {...PaperProps}
+          // eslint-disable-next-line react/prop-types
           className={clsx(classes.paper, PaperProps.className)}
         >
           {children}
@@ -370,7 +377,7 @@ const Popover = React.forwardRef(function Popover(props, ref) {
 
 Popover.propTypes = {
   /**
-   * This is callback property. It's called by the component on mount.
+   * This is callback prop. It's called by the component on mount.
    * This is useful when you want to trigger an action programmatically.
    * It currently only supports updatePosition() action.
    *
@@ -383,7 +390,7 @@ Popover.propTypes = {
    * that may be used to set the position of the popover.
    */
   anchorEl: chainPropTypes(PropTypes.oneOfType([PropTypes.object, PropTypes.func]), props => {
-    if (props.open && props.anchorReference === 'anchorEl') {
+    if (props.open && (!props.anchorReference || props.anchorReference === 'anchorEl')) {
       const resolvedAnchorEl = getAnchorEl(props.anchorEl);
 
       if (resolvedAnchorEl instanceof Element) {
@@ -469,7 +476,7 @@ Popover.propTypes = {
   elevation: PropTypes.number,
   /**
    * This function is called in order to retrieve the content anchor element.
-   * It's the opposite of the `anchorEl` property.
+   * It's the opposite of the `anchorEl` prop.
    * The content anchor element should be an element inside the popover.
    * It's used to correctly scroll and set the position of the popover.
    * The positioning strategy tries to make the content anchor element just above the
@@ -481,7 +488,7 @@ Popover.propTypes = {
    */
   marginThreshold: PropTypes.number,
   /**
-   * `classes` property applied to the [`Modal`](/api/modal/) element.
+   * `classes` prop applied to the [`Modal`](/api/modal/) element.
    */
   ModalClasses: PropTypes.object,
   /**
@@ -520,7 +527,7 @@ Popover.propTypes = {
    */
   open: PropTypes.bool.isRequired,
   /**
-   * Properties applied to the [`Paper`](/api/paper/) element.
+   * Props applied to the [`Paper`](/api/paper/) element.
    */
   PaperProps: PropTypes.shape({
     component: elementTypeAcceptingRef,
@@ -554,25 +561,9 @@ Popover.propTypes = {
     PropTypes.oneOf(['auto']),
   ]),
   /**
-   * Properties applied to the `Transition` element.
+   * Props applied to the `Transition` element.
    */
   TransitionProps: PropTypes.object,
-};
-
-Popover.defaultProps = {
-  anchorReference: 'anchorEl',
-  anchorOrigin: {
-    vertical: 'top',
-    horizontal: 'left',
-  },
-  elevation: 8,
-  marginThreshold: 16,
-  transformOrigin: {
-    vertical: 'top',
-    horizontal: 'left',
-  },
-  TransitionComponent: Grow,
-  transitionDuration: 'auto',
 };
 
 export default withStyles(styles, { name: 'MuiPopover' })(Popover);

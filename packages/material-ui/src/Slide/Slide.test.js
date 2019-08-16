@@ -1,7 +1,8 @@
 import React from 'react';
 import { assert } from 'chai';
 import { spy, stub, useFakeTimers } from 'sinon';
-import { createMount, describeConformance } from '@material-ui/core/test-utils';
+import { createMount } from '@material-ui/core/test-utils';
+import describeConformance from '@material-ui/core/test-utils/describeConformance';
 import Slide, { setTranslateValue } from './Slide';
 import createMuiTheme from '../styles/createMuiTheme';
 import { Transition } from 'react-transition-group';
@@ -31,8 +32,12 @@ describe('<Slide />', () => {
       classes: {},
       inheritComponent: Transition,
       mount,
-      refInstanceof: React.Component,
-      skip: ['componentProp', 'refForwarding'],
+      refInstanceof: window.HTMLDivElement,
+      skip: [
+        'componentProp',
+        // react-transition-group issue
+        'reactTestRenderer',
+      ],
     }),
   );
 
@@ -103,7 +108,7 @@ describe('<Slide />', () => {
 
       describe('handleEntering()', () => {
         it('should reset the translate3d', () => {
-          assert.match(handleEntering.args[0][0].style.transform, /translate\(0(px)?, 0(px)?\)/);
+          assert.match(handleEntering.args[0][0].style.transform, /none/);
         });
 
         it('should call handleEntering', () => {
@@ -250,32 +255,38 @@ describe('<Slide />', () => {
       it('should set element transform and transition in the `left` direction', () => {
         wrapper.setProps({ direction: 'left' });
         wrapper.setProps({ in: true });
-        assert.strictEqual(nodeEnterTransformStyle, 'translateX(100vw) translateX(-300px)');
+        assert.strictEqual(
+          nodeEnterTransformStyle,
+          `translateX(${global.innerWidth}px) translateX(-300px)`,
+        );
       });
 
       it('should set element transform and transition in the `right` direction', () => {
         wrapper.setProps({ direction: 'right' });
         wrapper.setProps({ in: true });
-        assert.strictEqual(nodeEnterTransformStyle, 'translateX(-824px)');
+        assert.strictEqual(nodeEnterTransformStyle, 'translateX(-800px)');
       });
 
       it('should set element transform and transition in the `up` direction', () => {
         wrapper.setProps({ direction: 'up' });
         wrapper.setProps({ in: true });
-        assert.strictEqual(nodeEnterTransformStyle, 'translateY(100vh) translateY(-200px)');
+        assert.strictEqual(
+          nodeEnterTransformStyle,
+          `translateY(${global.innerHeight}px) translateY(-200px)`,
+        );
       });
 
       it('should set element transform and transition in the `down` direction', () => {
         wrapper.setProps({ direction: 'down' });
         wrapper.setProps({ in: true });
-        assert.strictEqual(nodeEnterTransformStyle, 'translateY(-524px)');
+        assert.strictEqual(nodeEnterTransformStyle, 'translateY(-500px)');
       });
 
       it('should reset the previous transition if needed', () => {
-        child.style.transform = 'translateX(-824px)';
+        child.style.transform = 'translateX(-800px)';
         wrapper.setProps({ direction: 'right' });
         wrapper.setProps({ in: true });
-        assert.strictEqual(nodeEnterTransformStyle, 'translateX(-824px)');
+        assert.strictEqual(nodeEnterTransformStyle, 'translateX(-800px)');
       });
     });
 
@@ -295,25 +306,31 @@ describe('<Slide />', () => {
       it('should set element transform and transition in the `left` direction', () => {
         wrapper.setProps({ direction: 'left' });
         wrapper.setProps({ in: false });
-        assert.strictEqual(nodeExitingTransformStyle, 'translateX(100vw) translateX(-300px)');
+        assert.strictEqual(
+          nodeExitingTransformStyle,
+          `translateX(${global.innerWidth}px) translateX(-300px)`,
+        );
       });
 
       it('should set element transform and transition in the `right` direction', () => {
         wrapper.setProps({ direction: 'right' });
         wrapper.setProps({ in: false });
-        assert.strictEqual(nodeExitingTransformStyle, 'translateX(-824px)');
+        assert.strictEqual(nodeExitingTransformStyle, 'translateX(-800px)');
       });
 
       it('should set element transform and transition in the `up` direction', () => {
         wrapper.setProps({ direction: 'up' });
         wrapper.setProps({ in: false });
-        assert.strictEqual(nodeExitingTransformStyle, 'translateY(100vh) translateY(-200px)');
+        assert.strictEqual(
+          nodeExitingTransformStyle,
+          `translateY(${global.innerHeight}px) translateY(-200px)`,
+        );
       });
 
       it('should set element transform and transition in the `down` direction', () => {
         wrapper.setProps({ direction: 'down' });
         wrapper.setProps({ in: false });
-        assert.strictEqual(nodeExitingTransformStyle, 'translateY(-524px)');
+        assert.strictEqual(nodeExitingTransformStyle, 'translateY(-500px)');
       });
     });
   });
@@ -372,7 +389,10 @@ describe('<Slide />', () => {
         style: {},
       };
       setTranslateValue('up', element);
-      assert.strictEqual(element.style.transform, 'translateY(100vh) translateY(-780px)');
+      assert.strictEqual(
+        element.style.transform,
+        `translateY(${global.innerHeight}px) translateY(-780px)`,
+      );
     });
 
     it('should do nothing when visible', () => {

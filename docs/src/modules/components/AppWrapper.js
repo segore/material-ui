@@ -1,9 +1,13 @@
+/* eslint-disable no-underscore-dangle */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Router as Router2, useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@material-ui/styles';
-import { Provider as ThemeProvider } from 'docs/src/modules/components/ThemeContext';
-import { getCookie } from 'docs/src/modules/utils/helpers';
+import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
+import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
+import acceptLanguage from 'accept-language';
 import { ACTION_TYPES, CODE_VARIANTS } from 'docs/src/modules/constants';
 import { create } from 'jss';
 import rtl from 'jss-rtl';
@@ -14,39 +18,116 @@ const jss = create({
   insertionPoint: process.browser ? document.querySelector('#insertion-point-jss') : null,
 });
 
-class SideEffectsRaw extends React.Component {
-  componentDidMount() {
-    const { options } = this.props;
-    const codeVariant = getCookie('codeVariant');
+function useFirstRender() {
+  const firstRenderRef = React.useRef(true);
+  React.useEffect(() => {
+    firstRenderRef.current = false;
+  }, []);
 
-    if (codeVariant && options.codeVariant !== codeVariant) {
-      window.ga('set', 'dimension1', codeVariant);
-      this.props.dispatch({
-        type: ACTION_TYPES.OPTIONS_CHANGE,
-        payload: {
-          codeVariant,
-        },
-      });
-    } else {
-      window.ga('set', 'dimension1', CODE_VARIANTS.JS);
-    }
-
-    window.ga('set', 'dimension2', options.userLanguage);
-  }
-
-  render() {
-    return null;
-  }
+  return firstRenderRef.current;
 }
 
-SideEffectsRaw.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  options: PropTypes.object.isRequired,
-};
+acceptLanguage.languages(['en', 'zh']);
 
-const SideEffects = connect(state => ({
-  options: state.options,
-}))(SideEffectsRaw);
+function LanguageNegotiation() {
+  const router = useRouter();
+  const { userLanguage } = useSelector(state => ({
+    userLanguage: state.options.userLanguage,
+  }));
+
+  React.useEffect(() => {
+    const preferedLanguage =
+      getCookie('userLanguage') !== 'noDefault' && userLanguage === 'en'
+        ? acceptLanguage.get(navigator.language)
+        : userLanguage;
+
+    if (preferedLanguage !== userLanguage) {
+      const { canonical } = pathnameToLanguage(Router2._rewriteUrlForNextExport(router.asPath));
+
+      window.location = preferedLanguage === 'en' ? canonical : `/${preferedLanguage}${canonical}`;
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return null;
+}
+
+/**
+ * Priority: on first render: navigated value, persisted value; otherwise initial value, 'JS'
+ * @param {string} initialCodeVariant
+ * @param {(nextCodeVariant: string) => void} codeVariantChanged
+ * @returns {string} - The persisted variant if the initial value is undefined
+ */
+function usePersistCodeVariant(initialCodeVariant = CODE_VARIANTS.JS, codeVariantChanged) {
+  const isFirstRender = useFirstRender();
+
+  const navigatedCodeVariant = React.useMemo(() => {
+    const navigatedCodeVariantMatch =
+      typeof window !== 'undefined' ? window.location.hash.match(/\.(js|tsx)$/) : null;
+
+    if (navigatedCodeVariantMatch === null) {
+      return undefined;
+    }
+
+    return navigatedCodeVariantMatch[1] === 'tsx' ? CODE_VARIANTS.TS : CODE_VARIANTS.JS;
+  }, []);
+
+  const persistedCodeVariant = React.useMemo(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+    return getCookie('codeVariant');
+  }, []);
+
+  /**
+   * we initialize from navigation or cookies. on subsequent renders the store is the
+   * truth
+   */
+  const codeVariant =
+    isFirstRender === true
+      ? navigatedCodeVariant || persistedCodeVariant || initialCodeVariant
+      : initialCodeVariant;
+
+  React.useEffect(() => {
+    if (codeVariant !== initialCodeVariant) {
+      codeVariantChanged(codeVariant);
+    }
+  });
+
+  React.useEffect(() => {
+    document.cookie = `codeVariant=${codeVariant};path=/;max-age=31536000`;
+  }, [codeVariant]);
+
+  return codeVariant;
+}
+
+function Tracking() {
+  const dispatch = useDispatch();
+  const { options } = useSelector(state => ({
+    options: state.options,
+  }));
+
+  const codeVariant = usePersistCodeVariant(options.codeVariant, nextCodeVariant =>
+    dispatch({ type: ACTION_TYPES.OPTIONS_CHANGE, payload: { codeVariant: nextCodeVariant } }),
+  );
+
+  React.useEffect(() => {
+    window.ga('set', 'dimension1', codeVariant);
+  }, [codeVariant]);
+
+  React.useEffect(() => {
+    window.ga('set', 'dimension2', options.userLanguage);
+  }, [options.userLanguage]);
+
+  React.useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentNode.removeChild(jssStyles);
+    }
+  }, []);
+
+  return null;
+}
 
 // Inspired by
 // https://developers.google.com/web/tools/workbox/guides/advanced-recipes#offer_a_page_reload_for_users
@@ -107,21 +188,14 @@ function AppWrapper(props) {
   const { children } = props;
 
   React.useEffect(() => {
-    // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles) {
-      jssStyles.parentNode.removeChild(jssStyles);
-    }
-  }, []);
-
-  React.useEffect(() => {
     registerServiceWorker();
   }, []);
 
   return (
     <StylesProvider jss={jss}>
       <ThemeProvider>{children}</ThemeProvider>
-      <SideEffects />
+      <Tracking />
+      <LanguageNegotiation />
     </StylesProvider>
   );
 }

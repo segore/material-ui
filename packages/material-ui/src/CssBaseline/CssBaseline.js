@@ -17,7 +17,7 @@ const useStyles = makeStyles(
         boxSizing: 'inherit',
       },
       'strong, b': {
-        fontWeight: theme.typography.fontWeightMedium,
+        fontWeight: 'bolder',
       },
       body: {
         margin: 0, // Remove the margin in all browsers.
@@ -27,6 +27,11 @@ const useStyles = makeStyles(
         '@media print': {
           // Save printer ink.
           backgroundColor: theme.palette.common.white,
+        },
+        // Add support for document.body.requestFullScreen().
+        // Other elements, if background transparent, are not supported.
+        '&::backdrop': {
+          backgroundColor: theme.palette.background.default,
         },
       },
     },

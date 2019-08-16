@@ -1,67 +1,65 @@
-# Migration From v0.x to v1
+# 从v0.x版本迁移到v1版本
 
-<p class="description">是的，v1已经发布了！ 利用2年的努力。</p>
+<p class="description">是的，v1版本已经发布了！ 我们用了两年的努力达到了这个里程碑。</p>
 
 ## 常问问题
 
-### 哇 - API有所不同！ 这是否意味着1.0完全不同，我将不得不重新学习基础知识，迁移几乎是不可能的？
+### 哇—— API 看起来完全不一样！ 这是否意味着1.0完全不同，而我得重新学习基础知识，而迁移是几乎不可能的？
 
-我很高兴你问！ 答案是不。核心概念没有改变。 您会注意到API提供了更大的灵活性，但这需要付出代价。 我们一直在制作较低级别的组件，从而减少了复杂性。
+我很高兴你问了！ 答案是不。我们的核心概念并没有改变。 您会注意到 API 的灵活性更强了，但这是有一些代价的。 我们一直在实现一些较低级别的组件，并且减少了复杂性。
 
-### 是什么推动了这么大的变化？
+### 到底是什么带来了如此巨大的改变呢？
 
-材料的UI开始 [3年前](https://github.com/mui-org/material-ui/commit/28b768913b75752ecf9b6bb32766e27c241dbc46)。 从那时起，生态系统发展了很多，我们也学到了很多东西。 [@nathanmarks](https://github.com/nathanmarks/) 启动一项雄心勃勃的任务，从重建材料的UI **地面行动** 采取这方面的知识优势，以解决长期存在的问题。 列举一些主要变化：
+Material-UI 这个项目是从[4年前](https://github.com/mui-org/material-ui/commit/28b768913b75752ecf9b6bb32766e27c241dbc46)开始的。 在此期间，整个个生态系统发展了很多，我们也学到了很多东西。 [@nathanmarks](https://github.com/nathanmarks/) 启动了一项雄心勃勃的任务，将 Material-UI **重新启动**，并利用我们学到的知识，来解决一些长期存在的问题。 譬如这些主要的变化：
 
-- New styling solution using CSS-in-JS (better [customization](/customization/components/) power, better performance)
-- 新 [主题处理](/customization/themes/) （嵌套，自支撑等）
-- 感谢 [Next.js](https://github.com/zeit/next.js)快速创建文档
-- 方式更好 [测试覆盖率](/guides/testing/) （99％以上，在所有主流浏览器上运行， [视觉回归测试](https://www.argos-ci.com/mui-org/material-ui)）
-- 完全 [服务器端渲染](/guides/server-rendering/) 支持
-- 广泛的 [支持的浏览器](/getting-started/supported-platforms/)
+- 我们采用 CSS-in-JS 这个新的样式方案（更好的[自定义](/customization/components/)的能力和整体性能）
+- 新的 主题处理 （有嵌套，自主支撑等。）
+- 感谢 [Next.js](https://github.com/zeit/next.js) 超快地创建文档
+- 更容易检测 [测试覆盖率](/guides/testing/) （99％以上，在所有主流浏览器上运行， [视觉回归测试](https://www.argos-ci.com/mui-org/material-ui)）
+- 完全[服务器端渲染](/guides/server-rendering/)支持
+- 大范围地[支持的浏览器](/getting-started/supported-platforms/)
 
 ### 我应该从哪里开始迁移？
 
-1. 首先在v0.x版本旁边安装v1.x版本的Material-UI。
+1. 首先，和v0.x版本一起，安装v1.x版本的 Material-UI。
     
-    带纱：
-    
-    ```sh
-    yarn add material-ui
-    yarn add @material-ui/core
-    ```
-    
-    或者用npm：
-    
-    ```sh
-    npm install material-ui
-    npm install @material-ui/core
-    ```
-    
-    然后
-    
-    ```js
-    import FlatButton from 'material-ui/FlatButton'; // v0.x
-    import Button from '@material-ui/core/Button'; // v1.x
-    ```
+    用 yarn：
 
-2. 在项目上运行 [迁移帮助程序](https://github.com/mui-org/material-ui/tree/master/packages/material-ui-codemod)。
+```sh
+  yarn add material-ui
+  yarn add @material-ui/core
+  ```
 
-3. `MuiThemeProvider` 对于v1.x.是可选的，但如果您有自定义主题，则可以同时使用该组件的v0.x和v1.x版本，如下所示：
-    
-    ```jsx
-    import React from 'react';
-    import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'; // v1.x
-    import { MuiThemeProvider as V0MuiThemeProvider} from 'material-ui';
-    import getMuiTheme from 'material-ui/styles/getMuiTheme';
-    
-    const theme = createMuiTheme({
+  Or with npm:
+  ```sh
+  npm install material-ui
+  npm install @material-ui/core
+  ```
+
+  then
+
+  ```js
+  import FlatButton from 'material-ui/FlatButton'; // v0.x
+  import Button from '@material-ui/core/Button'; // v1.x
+  ```
+
+2. Run [the migration helper](https://github.com/mui-org/material-ui/tree/master/packages/material-ui-codemod) on your project.
+3。 `MuiThemeProvider` is optional for v1.x., but if you have a custom theme, you are free to use v0.x and v1.x versions of the component at the same time, like this:
+
+  ```jsx
+  import React from 'react';
+  import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'; // v1.x
+  import { MuiThemeProvider as V0MuiThemeProvider} from 'material-ui';
+  import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+  const theme = createMuiTheme({
     /* theme for v1.x */
-    });
-    const themeV0 = getMuiTheme({
+  });
+  const themeV0 = getMuiTheme({
     /* theme for v0.x */
-    });
-    
-    function App() {
+  });
+
+  function App() {
     return (
       <MuiThemeProvider theme={theme}>
         <V0MuiThemeProvider muiTheme={themeV0}>
@@ -69,26 +67,27 @@
         </V0MuiThemeProvider>
       </MuiThemeProvider>
     );
-    }
-    
-    export default App;
-    ```
+  }
 
-4. 之后，您可以自由迁移一个组件实例。
+  export default App;
+  ```
 
-## 组件
+4. 之后，您可以自由地一次迁移一个组件实例。
 
-### 自动补全
+## Components
 
-Material-UI不提供用于解决此问题的高级API。 You're encouraged you to explore [the solutions the React community has built](/components/autocomplete/).
+### Autocomplete
 
-在未来，我们将研究提供一个简单的组件来解决简单的用例： [＃9997](https://github.com/mui-org/material-ui/issues/9997)。
+Material-UI doesn't provide a high-level API for solving this problem.
+You're encouraged you to explore [the solutions the React community has built](/components/autocomplete/).
 
-### Svg图标
+In the future, we will look into providing a simple component to solve the simple use cases: [#9997](https://github.com/mui-org/material-ui/issues/9997).
 
-在项目上运行 [迁移帮助程序](https://github.com/mui-org/material-ui/tree/master/packages/material-ui-codemod)。
+### Svg Icon
 
-这将应用如下更改：
+Run [the migration helper](https://github.com/mui-org/material-ui/tree/master/packages/material-ui-codemod) on your project.
+
+This will apply a change such as the following:
 
 ```diff
 -import AddIcon from 'material-ui/svg-icons/Add';
@@ -97,7 +96,7 @@ Material-UI不提供用于解决此问题的高级API。 You're encouraged you t
 <AddIcon />
 ```
 
-### Flat Button
+### Flat Button（扁平按钮）
 
 ```diff
 -import FlatButton from 'material-ui/FlatButton';
@@ -107,9 +106,9 @@ Material-UI不提供用于解决此问题的高级API。 You're encouraged you t
 +<Button />
 ```
 
-### Raised Button
+### Raised Button（凸起的按钮）
 
-RaisedButton升级路径：
+凸起按钮的升级的路径：
 
 ```diff
 -import RaisedButton from 'material-ui/RaisedButton';
@@ -119,7 +118,7 @@ RaisedButton升级路径：
 +<Button variant="contained" />
 ```
 
-### Subheader
+### Subheader（副标题)
 
 ```diff
 -import Subheader from 'material-ui/Subheader';
@@ -129,7 +128,7 @@ RaisedButton升级路径：
 +<ListSubheader>Sub Heading</ListSubheader>
 ```
 
-### Toggle
+### Toggle（切换）
 
 ```diff
 -import Toggle from 'material-ui/Toggle';
@@ -146,7 +145,7 @@ RaisedButton升级路径：
 +/>
 ```
 
-### Menu Item
+### Menu Item（菜单项）
 
 ```diff
 -import MenuItem from 'material-ui/MenuItem';
@@ -156,7 +155,7 @@ RaisedButton升级路径：
 +<MenuItem>Profile</MenuItem>
 ```
 
-### 字体图标
+### Font Icon（字体图标）
 
 ```diff
 -import FontIcon from 'material-ui/FontIcon';
@@ -166,7 +165,7 @@ RaisedButton升级路径：
 +<Icon>home</Icon>
 ```
 
-### Circular Progress
+### Circular Progress（环状进度条）
 
 ```diff
 -import CircularProgress from 'material-ui/CircularProgress';
@@ -176,7 +175,7 @@ RaisedButton升级路径：
 +<CircularProgress variant="indeterminate" />
 ```
 
-### Drop Down Menu
+### Drop Down Menu（下拉式菜单）
 
 ```diff
 -import DropDownMenu from 'material-ui/DropDownMenu';
@@ -186,6 +185,6 @@ RaisedButton升级路径：
 +<Select value={this.state.value}></Select>
 ```
 
-### 继续…
+### 未完待续...
 
-您是否已成功迁移您的应用，并希望帮助社区？ 请帮助我们！ 我们有一个未解决的问题，以完成此迁移指南 [＃7195](https://github.com/mui-org/material-ui/issues/7195)。 Any pull request is welcomed
+您是否已成功迁移您的应用，并助社区一臂之力？ 请帮助我们！ 我们有一个未解决的问题，以完成此迁移指南 [＃7195](https://github.com/mui-org/material-ui/issues/7195)。 Any pull request is welcomed 😊.

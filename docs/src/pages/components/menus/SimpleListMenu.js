@@ -21,7 +21,7 @@ const options = [
   'Hide all notification content',
 ];
 
-function SimpleListMenu() {
+export default function SimpleListMenu() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
@@ -46,7 +46,7 @@ function SimpleListMenu() {
           button
           aria-haspopup="true"
           aria-controls="lock-menu"
-          aria-label="When device is locked"
+          aria-label="when device is locked"
           onClick={handleClickListItem}
         >
           <ListItemText primary="When device is locked" secondary={options[selectedIndex]} />
@@ -73,5 +73,3 @@ function SimpleListMenu() {
     </div>
   );
 }
-
-export default SimpleListMenu;

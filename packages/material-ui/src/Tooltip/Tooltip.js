@@ -20,6 +20,7 @@ export const styles = theme => ({
     position: 'absolute',
     top: 0,
     left: 0,
+    flip: false, // disable jss-rtl plugin
   },
   /* Styles applied to the Popper component if `interactive={true}`. */
   popperInteractive: {
@@ -107,7 +108,7 @@ function Tooltip(props) {
   const [, forceUpdate] = React.useState(0);
   const [childNode, setChildNode] = React.useState();
   const ignoreNonTouchEvents = React.useRef(false);
-  const { current: isControlled } = React.useRef(props.open != null);
+  const { current: isControlled } = React.useRef(openProp != null);
   const defaultId = React.useRef();
   const closeTimer = React.useRef();
   const enterTimer = React.useRef();
@@ -135,7 +136,7 @@ function Tooltip(props) {
 
   React.useEffect(() => {
     // Fallback to this default id when possible.
-    // Use the random value for client side rendering only.
+    // Use the random value for client-side rendering only.
     // We can't use it server-side.
     if (!defaultId.current) {
       defaultId.current = `mui-tooltip-${Math.round(Math.random() * 1e5)}`;
@@ -184,7 +185,7 @@ function Tooltip(props) {
     // We don't want to wait for the next render commit.
     // We would risk displaying two tooltips at the same time (native + this one).
     if (childNode) {
-      childNode.setAttribute('title', '');
+      childNode.removeAttribute('title');
     }
 
     clearTimeout(enterTimer.current);
@@ -356,8 +357,8 @@ function Tooltip(props) {
   warning(
     !children.props.title,
     [
-      'Material-UI: you have provided a `title` property to the child of <Tooltip />.',
-      `Remove this title property \`${children.props.title}\` or the Tooltip component.`,
+      'Material-UI: you have provided a `title` prop to the child of <Tooltip />.',
+      `Remove this title prop \`${children.props.title}\` or the Tooltip component.`,
     ].join('\n'),
   );
 
@@ -424,7 +425,7 @@ Tooltip.propTypes = {
   disableTouchListener: PropTypes.bool,
   /**
    * The number of milliseconds to wait before showing the tooltip.
-   * This property won't impact the enter touch delay (`enterTouchDelay`).
+   * This prop won't impact the enter touch delay (`enterTouchDelay`).
    */
   enterDelay: PropTypes.number,
   /**
@@ -433,8 +434,8 @@ Tooltip.propTypes = {
   enterTouchDelay: PropTypes.number,
   /**
    * The relationship between the tooltip and the wrapper component is not clear from the DOM.
-   * This property is used with aria-describedby to solve the accessibility issue.
-   * If you don't provide this property. It falls back to a randomly generated id.
+   * This prop is used with aria-describedby to solve the accessibility issue.
+   * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
   /**
@@ -444,7 +445,7 @@ Tooltip.propTypes = {
   interactive: PropTypes.bool,
   /**
    * The number of milliseconds to wait before hiding the tooltip.
-   * This property won't impact the leave touch delay (`leaveTouchDelay`).
+   * This prop won't impact the leave touch delay (`leaveTouchDelay`).
    */
   leaveDelay: PropTypes.number,
   /**
@@ -485,7 +486,7 @@ Tooltip.propTypes = {
     'top',
   ]),
   /**
-   * Properties applied to the [`Popper`](/api/popper/) element.
+   * Props applied to the [`Popper`](/api/popper/) element.
    */
   PopperProps: PropTypes.object,
   /**
@@ -501,7 +502,7 @@ Tooltip.propTypes = {
    */
   TransitionComponent: PropTypes.elementType,
   /**
-   * Properties applied to the `Transition` element.
+   * Props applied to the `Transition` element.
    */
   TransitionProps: PropTypes.object,
 };

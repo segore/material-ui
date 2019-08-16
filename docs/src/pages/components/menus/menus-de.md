@@ -21,7 +21,7 @@ Durch die Auswahl einer Option wird die Option sofort übernommen und das Menü 
 
 ## Ausgewählte Menüs
 
-If used for item selection, when opened, simple menus attempt to vertically align the currently selected menu item with the anchor element, and the initial focus will be placed on the selected menu item. Das aktuell ausgewählte Menüelement wird mit der Eigenschaft `selected` (von [ListItem](/api/list-item/)) festgelegt. To use a selected menu item without impacting the initial focus or the vertical positioning of the menu, set the `variant` property to `menu`.
+Bei der Elementauswahl versuchen einfache Menüs beim Öffnen, das aktuell ausgewählte Menüelement mit dem Ankerelement vertikal auszurichten, und der ursprüngliche Fokus wird auf das ausgewählte Menüelement gesetzt. Das aktuell ausgewählte Menüelement wird mit der Eigenschaft `selected` (von [ListItem](/api/list-item/)) festgelegt. Um ein ausgewähltes Menüelement zu verwenden, ohne den anfänglichen Fokus oder die vertikale Positionierung des Menüs zu beeinflussen, setzen Sie die Eigenschaft `variant` auf `menu`.
 
 {{"demo": "pages/components/menus/SimpleListMenu.js"}}
 
@@ -33,13 +33,13 @@ Die Hauptaufgabe der `MenuList` Komponente besteht darin, den Fokus festzulegen.
 
 {{"demo": "pages/components/menus/MenuListComposition.js"}}
 
-## Customized menus
+## Menüs anpassen
 
-Here is an example of customizing the component. You can learn more about this in the [overrides documentation page](/customization/components/).
+Hier ist ein Beispiel zum Anpassen der Komponente. Mehr dazu erfahren Sie auf der [Überschreibungsdokumentationsseite](/customization/components/).
 
 {{"demo": "pages/components/menus/CustomizedMenus.js"}}
 
-Das `MenuItem` ist ein Wrapper um ein `ListItem` mit einigen zusätzlichen Stilen. Sie können dieselben Listenkompositionsfunktionen mit der `MenuItem` Komponente verwenden:
+The `MenuItem` is a wrapper around `ListItem` with some additional styles. You can use the same list composition features with the `MenuItem` component:
 
 ## Maximale-Höhe Menüs
 
@@ -53,7 +53,7 @@ Es gibt [einen FlexBox bug](https://bugs.chromium.org/p/chromium/issues/detail?i
 
 {{"demo": "pages/components/menus/TypographyMenu.js"}}
 
-## Change transition
+## Übergang ändern
 
 Verwenden Sie einen anderen Übergang.
 

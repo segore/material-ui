@@ -1,16 +1,14 @@
 import React from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-const useStyles = makeStyles(
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-  }),
-);
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+});
 
-function LinearQuery() {
+export default function LinearQuery() {
   const classes = useStyles();
 
   return (
@@ -21,5 +19,3 @@ function LinearQuery() {
     </div>
   );
 }
-
-export default LinearQuery;

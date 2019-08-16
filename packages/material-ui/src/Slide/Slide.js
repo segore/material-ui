@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import debounce from 'debounce'; // < 1kb payload overhead when lodash/debounce is > 3kb.
+import debounce from '../utils/debounce';
 import { Transition } from 'react-transition-group';
 import { elementAcceptingRef } from '@material-ui/utils';
 import { useForkRef } from '../utils/reactHelpers';
-import withTheme from '../styles/withTheme';
+import useTheme from '../styles/useTheme';
 import { duration } from '../styles/transitions';
 import { reflow, getTransitionProps } from '../transitions/utils';
 
-const GUTTER = 24;
-
 // Translate the node so he can't be seen on the screen.
 // Later, we gonna translate back the node to his original location
-// with `translate3d(0, 0, 0)`.`
+// with `none`.`
 function getTranslateValue(direction, node) {
   const rect = node.getBoundingClientRect();
 
@@ -41,19 +39,19 @@ function getTranslateValue(direction, node) {
   }
 
   if (direction === 'left') {
-    return `translateX(100vw) translateX(-${rect.left - offsetX}px)`;
+    return `translateX(${window.innerWidth}px) translateX(-${rect.left - offsetX}px)`;
   }
 
   if (direction === 'right') {
-    return `translateX(-${rect.left + rect.width + GUTTER - offsetX}px)`;
+    return `translateX(-${rect.left + rect.width - offsetX}px)`;
   }
 
   if (direction === 'up') {
-    return `translateY(100vh) translateY(-${rect.top - offsetY}px)`;
+    return `translateY(${window.innerHeight}px) translateY(-${rect.top - offsetY}px)`;
   }
 
   // direction === 'down'
-  return `translateY(-${rect.top + rect.height + GUTTER - offsetY}px)`;
+  return `translateY(-${rect.top + rect.height - offsetY}px)`;
 }
 
 export function setTranslateValue(direction, node) {
@@ -84,11 +82,11 @@ const Slide = React.forwardRef(function Slide(props, ref) {
     onExit,
     onExited,
     style,
-    theme,
     timeout = defaultTimeout,
     ...other
   } = props;
 
+  const theme = useTheme();
   const childrenRef = React.useRef(null);
   /**
    * used in cloneElement(children, { ref: handleRef })
@@ -100,17 +98,17 @@ const Slide = React.forwardRef(function Slide(props, ref) {
   const handleRefIntermediary = useForkRef(children.ref, handleOwnRef);
   const handleRef = useForkRef(handleRefIntermediary, ref);
 
-  const handleEnter = () => {
+  const handleEnter = (_, isAppearing) => {
     const node = childrenRef.current;
     setTranslateValue(direction, node);
     reflow(node);
 
     if (onEnter) {
-      onEnter(node);
+      onEnter(node, isAppearing);
     }
   };
 
-  const handleEntering = () => {
+  const handleEntering = (_, isAppearing) => {
     const node = childrenRef.current;
     const transitionProps = getTransitionProps(
       { timeout, style },
@@ -126,10 +124,10 @@ const Slide = React.forwardRef(function Slide(props, ref) {
       ...transitionProps,
       easing: theme.transitions.easing.easeOut,
     });
-    node.style.webkitTransform = 'translate(0, 0)';
-    node.style.transform = 'translate(0, 0)';
+    node.style.webkitTransform = 'none';
+    node.style.transform = 'none';
     if (onEntering) {
-      onEntering(node);
+      onEntering(node, isAppearing);
     }
   };
 
@@ -180,7 +178,7 @@ const Slide = React.forwardRef(function Slide(props, ref) {
         if (childrenRef.current) {
           setTranslateValue(direction, childrenRef.current);
         }
-      }, 166); // Corresponds to 10 frames at 60 Hz.
+      });
 
       window.addEventListener('resize', handleResize);
 
@@ -261,10 +259,6 @@ Slide.propTypes = {
    */
   style: PropTypes.object,
   /**
-   * @ignore
-   */
-  theme: PropTypes.object.isRequired,
-  /**
    * The duration for the transition, in milliseconds.
    * You may specify a single timeout for all transitions, or individually with an object.
    */
@@ -274,4 +268,4 @@ Slide.propTypes = {
   ]),
 };
 
-export default withTheme(Slide);
+export default Slide;

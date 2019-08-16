@@ -1,7 +1,8 @@
 import React from 'react';
 import { assert } from 'chai';
 import { spy } from 'sinon';
-import { createMount, describeConformance } from '@material-ui/core/test-utils';
+import { createMount } from '@material-ui/core/test-utils';
+import describeConformance from '@material-ui/core/test-utils/describeConformance';
 import PropTypes from 'prop-types';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
 import Drawer from '../Drawer';
@@ -95,11 +96,15 @@ describe('<SwipeableDrawer />', () => {
     inheritComponent: Drawer,
     mount,
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp'],
+    skip: [
+      'componentProp',
+      // https://github.com/facebook/react/issues/11565
+      'reactTestRenderer',
+    ],
   }));
 
   it('should render a Drawer and a SwipeArea', () => {
-    const wrapper = mount(<SwipeableDrawer onOpen={() => {}} onClose={() => {}} open={false} />); // unwrap withForwardedRef
+    const wrapper = mount(<SwipeableDrawer onOpen={() => {}} onClose={() => {}} open={false} />);
     assert.strictEqual(wrapper.find(Drawer).exists(), true);
     assert.strictEqual(wrapper.find(SwipeArea).exists(), true);
   });
@@ -136,7 +141,7 @@ describe('<SwipeableDrawer />', () => {
           open={false}
           PaperProps={{ component: FakePaper }}
         >
-          <h1>Hello</h1>
+          <h1>SwipeableDrawer</h1>
         </SwipeableDrawer>,
       );
     });
@@ -228,7 +233,7 @@ describe('<SwipeableDrawer />', () => {
           fireBodyMouseEvent('touchmove', { touches: [params.openTouches[1]] });
           fireBodyMouseEvent('touchmove', { touches: [params.openTouches[2]] });
           fireBodyMouseEvent('touchend', { changedTouches: [params.openTouches[2]] });
-          assert.strictEqual(handleOpen.callCount, 1);
+          assert.strictEqual(handleOpen.callCount, 1, 'open');
 
           const handleClose = spy();
           wrapper.setProps({ open: true, onClose: handleClose });
@@ -236,7 +241,7 @@ describe('<SwipeableDrawer />', () => {
           fireBodyMouseEvent('touchmove', { touches: [params.closeTouches[1]] });
           fireBodyMouseEvent('touchmove', { touches: [params.closeTouches[2]] });
           fireBodyMouseEvent('touchend', { changedTouches: [params.closeTouches[2]] });
-          assert.strictEqual(handleClose.callCount, 1);
+          assert.strictEqual(handleClose.callCount, 1, 'close');
         });
 
         it('should stay closed when not swiping far enough', () => {
@@ -375,7 +380,7 @@ describe('<SwipeableDrawer />', () => {
           open={false}
           PaperProps={{ component: FakePaper }}
         >
-          <h1>Hello</h1>
+          <h1>SwipeableDrawer</h1>
         </SwipeableDrawer>,
       );
 
@@ -399,7 +404,7 @@ describe('<SwipeableDrawer />', () => {
           open
           PaperProps={{ component: FakePaper }}
         >
-          <h1>Hello</h1>
+          <h1>SwipeableDrawer</h1>
         </SwipeableDrawer>,
       );
 
@@ -425,7 +430,7 @@ describe('<SwipeableDrawer />', () => {
             open={false}
             PaperProps={{ component: FakePaper }}
           >
-            <h1>Hello1</h1>
+            <h1>Drawer1</h1>
           </SwipeableDrawer>
           <SwipeableDrawer
             onOpen={handleOpen}
@@ -433,7 +438,7 @@ describe('<SwipeableDrawer />', () => {
             open={false}
             PaperProps={{ component: FakePaper }}
           >
-            <h1>Hello2</h1>
+            <h1>Drawer2</h1>
           </SwipeableDrawer>
         </div>,
       );
@@ -459,7 +464,7 @@ describe('<SwipeableDrawer />', () => {
         open={false}
         PaperProps={{ component: NullPaper }}
       >
-        <h1>Hello</h1>
+        <h1>SwipeableDrawer</h1>
       </SwipeableDrawer>,
     );
     fireSwipeAreaMouseEvent(wrapper, 'touchstart', { touches: [{ pageX: 0, clientY: 0 }] });
@@ -506,7 +511,7 @@ describe('<SwipeableDrawer />', () => {
       assert.strictEqual(consoleErrorMock.callCount(), 1);
       assert.include(
         consoleErrorMock.args()[0][0],
-        'Warning: Failed prop type: Invalid prop `PaperProps.component` supplied to `SwipeableDrawer`. Expected an element type that can hold a ref.',
+        'Warning: Failed prop type: Invalid prop `PaperProps.component` supplied to `ForwardRef(SwipeableDrawer)`. Expected an element type that can hold a ref.',
       );
     });
 
@@ -523,7 +528,7 @@ describe('<SwipeableDrawer />', () => {
       assert.strictEqual(consoleErrorMock.callCount(), 1);
       assert.include(
         consoleErrorMock.args()[0][0],
-        'Warning: Failed prop type: Invalid prop `ModalProps.BackdropProps.component` supplied to `SwipeableDrawer`. Expected an element type that can hold a ref.',
+        'Warning: Failed prop type: Invalid prop `ModalProps.BackdropProps.component` supplied to `ForwardRef(SwipeableDrawer)`. Expected an element type that can hold a ref.',
       );
     });
   });

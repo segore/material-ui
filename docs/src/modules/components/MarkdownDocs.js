@@ -1,9 +1,7 @@
-/* eslint-disable react/no-array-index-key */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import warning from 'warning';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Portal from '@material-ui/core/Portal';
@@ -27,13 +25,14 @@ import {
   getDescription,
   demoRegexp,
 } from 'docs/src/modules/utils/parseMarkdown';
-import compose from 'docs/src/modules/utils/compose';
 import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
 import { LANGUAGES_IN_PROGRESS } from 'docs/src/modules/constants';
 import Link from 'docs/src/modules/components/Link';
 
 const styles = theme => ({
   header: {
+    position: 'absolute',
+    right: 16,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
@@ -102,17 +101,20 @@ function MarkdownDocs(props) {
   const {
     blog,
     classes,
-    disableAd,
-    disableToc,
+    disableAd = false,
     disableEdit,
+    disableToc = false,
     markdown: markdownProp,
     markdownLocation: markdownLocationProp,
     req,
     reqPrefix,
     reqSource,
-    t,
-    userLanguage,
   } = props;
+
+  const { t, userLanguage } = useSelector(state => ({
+    t: state.options.t,
+    userLanguage: state.options.userLanguage,
+  }));
 
   let demos;
   let markdown = markdownProp;
@@ -176,7 +178,7 @@ function MarkdownDocs(props) {
             </Portal>
           )}
 
-          <AppContent disableToc={disableToc} className={classes.root}>
+          <AppContent disableToc={disableToc}>
             {!disableEdit ? (
               <div className={classes.header}>
                 <EditPage
@@ -209,12 +211,13 @@ function MarkdownDocs(props) {
                   warning(false, errorMessage);
 
                   const warnIcon = (
-                    <span role="img" aria-label="warning">
+                    <span role="img" aria-label={t('emojiWarning')}>
                       ⚠️
                     </span>
                   );
                   return (
                     <div key={content}>
+                      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                       {warnIcon} Missing demo `{name}` {warnIcon}
                     </div>
                   );
@@ -294,19 +297,6 @@ MarkdownDocs.propTypes = {
   req: PropTypes.func,
   reqPrefix: PropTypes.string,
   reqSource: PropTypes.func,
-  t: PropTypes.func.isRequired,
-  userLanguage: PropTypes.string.isRequired,
 };
 
-MarkdownDocs.defaultProps = {
-  disableAd: false,
-  disableToc: false,
-};
-
-export default compose(
-  connect(state => ({
-    t: state.options.t,
-    userLanguage: state.options.userLanguage,
-  })),
-  withStyles(styles),
-)(MarkdownDocs);
+export default withStyles(styles)(MarkdownDocs);

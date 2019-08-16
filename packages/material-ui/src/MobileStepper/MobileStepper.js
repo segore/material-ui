@@ -89,7 +89,6 @@ const MobileStepper = React.forwardRef(function MobileStepper(props, ref) {
         <div className={classes.dots}>
           {[...new Array(steps)].map((_, index) => (
             <div
-              // eslint-disable-next-line react/no-array-index-key
               key={index}
               className={clsx(classes.dot, {
                 [classes.dotActive]: index === activeStep,
@@ -131,7 +130,7 @@ MobileStepper.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Properties applied to the `LinearProgress` element.
+   * Props applied to the `LinearProgress` element.
    */
   LinearProgressProps: PropTypes.object,
   /**
